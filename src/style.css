@@ -1,12 +1,10 @@
 :root {
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
-  font: normal normal 30px/47px 'Avenir LT W01_35 Light1475496',Helvetica,Arial,sans-serif;
+  font: normal normal 'Avenir LT W01_35 Light1475496',Helvetica,Arial,sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,6 +23,10 @@ a:hover {
 } */
 
 
+#app {
+  background-color: #fff;
+  color: #3c3c3c;
+}  
 
 
 
@@ -48,6 +50,17 @@ li {
 }
 p {
   margin: 0;
+}
+input, textarea {
+  background-color: #fff;
+  color: #3c3c3c;
+}
+label {
+  color: #3c3c3c;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
 }
 
 button {

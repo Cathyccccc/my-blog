@@ -19,7 +19,12 @@
     <div class="search">
       <input type="search" v-model.trim="searchValRef">
       <div class="search-btn" @click="handleSearch">
-        <svg t="1695604758202" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="913" width="20" height="20"><path d="M1005.312 914.752l-198.528-198.464A448 448 0 1 0 0 448a448 448 0 0 0 716.288 358.784l198.4 198.4a64 64 0 1 0 90.624-90.432zM448 767.936A320 320 0 1 1 448 128a320 320 0 0 1 0 640z" fill="#ffffff" p-id="914"></path></svg>
+        <svg t="1695604758202" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+          p-id="913" width="20" height="20">
+          <path
+            d="M1005.312 914.752l-198.528-198.464A448 448 0 1 0 0 448a448 448 0 0 0 716.288 358.784l198.4 198.4a64 64 0 1 0 90.624-90.432zM448 767.936A320 320 0 1 1 448 128a320 320 0 0 1 0 640z"
+            fill="#ffffff" p-id="914"></path>
+        </svg>
       </div>
     </div>
     <!-- 用户 -->
@@ -40,7 +45,7 @@
         </svg>
       </button>
       <div class="mask"></div>
-      <ul v-show="isShowOperationListRef" class="operation-list">
+      <ul v-show="isShowOperationListRef" class="operation-list" @click="controlOperationList">
         <li><router-link to="/addArticle">新建文章</router-link></li>
         <li><router-link to="/articleManage">文章管理</router-link></li>
         <li><router-link to="/projectManage">项目管理</router-link></li>
@@ -50,15 +55,15 @@
     </div>
   </nav>
   <!-- 主内容区 -->
-  <div class="main-content">
+  <div class="main-content" :class="{ 'has-padding': showPadding }">
     <router-view></router-view>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import {useRouter, useLink, useRoute} from 'vue-router';
-import {getArticleList} from './api/article';
+import { useRouter, useLink, useRoute } from 'vue-router';
+import { getArticleList } from './api/article';
 import { getProjectList } from './api/project';
 // import {stretchWater, shrinkWater} from './utils/index';
 
@@ -77,7 +82,7 @@ onMounted(() => {
     headerBump.style.left = e.clientX;
   })
   navBar.addEventListener('mouseenter', () => {
-    if(timer) clearInterval(timer);
+    if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (a < 2) {
         a += speed_a;
@@ -91,7 +96,7 @@ onMounted(() => {
       if (a >= 2 && d <= 0.7 && tx <= -352.3911023420891) {
         clearInterval(timer);
         timer = null;
-        a=2;d=0.7;tx = -352.3911023420891;
+        a = 2; d = 0.7; tx = -352.3911023420891;
       }
       path.style.transform = `matrix(${a}, 0, 0, ${d}, ${tx}, 0)`
     }, 50);
@@ -102,37 +107,48 @@ onMounted(() => {
       if (a > 1) {
         a -= speed_a * 2.9800033;
       }
-      if(d < 1) {
+      if (d < 1) {
         d -= speed_d * 2.00033;
       }
       if (tx < -76.1984879008934) {
         tx -= speed_tx * 3.00033;
       }
-      if (a <=1 && d >=1 && tx >= -76.1984879008934) {
+      if (a <= 1 && d >= 1 && tx >= -76.1984879008934) {
         clearInterval(timer);
         timer = null;
-        a = 1;d = 1;tx = -76.1984879008934;
+        a = 1; d = 1; tx = -76.1984879008934;
       }
       path.style.transform = `matrix(${a}, 0, 0, ${d}, ${tx}, 0)`
     }, 50)
   })
   // 刷新页面
-  if(userInfo) {
+  if (userInfo) {
     userInfoRef.value = userInfo;
   }
 })
+
 const route = useRoute();
+
 // 点击登录按钮
 const router = useRouter();
 const handleLogon = () => {
   if (!userInfo) {
-    router.push({path: '/login'});
+    router.push({ path: '/login' });
   }
 }
+// 根据不同情况显示不同 main-content样式，当为管理界面时，去掉padding
+const showPadding = ref(false);
+const noPaddingList = ['/articleManage', '/projectManage', '/commentManage', '/tagManage']
 // 监听路由变化
 watch(() => router.currentRoute.value.path, (newVal, oldVal) => {
   if (oldVal === '/login' && newVal === '/article') {
     userInfoRef.value = JSON.parse(localStorage.getItem('userInfo'));
+  }
+  console.log(noPaddingList.includes(router.currentRoute.value.path))
+  if (noPaddingList.includes(router.currentRoute.value.path)) {
+    showPadding.value = false;
+  } else {
+    showPadding.value = true;
   }
 })
 // 搜索
@@ -140,14 +156,14 @@ const searchValRef = ref('');
 const handleSearch = () => {
   if (!searchValRef.value) return;
   const path = route.fullPath;
-  switch(path) {
+  switch (path) {
     case '/article':
-      getArticleList({page: 1, pageSize: 5, searchStr: searchValRef.value}).then((res) => {
+      getArticleList({ page: 1, pageSize: 5, searchStr: searchValRef.value }).then((res) => {
         console.log('搜索后的文章列表', res)
       })
       break;
     case '/project':
-      getProjectList({searchStr: searchValRef.value}).then((res) => {
+      getProjectList({ searchStr: searchValRef.value }).then((res) => {
         console.log('搜索后的项目列表', res)
       })
       break;
@@ -158,6 +174,8 @@ const isShowOperationListRef = ref(false)
 function controlOperationList() {
   isShowOperationListRef.value = !isShowOperationListRef.value;
 }
+
+
 </script>
 
 <style scoped>
@@ -224,12 +242,13 @@ function controlOperationList() {
 .nav-bar a:hover {
   color: #ffdd00;
 }
+
 .search {
   display: flex;
   align-items: center;
   margin-right: 20px;
-  cursor: pointer;
 }
+
 .search input {
   border: none;
   outline: none;
@@ -241,13 +260,17 @@ function controlOperationList() {
 
 .search-btn {
   margin: 0 10px;
+  cursor: pointer;
 }
+
 .search-btn path {
   transition: all .5s;
 }
+
 .search-btn:hover path {
   fill: #ffdd00;
 }
+
 .login-btn {
   width: 50px;
   height: 35px;
@@ -257,6 +280,7 @@ function controlOperationList() {
   font-weight: bold;
   flex: 0 0 50px;
 }
+
 .personal {
   /* height: 60px; */
   line-height: 60px;
@@ -289,6 +313,7 @@ function controlOperationList() {
   color: #FFF;
   font-weight: 600;
 }
+
 .operation-list {
   position: absolute;
   top: 60px;
@@ -301,6 +326,7 @@ function controlOperationList() {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
 li {
   list-style: none;
   height: 40px;
@@ -308,6 +334,7 @@ li {
   box-sizing: border-box;
   padding: 10px 20px;
 }
+
 .operation-list li a {
   text-decoration: none;
   color: #fff;
@@ -319,10 +346,12 @@ li {
 .main-content {
   height: calc(100vh - 60px);
   margin-top: 60px;
-  padding: 0 10%;
   box-sizing: border-box;
   background-color: #f8f8f8;
   overflow-y: auto;
   scroll-behavior: smooth;
+}
+.has-padding {
+  padding: 0 10%;
 }
 </style>

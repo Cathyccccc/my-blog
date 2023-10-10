@@ -94,9 +94,6 @@ function editArticle() {
   margin-right: 15px;
 }
 
-.editor-wrapper {
-  margin: 20px 0;
-}
 
 /* .avatar {
   width: 35px;

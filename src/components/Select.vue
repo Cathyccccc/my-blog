@@ -62,9 +62,10 @@ function handleBlur() {
   position: relative;
 }
 .selector {
+  min-height: 32px;
   border: 1px solid #ddd;
   border-radius: 3px;
-  width: 200px;
+  width: 300px;
   padding: 1px;
   box-sizing: border-box;
   display: flex;
@@ -75,7 +76,7 @@ function handleBlur() {
   background-color: #c3e7ff;
   border-radius: 3px;
   font-size: 14px;
-  height: 22px;
+  height: 26px;
   box-sizing: border-box;
   padding: 3px;
   display: flex;
@@ -108,7 +109,7 @@ input {
   margin-left: 2px;
 }
 .select-list {
-  width: 200px;
+  width: 300px;
   box-sizing: border-box;
   padding: 3px 0;
   border-radius: 3px;

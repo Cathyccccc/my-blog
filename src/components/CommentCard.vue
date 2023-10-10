@@ -5,6 +5,7 @@
     <span class="create-time">{{ commentObj.createTime }}</span>
     <div class="right">
       <div class="comment">{{ commentObj.commentTxt }}</div>
+      <CommentBox comment-txt="" />
       <button v-show="!isReplay">回复</button>
     </div>
     <div class="reply-wrapper" v-if="commentObj.replayArr">
@@ -21,12 +22,17 @@ export default {
 
 <script setup>
 import CommentCard from '../components/CommentCard.vue'
+import CommentBox from './CommentBox.vue';
 
 const props = defineProps({
   isReplay: Boolean, // 这里数据不能直接使用Boolean。因为最开始数据为undefined。Boolean(undefined)结果为false
   commentObj: Object,
 })
 const { commentObj } = props;
+
+function replyComment() {
+
+}
 </script>
 
 <style scoped>

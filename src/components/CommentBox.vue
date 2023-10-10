@@ -32,6 +32,7 @@ textarea {
   border-radius: 10px;
   padding: 10px;
   resize: none;
+  border: 1px solid #eee;
 }
 
 textarea::placeholder {
