@@ -1,17 +1,15 @@
 <template>
-  <div>标签管理
-    <Table :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
-      <template #operate="{row}">
-        <a @click="deleteTagItem(row)">Delete</a>
-      </template>
-    </Table>
-  </div>
+  <Table :data="gridData" :columns="gridColumns" :filter-key="searchQuery" title="标签管理">
+    <template #operate="{ row }">
+      <a @click="deleteTagItem(row)">Delete</a>
+    </template>
+  </Table>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
 import Table from '../components/Table.vue';
-import {getTagList} from '../api/tag';
+import { getTagList } from '../api/tag';
 
 const searchQuery = ref('')
 const gridColumns = [
@@ -34,7 +32,7 @@ const gridColumns = [
     title: '操作',
     key: 'operate',
     dataIndex: 'operate',
-    customRender: () => {}
+    customRender: () => { }
   }
 ]
 const gridData = ref([])

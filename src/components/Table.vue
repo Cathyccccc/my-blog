@@ -91,18 +91,19 @@ function sortBy(key) {
 <style scoped>
 /* 需要添加表格单元格的响应式样式？？？ */
 table {
-  width: 100%;
+  width: calc(100% - 10px);
+  /* min-width: 600px; */
   border-radius: 10px 10px 3px 3px;
   background-color: #F7F7F7;
-  border-collapse: collapse;
-  margin-top: 5px;
+  /* border-collapse: collapse; */
+  margin: 5px;
 }
 caption {
   width: 100%;
   font-size: 20px;
   font-weight: bold;
   text-align: left;
-  padding: 8px 20px;
+  padding: 5px 15px;
   box-sizing: border-box;
 }
 
@@ -125,12 +126,14 @@ tbody tr:hover td {
 td {
   background-color: #fff;
   transition: all .3s;
+  text-align: center;
 }
 
 th,
 td {
   /* min-width: 120px; */
   padding: 10px 20px;
+  font-size: 14px;
 }
 
 th.active {
