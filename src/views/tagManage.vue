@@ -1,7 +1,9 @@
 <template>
   <Table :data="gridData" :columns="gridColumns" :filter-key="searchQuery" title="标签管理">
-    <template #operate="{ row }">
-      <a @click="deleteTagItem(row)">Delete</a>
+    <template #bodyCell="{ column, row }">
+      <template v-if="column.key === 'operate'">
+        <a @click="deleteTagItem(row)">Delete</a>
+      </template>
     </template>
   </Table>
 </template>
@@ -49,7 +51,4 @@ function deleteTagItem(row) {
 </script>
 
 <style scoped>
-a {
-  color: #5ab4f0;
-}
 </style>

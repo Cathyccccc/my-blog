@@ -1,5 +1,5 @@
 <template>
-  <table v-if="filteredData.length">
+  <table class="table-container" v-if="filteredData.length">
     <caption>{{ title }}</caption>
     <thead>
       <tr>
@@ -12,8 +12,9 @@
     <tbody>
       <tr v-for="(entry, index) in filteredData" :key="index">
         <td v-for="key in columns" :key="key.dataIndex">
-          {{ entry[key.dataIndex] }}
-          <slot v-if="!entry[key.dataIndex]" :name="key.dataIndex" :column="key" :row="entry"></slot>
+          <slot name="bodyCell" :column="key" :row="entry">
+            {{ typeof entry[key.dataIndex] === 'string' ? entry[key.dataIndex].slice(0, 20) : entry[key.dataIndex]}}
+          </slot>
         </td>
       </tr>
     </tbody>
@@ -37,11 +38,10 @@ const props = defineProps({
   title: {
     type: String || Object,
     default: ''
-  }
-})
+  },
 
+})
 // 当存在表格标题（title属性）时，标题左上和右上显示圆角style，否则表头显示圆角style
-console.log(props.title)
 const sortKey = ref('')
 // 将columns的key转为{key： 1}形式，当以当前字段（key）进行排序时，赋值为-1
 const sortOrders = ref(
@@ -52,8 +52,19 @@ const filteredData = computed(() => {
   // 添加序号（columns中包含index数据项）
   const hasIndex = columns.find(item => item.dataIndex === 'index')
   if (hasIndex) {
-    data = data.map((item, index) => ({...item, index:index+1}))
+    data = data.map((item, index) => ({ ...item, index: index + 1 }))
   }
+  // const filterColumns = columns.filter(col => {
+  //   return data[0] && !data[0][col.dataIndex]
+  // })
+  // // 这里必须用map，不能用push？？？
+  // filterColumns.forEach(col => {
+  //   if (col.dataIndex === 'index') {
+  //     data = data.map((item, index) => ({ ...item, index: index + 1 }))
+  //   } else {
+  //     // data = data.map((item, index) => ({ ...item, [col.dataIndex]: undefined }))
+  //   }
+  // })
   // 自定义渲染 customRender
   // const customColumns = columns.filter(item => {
   //   return item.hasOwnProperty('customRender')
@@ -98,6 +109,7 @@ table {
   /* border-collapse: collapse; */
   margin: 5px;
 }
+
 caption {
   width: 100%;
   font-size: 20px;
@@ -113,9 +125,11 @@ th {
   cursor: pointer;
   user-select: none;
 }
+
 th:nth-child(1) {
   border-top-left-radius: 10px;
 }
+
 th:nth-last-child(1) {
   border-top-right-radius: 10px;
 }
@@ -123,6 +137,7 @@ th:nth-last-child(1) {
 tbody tr:hover td {
   background-color: #F5F5F5;
 }
+
 td {
   background-color: #fff;
   transition: all .3s;

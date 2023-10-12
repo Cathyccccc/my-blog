@@ -95,3 +95,20 @@ button:hover {
     color: #747bff;
   } */
 }
+/* 设置Table表格图片样式 */
+.table-container img {
+  width: 100px;
+}
+/* 设置Table表格操作按钮样式 */
+.table-container .operate-list {
+  display: flex;
+  column-gap: 5px;
+}
+.table-container a {
+  color: #72c7ff;
+  font-weight: 600;
+  transition: all .3s;
+}
+.table-container a:hover {
+  color: #55BBFF;
+}
