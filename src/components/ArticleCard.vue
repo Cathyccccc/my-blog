@@ -10,9 +10,10 @@
       </div>
     </div>
     <div class="card-bottom">
-      <div class="tag-list">
+      <TagList :tag-list-data="article.tags" />
+      <!-- <div class="tag-list">
         <span class="tag-item" v-for="(t, index) in article.tags" :key="t" :style="{backgroundColor: gradient[index]}">{{ t }}</span>
-      </div>
+      </div> -->
       <div class="numbers">
         <span>浏览数：{{ article.scanNumber }}</span>
         <span>评论数：{{ article.commentNumber }}</span>
@@ -23,8 +24,7 @@
 </template>
 
 <script setup>
-import { gradient } from '/public/js/constant';
-
+import TagList from './TagList.vue';
 const props = defineProps({
   article: Object,
 })
@@ -35,7 +35,7 @@ const props = defineProps({
   width: 100%;
   /* height: 150px; */
   background-color: #fff;
-  box-shadow: 1px 1px 20px rgba(100, 100, 100, .1);
+  /* box-shadow: 1px 1px 20px rgba(100, 100, 100, .1); */
   border-radius: 12px;
   margin-bottom: 15px;
   padding: 18px 20px;
@@ -60,9 +60,7 @@ const props = defineProps({
   line-height: 30px;
   margin-top: 5px;
 }
-.tag-list {
-  overflow: hidden;
-}
+
 
 .article-img {
   width: 200px;
@@ -112,16 +110,5 @@ const props = defineProps({
 }
 
 
-.tag-item {
-  display: inline-block;
-  height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  margin-right: 6px;
-  padding: 0 5px;
-  border-radius: 3px;
-  color: #000;
-  letter-spacing: 1px;
-  font-weight: 600;
-}
+
 </style>
