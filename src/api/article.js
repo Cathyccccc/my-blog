@@ -1,7 +1,12 @@
 import instance from ".";
 
-const getArticleList = (params) => {
-  return instance.get('/article', params)
+const getArticleList = ({page, pageSize} = {page: 1, pageSize: 10}) => {
+  return instance.get('/article', {
+    params: {
+      page,
+      pageSize,
+    }
+  })
 }
 
 const getArticleById = (id) => {

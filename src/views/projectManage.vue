@@ -12,8 +12,8 @@
       </template>
       <template v-else-if="column.key === 'operate'">
         <div class="operate-list">
-          <a @click="editProjectItem(row)">Edit</a>
-          <a @click="deleteProjectItem(row)">Delete</a>
+          <Button type="link" @click="editProjectItem(row)">Edit</Button>
+          <Button type="link" @click="deleteProjectItem(row)">Delete</Button>
         </div>
       </template>
     </template>
@@ -24,6 +24,7 @@
 import {ref, onMounted} from 'vue';
 import Table from '../components/Table.vue';
 import TagList from '../components/TagList.vue';
+import Button from '../components/Button.vue';
 import {getProjectList} from '../api/project';
 
 const columns = [

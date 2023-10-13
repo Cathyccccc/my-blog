@@ -1,9 +1,7 @@
-
-
 <template>
   <div class="article-container">
     <div class="article-list">
-      <ArticleCard v-for="item in articleListRef" :key="item.id" :article="item" @click="$router.push({path: `/articleDetail/${item.id}`, params: {article: item}})"/>
+      <ArticleCard v-for="item in articleListRef" :key="item.id" :article="item" @click="$router.push({path:`/articleDetail/${item.id}`})"/>
     </div>
     <div class="side-list"></div>
   </div>
@@ -13,6 +11,7 @@
 import { ref, onBeforeMount } from 'vue'
 import ArticleCard from '/src/components/ArticleCard.vue';
 import {getArticleList} from '/src/api/article';
+
 const articleListRef = ref([]);
 onBeforeMount(() => {
   getArticleList({page: 1, pageSize: 5}).then((res) => articleListRef.value = res)

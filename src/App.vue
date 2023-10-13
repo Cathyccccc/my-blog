@@ -144,7 +144,7 @@ watch(() => router.currentRoute.value.path, (newVal, oldVal) => {
   if (oldVal === '/login' && newVal === '/article') {
     userInfoRef.value = JSON.parse(localStorage.getItem('userInfo'));
   }
-  console.log(noPaddingList.includes(router.currentRoute.value.path))
+  // console.log(noPaddingList.includes(router.currentRoute.value.path))
   if (noPaddingList.includes(router.currentRoute.value.path)) {
     showPadding.value = false;
   } else {

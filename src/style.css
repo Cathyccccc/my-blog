@@ -59,24 +59,11 @@ label {
   color: #3c3c3c;
 }
 a {
-  text-decoration: none;
   cursor: pointer;
+  color: #72c7ff;
 }
 
-button {
-  border: 1px solid transparent;
-  font-family: inherit;
-  cursor: pointer;
-  padding: 0.4em;
-  border-radius: 3px;
-  outline: none;
-  background-color: #55BBFF;
-  line-height: 1;
-  color: #FFF;
-}
-button:hover {
-  box-shadow: 0 0 2px #55bbff;
-}
+
 
 
 
@@ -95,20 +82,8 @@ button:hover {
     color: #747bff;
   } */
 }
-/* 设置Table表格图片样式 */
-.table-container img {
-  width: 100px;
-}
 /* 设置Table表格操作按钮样式 */
 .table-container .operate-list {
   display: flex;
   column-gap: 5px;
-}
-.table-container a {
-  color: #72c7ff;
-  font-weight: 600;
-  transition: all .3s;
-}
-.table-container a:hover {
-  color: #55BBFF;
 }

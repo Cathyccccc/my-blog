@@ -1,6 +1,9 @@
 <template>
   <table class="table-container" v-if="filteredData.length">
-    <caption>{{ title }}</caption>
+    <caption>
+      <slot name="title">{{ title }}</slot>
+      <div class="action"><slot name="action"></slot></div>
+    </caption>
     <thead>
       <tr>
         <th v-for="key in columns" :key="key" @click="sortBy(key)" :class="{ active: sortKey == key }">
@@ -108,6 +111,7 @@ table {
   background-color: #F7F7F7;
   /* border-collapse: collapse; */
   margin: 5px;
+  position: relative;
 }
 
 caption {
@@ -115,10 +119,16 @@ caption {
   font-size: 20px;
   font-weight: bold;
   text-align: left;
-  padding: 5px 15px;
+  padding: 0 15px;
   box-sizing: border-box;
 }
-
+.action {
+  float: right;
+}
+thead {
+  position: sticky;
+  top: 0;
+}
 th {
   background-color: #eee;
   color: rgba(0, 0, 0, 0.66);
