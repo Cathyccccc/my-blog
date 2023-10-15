@@ -5,11 +5,11 @@
     <span class="create-time">{{ commentObj.createTime }}</span>
     <div class="right">
       <div class="comment">{{ commentObj.commentTxt }}</div>
-      <CommentBox comment-txt="" />
-      <button v-show="!isReplay">回复</button>
+      <Button size="small" v-show="!isReplyRef" @click="replyComment">回复</Button>
+      <CommentBox v-show="isReplyRef" v-model:commentTxt="commentTxtRef" @publish-comment="handlePublishComment" />
     </div>
-    <div class="reply-wrapper" v-if="commentObj.replayArr">
-      <CommentCard is-replay />
+    <div class="reply-wrapper" v-if="commentObj.replyArr">
+      <CommentCard is-reply />
     </div>
   </div>
 </template>
@@ -21,17 +21,34 @@ export default {
 </script>
 
 <script setup>
+import {ref} from 'vue'
 import CommentCard from '../components/CommentCard.vue'
 import CommentBox from './CommentBox.vue';
-
+import Button from './Button.vue';
 const props = defineProps({
-  isReplay: Boolean, // 这里数据不能直接使用Boolean。因为最开始数据为undefined。Boolean(undefined)结果为false
+  // isReply: Boolean,
   commentObj: Object,
 })
 const { commentObj } = props;
+// console.log(props.isReply)
+const isReplyRef = ref(false)
 
 function replyComment() {
+  isReplyRef.value = true
+}
+const commentTxtRef = ref('')
+function handlePublishComment() {
+  console.log('发布评论', commentTxtRef.value)
+  const replyObj = {
 
+  }
+  // 下面这部分应该添加到后台
+  if (commentObj['replyArr']) {
+    commentObj['replyArr'].push({})
+  } else {
+    
+  }
+  // 接口+清空数据
 }
 </script>
 

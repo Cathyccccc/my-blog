@@ -40,7 +40,7 @@ const columns = [
     title: '头像',
   },
   {
-    dataIndex: 'replayNumber',
+    dataIndex: 'replyNumber',
     title: '回复数',
   },
   {
@@ -62,7 +62,7 @@ onMounted(() => {
           ...item,
           title: article.title,
           articleId: article.id,
-          replayNumber: item.replayArr ? item.replayArr.length : 0,
+          replyNumber: item.replyArr ? item.replyArr.length : 0,
         }
       })
     })

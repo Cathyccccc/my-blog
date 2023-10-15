@@ -22,11 +22,12 @@
       </tr>
     </tbody>
   </table>
-  <p v-else>No matches found.</p>
+  <Empty v-else />
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
+import Empty from './Empty.vue';
 
 const props = defineProps({
   data: {

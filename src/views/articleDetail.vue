@@ -32,7 +32,7 @@
         statusbar: false, // 隐藏底部状态栏
         content_css: 'http://127.0.0.1:5173/css/editor.css', // 设置内部样式。规定的6种样式只在classic mode下有效
       }" />
-      <button v-if="true" @click="editArticle">修改文章</button>
+      <Button v-if="true" @click="editArticle">修改文章</Button>
     </div>
     <!-- 评论发布框 -->
     <div class="comment-box">
@@ -40,7 +40,7 @@
     </div>
     <!-- 历史评论列表 -->
     <div class="comment-list-wrapper">
-      <CommentCard :is-replay="false" v-for="(item, index) in article.comments" :key="index" :commentObj="item" />
+      <CommentCard v-for="(item, index) in article.comments" :key="index" :commentObj="item" />
     </div>
   </div>
 </template>
@@ -52,6 +52,7 @@ import { getArticleById } from '/src/api/article';
 import Editor from '@tinymce/tinymce-vue';
 import CommentCard from '../components/CommentCard.vue';
 import CommentBox from '../components/CommentBox.vue';
+import Button from '../components/Button.vue';
 
 const editorTxt = ref('<p>123</p><h1>title</h1><a href="http://www.baidu.com">百度</a>');
 const route = useRoute()

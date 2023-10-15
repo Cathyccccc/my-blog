@@ -36,22 +36,24 @@
       <div class="username">
         <router-link to="/individual">{{ userInfoRef.loginId }}</router-link>
       </div>
-      <button class="operation" @click="controlOperationList">
-        <svg t="1695211863577" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-          p-id="1161" width="20" height="20">
+      <Button class="operation" @click="controlOperationList">
+        <svg :class="{ 'rotate': isShowOperationListRef }" t="1697359298131" class="icon" viewBox="0 0 1024 1024"
+          version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1240" width="20" height="20">
           <path
-            d="M787.2 380.8c-9.6-9.6-22.4-12.8-35.2-12.8l-480 3.2c-12.8 0-25.6 3.2-35.2 12.8-19.2 19.2-19.2 48 0 67.2l240 240c0 0 0 0 0 0 0 0 0 0 0 0 3.2 3.2 9.6 6.4 12.8 9.6 0 0 3.2 3.2 3.2 3.2 16 6.4 38.4 3.2 51.2-9.6l240-243.2C806.4 428.8 803.2 400 787.2 380.8z"
-            p-id="1162" fill="#FFF"></path>
+            d="M755.2 544L390.4 874.666667c-17.066667 14.933333-44.8 14.933333-59.733333-2.133334-6.4-8.533333-10.666667-19.2-10.666667-29.866666v-661.333334c0-23.466667 19.2-42.666667 42.666667-42.666666 10.666667 0 21.333333 4.266667 27.733333 10.666666l362.666667 330.666667c17.066667 14.933333 19.2 42.666667 2.133333 59.733333 2.133333 2.133333 0 2.133333 0 4.266667z"
+            fill="#fff" p-id="1241"></path>
         </svg>
-      </button>
+      </Button>
       <div class="mask"></div>
-      <ul v-show="isShowOperationListRef" class="operation-list" @click="controlOperationList">
-        <li><router-link to="/addArticle">新建文章</router-link></li>
-        <li><router-link to="/articleManage">文章管理</router-link></li>
-        <li><router-link to="/projectManage">项目管理</router-link></li>
-        <li><router-link to="/commentManage">评论管理</router-link></li>
-        <li><router-link to="/tagManage">标签管理</router-link></li>
-      </ul>
+      <Transition>
+        <ul v-show="isShowOperationListRef" class="operation-list" @click="controlOperationList">
+          <li><router-link to="/addArticle">新建文章</router-link></li>
+          <li><router-link to="/articleManage">文章管理</router-link></li>
+          <li><router-link to="/projectManage">项目管理</router-link></li>
+          <li><router-link to="/commentManage">评论管理</router-link></li>
+          <li><router-link to="/tagManage">标签管理</router-link></li>
+        </ul>
+      </Transition>
     </div>
   </nav>
   <!-- 主内容区 -->
@@ -65,6 +67,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useRouter, useLink, useRoute } from 'vue-router';
 import { getArticleList } from './api/article';
 import { getProjectList } from './api/project';
+import Button from './components/Button.vue';
 // import {stretchWater, shrinkWater} from './utils/index';
 
 const userInfoRef = ref(null);
@@ -303,8 +306,21 @@ function controlOperationList() {
   border-radius: 50%;
 }
 
+.operation {
+  background-color: #55BBFF;
+  border: none;
+  margin: 3px 0;
+}
+
+.operation svg {
+  transition: all .3s;
+}
+
+.rotate {
+  transform: rotateZ(90deg);
+}
+
 .username {
-  margin-right: 20px;
   font-size: 18px;
 }
 
@@ -315,12 +331,13 @@ function controlOperationList() {
 }
 
 .operation-list {
+  height: 210px;
+  box-sizing: border-box;
   position: absolute;
   top: 60px;
   right: 0px;
   background: #55BBFF;
   margin: 0;
-  padding: 0;
   padding-bottom: 10px;
   z-index: 101;
   border-bottom-left-radius: 5px;
@@ -351,7 +368,17 @@ li {
   overflow-y: auto;
   scroll-behavior: smooth;
 }
+
 .has-padding {
   padding: 0 10%;
+}
+.v-enter-active, v-leave-active {
+  transition: all .3s;
+}
+.v-enter-from, v-leave-to {
+  height: 0;
+}
+.v-enter-to, v-leave-from {
+  height: 210px;
 }
 </style>

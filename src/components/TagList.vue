@@ -16,6 +16,7 @@ const props = defineProps({
 <style scoped>
 .tag-list {
   overflow: hidden;
+  display: inline-block;
 }
 .tag-item {
   display: inline-block;

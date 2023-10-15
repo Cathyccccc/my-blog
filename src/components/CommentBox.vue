@@ -1,25 +1,21 @@
 <template>
-  <textarea :value="commentTxt" maxlength="200" rows="10" placeholder="write down your points ..." @input="$emit('changeCommentTxt', e.target.value)" />
-  <span class="comment-length">{{ commentTxt.length }}/200</span>
-  <button @click="publishComment">发布</button>
+  <div>
+    <textarea :value="commentTxt" maxlength="200" rows="10" placeholder="write down your points ..."
+      @change="$emit('update:commentTxt', $event.target.value)" />
+    <span class="comment-length">{{ commentTxt.length }}/200</span>
+    <Button type="primary" size="small" @click="publishComment">发布</Button>
+  </div>
 </template>
 
 <script setup>
+import Button from './Button.vue';
 const props = defineProps({
   commentTxt: String,
 })
-const {commentTxt} = props;
-const emit = defineEmits({
-  changeCommentTxt(commentTxt) {
-    return Boolean(commentTxt);
-  },
-  publishComment(commentTxt) {
-    return Boolean(commentTxt);
-  }
-})
+const emit = defineEmits(['update:commentTxt', 'publishComment'])
 function publishComment() {
-  if (!commentTxt) return;
-  emit('publishComment', commentTxt);
+  if (!props.commentTxt) return; // 这里commentTxt不能解构使用，否则失去响应性，就是初始状态（空字符串）
+  emit('publishComment')
 }
 </script>
 
@@ -56,9 +52,5 @@ textarea:-ms-input-placeholder {
   bottom: 45px;
   color: #ccc;
   font-size: 14px;
-}
-
-button {
-  transform: translateY(-20px);
 }
 </style>

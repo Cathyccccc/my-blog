@@ -23,5 +23,7 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  gap: 20px 30px;
+  margin-top: 20px;
 }
 </style>

@@ -15,12 +15,15 @@ const props = defineProps({
 
 <style scoped>
 .project-card-container {
-  width: 300px;
+  /* width: 300px; */
   height: 220px;
+  /* flex-grow: 1; */
+  flex: initial;
   border-radius: 10px;
+  background-color: #fff;
   overflow: hidden;
   position: relative;
-  margin: 20px;
+  /* margin: 20px; */
   transition: all .5s;
 }
 .project-card-container:hover {

@@ -61,7 +61,7 @@
       }" />
     </div>
     <div class="form-item">
-      <button @click="publishArticle">发布文章</button>
+      <Button type="primary" @click="publishArticle">发布文章</Button>
     </div>
   </div>
 </template>
@@ -72,6 +72,7 @@ import { useRoute } from 'vue-router';
 import Editor from '@tinymce/tinymce-vue';
 import { getTagList } from '../api/tag';
 import Select from '../components/Select.vue';
+import Button from '../components/Button.vue';
 const route = useRoute()
 
 // 获取标签列表数据

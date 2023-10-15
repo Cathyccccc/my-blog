@@ -1,9 +1,9 @@
 <template>
-  <div class="btn-container">
+  <!-- <div class="btn-container"> -->
     <button :class="[type, shape, size]" v-bind="$attrs">
       <slot></slot>
     </button>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script setup>
@@ -23,9 +23,6 @@ const props = defineProps({
 </script>
 
 <style scoped>
-.btn-container {
-  display: inline-block;
-}
 button {
   cursor: pointer;
   outline: none;

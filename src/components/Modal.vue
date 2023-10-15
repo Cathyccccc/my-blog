@@ -1,19 +1,21 @@
 <template>
-  <div class="modal-container">
-    <div class="mask" :style="{ display: activeDisplay }"></div>
-    <div class="modal" tabindex="-1">
-      <div class="modal-content">
-        <div class="title">{{ $attrs.title }}</div>
-        <div class="content">
-          <slot></slot>
-        </div>
-        <div class="footer">
-          <Button @click="handleCancel">{{ cancelText }}</Button>
-          <Button type="primary" @click="handleOk">{{ okText }}</Button>
+  <Transition>
+    <div class="modal-container" v-if="open">
+      <div class="mask"></div>
+      <div class="modal" tabindex="-1">
+        <div class="modal-content">
+          <div class="title">{{ $attrs.title }}</div>
+          <div class="content">
+            <slot></slot>
+          </div>
+          <div class="footer">
+            <Button @click="handleCancel">{{ cancelText }}</Button>
+            <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup>
@@ -24,7 +26,7 @@ const props = defineProps({
     default: false,
   },
   okText: {
-    type:String,
+    type: String,
     default: 'Ok'
   },
   cancelText: {
@@ -32,8 +34,6 @@ const props = defineProps({
     default: 'Cancel'
   },
 })
-const activeDisplay = props.open ? 'block' : 'none';
-console.log(props)
 const emits = defineEmits(['onCancel', 'onOk', 'update:open'])
 function handleBlur() {
   console.log('失焦')
@@ -43,15 +43,11 @@ function handleCancel() {
   emits('update:open', false)
   emits('onCancel')
 }
-// 点击ok按钮
-function handleOk() {
-  emits('onOk')
-}
 </script>
 
 <style scoped>
-.mask, .modal {
-  display: none;
+.mask,
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -59,13 +55,16 @@ function handleOk() {
   bottom: 0;
   z-index: 1000;
 }
+
 .mask {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.45);
 }
+
 .modal {
   overflow: auto;
 }
+
 .modal-content {
   background-color: #fff;
   border-radius: 10px;
@@ -77,18 +76,58 @@ function handleOk() {
   scroll-behavior: smooth;
   font-size: 14px;
 }
+
 .title {
   line-height: 2;
   font-weight: 600;
   font-size: 16px;
 }
+
 .content {
   margin: 10px 0;
 }
+
 .footer {
   margin-top: 10px;
   display: flex;
   justify-content: flex-end;
   column-gap: 8px;
+}
+
+/* transition动画 */
+.v-enter-active,
+.v-leave-active {
+  transition: all .3s;
+}
+.v-enter-active .modal-content {
+  animation: bounce-in 0.3s;
+}
+
+.v-leave-active .modal-content {
+  animation: bounce-in .3s reverse forwards;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+.v-enter-active .mask {
+  animation: show-in 0.3s;
+}
+.v-leave-active .mask {
+  animation: show-in 0.3s reverse forwards;
+}
+@keyframes show-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
