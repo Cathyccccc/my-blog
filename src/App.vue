@@ -372,13 +372,15 @@ li {
 .has-padding {
   padding: 0 10%;
 }
-.v-enter-active, v-leave-active {
+.v-enter-active, .v-leave-active {
   transition: all .3s;
 }
-.v-enter-from, v-leave-to {
+.v-enter-from, .v-leave-to {
   height: 0;
+  opacity: 0;
 }
-.v-enter-to, v-leave-from {
+.v-enter-to, .v-leave-from {
   height: 210px;
+  opacity: 1;
 }
 </style>

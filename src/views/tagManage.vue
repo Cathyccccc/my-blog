@@ -79,6 +79,7 @@ function handleDelete(row) {
 // 新增标签
 const tagNameRef = ref('');
 function addTagItem() {
+  console.log(tagNameRef.value)
   if (tagNameRef.value === '') return; // 表单验证
   console.log('新增标签', tagNameRef.value)
   visibleAddRef.value = false;

@@ -1,8 +1,8 @@
 <template>
-  <Loading v-if="dataSourceRef" />
-  <Table title="项目管理" :columns="columns" :data="dataSourceRef">
+  <Loading v-if="loadingRef" class="loading" />
+  <Table v-else title="项目管理" :columns="columns" :data="dataSourceRef">
     <template #action>
-      <Button @click="visibleAddRef = true">新增项目</Button>
+      <Button @click="handleModalOpen('add')">新增项目</Button>
     </template>
     <template #bodyCell="{column, row}">
       <template v-if="column.key === 'cover'">
@@ -16,23 +16,35 @@
       </template>
       <template v-else-if="column.key === 'operate'">
         <div class="operate-list">
-          <Button type="link" @click="editProjectItem(row)">Edit</Button>
-          <Button type="link" @click="deleteProjectItem(row)">Delete</Button>
+          <Button type="link" @click="handleModalOpen('edit', row)">Edit</Button>
+          <Button type="link" @click="handleDelete(row)">Delete</Button>
         </div>
       </template>
     </template>
   </Table>
-  <Modal>
+  <Modal
+    v-model:open="visibleRef"
+    :title="statusRef === 'add' ? '新增项目' : '修改项目'"
+    @on-ok="addProjectItem"
+  >
     <FormItem label="项目名称" name="project_name">
       <Input></Input>
     </FormItem>
-    <FormItem label="封面" name="cover"></FormItem>
+    <FormItem label="封面" name="cover">
+      <Upload v-model:file-list="fileListRef" @change="handleChange" />
+    </FormItem>
     <FormItem label="链接地址" name="project_url">
       <Input />
     </FormItem>
     <FormItem label="相关技术" name="technology">
       <Select />
     </FormItem>
+    <FormItem label="项目介绍" name="introduction">
+      <Textarea v-model:value.trim="projectRef.introduction" />
+    </FormItem>
+  </Modal>
+  <Modal v-model:open="visibleDeleteRef" title="删除项目" @on-ok="deleteProjectItem">
+    确认删除项目【{{deleteTagRef.project_name}}】吗？
   </Modal>
 </template>
 
@@ -45,6 +57,9 @@ import Loading from '../components/Loading.vue';
 import FormItem from '../components/FormItem.vue';
 import Input from '../components/Input.vue';
 import Select from '../components/Select.vue';
+import Modal from '../components/Modal.vue';
+import Upload from '../components/Upload.vue';
+import Textarea from '../components/Textarea.vue';
 import {getProjectList} from '../api/project';
 
 const columns = [
@@ -86,16 +101,47 @@ const columns = [
   }
 ]
 const dataSourceRef = ref([]);
+const loadingRef = ref(false);
 onMounted(() => {
+  loadingRef.value = true;
   getProjectList().then((res) => {
     dataSourceRef.value = res;
+    loadingRef.value = false;
   })
 })
-const visibleAddRef = ref(false);
+const projectRef = ref({
+  project_name: '',
+  cover: '',
+  project_url: '',
+  technology: [],
+  introduction: '',
+  finish_date: '',
+})
+const visibleDeleteRef = ref(false);
 const visibleRef = ref(false);
+const statusRef = ref('add');
 const tagRef = ref();
+// 打开弹窗
+function handleModalOpen(status, tag) {
+  visibleRef.value = true;
+  statusRef.value = status;
+  if (status === 'edit') {
+    tagRef.value = tag;
+  }
+}
+const deleteTagRef = ref();
+function handleDelete(tag) {
+  deleteTagRef.value = tag;
+}
+// Upload
+const fileListRef = ref([]);
+function handleChange() {
+  console.log(fileListRef.value)
+}
 // 新增项目
-function addProjectItem() {}
+function addProjectItem() {
+  console.log('新增项目', projectRef.value)
+}
 // 修改项目
 function editProjectItem(project) {
   console.log('修改项目', project)
@@ -107,5 +153,10 @@ function deleteProjectItem(project) {
 </script>
 
 <style scoped>
-
+.loading {
+  position: relative;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
+}
 </style>
