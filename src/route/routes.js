@@ -47,7 +47,7 @@ const routes = [
   { path: '/articleDetail/:id', component: ArticleDetail },
   { path: '/login', component: Login },
   { path: '/addArticle', component: AddArticle },
-  { path: '/editArticle', component: AddArticle },
+  { path: '/editArticle/:id', component: AddArticle },
   { path: '/articleManage', component: ArticleManage },
   { path: '/projectManage', component: ProjectManage },
   { path: '/commentManage', component: CommentManage },

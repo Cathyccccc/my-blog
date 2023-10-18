@@ -12,14 +12,14 @@
       </template>
       <template v-else-if="column.key === 'operate'">
         <div class="operate-list">
-          <Button type="link" @click="$router.push({ path: '/editArticle', params: {articleObj: row}})">Edit</Button>
+          <Button type="link" @click="$router.push({ path: `/editArticle/${row.id}`})">Edit</Button>
           <Button type="link" @click="handleModalOpen(row)">Delete</Button>
         </div>
       </template>
     </template>
   </Table>
-  <Modal>
-
+  <Modal v-model:open="visibleRef" title="删除文章" @on-ok="deleteArticleItem">
+    确认删除标题为【{{ articleRef.title }}】的文章吗？
   </Modal>
 </template>
 
@@ -80,16 +80,16 @@ onMounted(async() => {
   tagListRef.value = await getTagList();
 })
 const visibleRef = ref(false);
-function handleModalOpen() {
+const articleRef = ref();
+function handleModalOpen(article) {
   visibleRef.value = true;
-}
-// 修改文章
-function editArticleItem() {
-  console.log('修改文章', articleRef.value)
+  articleRef.value = article;
 }
 // 删除文章
-function deleteArticleItem(article) {
-  console.log(article)
+function deleteArticleItem() {
+  console.log('删除文章', articleRef.value);
+  // 删除接口调用
+  visibleRef.value = false;
 }
 </script>
 
