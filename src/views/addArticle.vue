@@ -10,11 +10,7 @@
     </div>
     <div class="form-item">
       <label for="title">文章分类</label>
-      <!-- 这里有个问题：失焦的两种情况不能同时？？？ -->
-      <Select :list-data="tagListRef" @change-select="onChangeSelect" />
-      <!-- <select id="tag-select" multiple>
-        <option v-for="item in articleObjRef.tags" :key="item.id" :value="item.tag_name">{{ item.tag_name }}</option>
-      </select> -->
+      <Select v-model:value="articleObjRef.tags" :options="tagListRef" mode="multiple" />
     </div>
     <div class="form-item">
       <label for="content">文章内容</label>
@@ -55,25 +51,10 @@ import { getTagList } from '../api/tag';
 import Select from '../components/Select.vue';
 import Button from '../components/Button.vue';
 import Upload from '../components/Upload.vue';
-const route = useRoute()
+import { getBase64 } from '../utils/encode';
 
-// 获取标签列表数据
-const tagListRef = ref([])
-onBeforeMount(() => {
-  getTagList().then((res) => {
-    tagListRef.value = res.map((item) => {
-      return { id: item.id, value: item.tag_name, selected: false }
-    });
-  })
-})
-
-
-// 添加选中标签
-function onChangeSelect(id, selected) {
-  const index = tagListRef.value.findIndex(item => item.id === id)
-  tagListRef.value[index].selected = !selected;
-  articleObjRef.value.tags = tagListRef.value.filter(item => item.selected)
-}
+const route = useRoute();
+console.log(route)
 
 const articleObjRef = ref({
   title: '',
@@ -81,16 +62,21 @@ const articleObjRef = ref({
   coverImg: '',
   tags: [],
 });
+// 获取标签列表数据
+const tagListRef = ref([])
+onBeforeMount(() => {
+  getTagList().then((res) => {
+    tagListRef.value = res.map((item) => {
+      return { value: item.id, label: item.tag_name, selected: false }
+    });
+  })
+})
 // 处理文件列表
 const fileListRef = ref([]);
 function handleFilesChange() {
   console.log('处理所有file', fileListRef.value)
   if (fileListRef.value.length > 0) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      articleObjRef.value.coverImg = e.target.result;
-    }
-    reader.readAsDataURL(fileListRef.value[0])
+    articleObjRef.value.coverImg = getBase64(fileListRef.value)
   } else {
     articleObjRef.value.coverImg = '';
   }
@@ -104,7 +90,6 @@ function publishArticle() {
   // 发布文章接口调用
   // 清空表单
 }
-
 </script>
 
 <style scoped>
@@ -137,8 +122,4 @@ input[type="text"] {
   color: #616161;
 }
 
-
-/* #content {
-  z-index: 1;
-} */
 </style>

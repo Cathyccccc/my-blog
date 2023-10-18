@@ -47,7 +47,6 @@
       <div class="mask"></div>
       <Transition>
         <ul v-show="isShowOperationListRef" class="operation-list" @click="controlOperationList">
-          <li><router-link to="/addArticle">新建文章</router-link></li>
           <li><router-link to="/articleManage">文章管理</router-link></li>
           <li><router-link to="/projectManage">项目管理</router-link></li>
           <li><router-link to="/commentManage">评论管理</router-link></li>
@@ -331,7 +330,6 @@ function controlOperationList() {
 }
 
 .operation-list {
-  height: 210px;
   box-sizing: border-box;
   position: absolute;
   top: 60px;
@@ -372,15 +370,25 @@ li {
 .has-padding {
   padding: 0 10%;
 }
-.v-enter-active, .v-leave-active {
-  transition: all .3s;
+.v-enter-active {
+  animation: toggle .15s;
+  transform-origin: 0 -5px;
 }
-.v-enter-from, .v-leave-to {
-  height: 0;
-  opacity: 0;
+
+.v-leave-active {
+  animation: toggle .15s reverse;
+  transform-origin: 0 -5px;
 }
-.v-enter-to, .v-leave-from {
-  height: 210px;
-  opacity: 1;
+
+@keyframes toggle {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 </style>

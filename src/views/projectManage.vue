@@ -4,7 +4,7 @@
     <template #action>
       <Button @click="handleModalOpen('add')">新增项目</Button>
     </template>
-    <template #bodyCell="{column, row}">
+    <template #bodyCell="{ column, row }">
       <template v-if="column.key === 'cover'">
         <img :src="row.cover" width="100">
       </template>
@@ -22,34 +22,34 @@
       </template>
     </template>
   </Table>
-  <Modal
-    v-model:open="visibleRef"
-    :title="statusRef === 'add' ? '新增项目' : '修改项目'"
-    @on-ok="addProjectItem"
-  >
+  <Modal v-model:open="visibleRef" :title="statusRef === 'add' ? '新增项目' : '修改项目'" @on-ok="handleOk">
     <FormItem label="项目名称" name="project_name">
-      <Input></Input>
+      <Input v-model:value="projectRef.project_name" />
     </FormItem>
     <FormItem label="封面" name="cover">
+      <!-- 待修改v-model -->
       <Upload v-model:file-list="fileListRef" @change="handleChange" />
     </FormItem>
     <FormItem label="链接地址" name="project_url">
-      <Input />
+      <Input v-model:value="projectRef.project_url" />
     </FormItem>
     <FormItem label="相关技术" name="technology">
-      <Select />
+      <Select v-model:value="projectRef.technology" :options="tagListRef" mode="multiple" />
+    </FormItem>
+    <FormItem label="完成时间" name="finish_date">
+      <!-- 手写DatePicker -->
     </FormItem>
     <FormItem label="项目介绍" name="introduction">
-      <Textarea v-model:value.trim="projectRef.introduction" />
+      <Textarea v-model:value.trim="projectRef.introduction" rows="5" />
     </FormItem>
   </Modal>
   <Modal v-model:open="visibleDeleteRef" title="删除项目" @on-ok="deleteProjectItem">
-    确认删除项目【{{deleteTagRef.project_name}}】吗？
+    确认删除项目【{{ deleteProjectRef.project_name }}】吗？
   </Modal>
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import Table from '../components/Table.vue';
 import TagList from '../components/TagList.vue';
 import Button from '../components/Button.vue';
@@ -60,7 +60,10 @@ import Select from '../components/Select.vue';
 import Modal from '../components/Modal.vue';
 import Upload from '../components/Upload.vue';
 import Textarea from '../components/Textarea.vue';
-import {getProjectList} from '../api/project';
+import { getProjectList } from '../api/project';
+import { getTagList } from '../api/tag';
+import { getDate } from '../utils/date';
+import { getBase64 } from '../utils/encode';
 
 const columns = [
   {
@@ -101,13 +104,14 @@ const columns = [
   }
 ]
 const dataSourceRef = ref([]);
+const tagListRef = ref([]);
 const loadingRef = ref(false);
-onMounted(() => {
+onMounted(async () => {
   loadingRef.value = true;
-  getProjectList().then((res) => {
-    dataSourceRef.value = res;
-    loadingRef.value = false;
-  })
+  dataSourceRef.value = await getProjectList();
+  const tagList = await getTagList();
+  tagListRef.value = tagList.map(item => ({ value: item.id, label: item.tag_name }))
+  loadingRef.value = false;
 })
 const projectRef = ref({
   project_name: '',
@@ -120,35 +124,56 @@ const projectRef = ref({
 const visibleDeleteRef = ref(false);
 const visibleRef = ref(false);
 const statusRef = ref('add');
-const tagRef = ref();
-// 打开弹窗
-function handleModalOpen(status, tag) {
+// 打开add和edit弹窗
+function handleModalOpen(status, projectObj) {
   visibleRef.value = true;
   statusRef.value = status;
   if (status === 'edit') {
-    tagRef.value = tag;
+    projectRef.value = projectObj;
+  } else if(status === 'add') {
+    projectRef.value = {
+      project_name: '',
+      cover: '',
+      project_url: '',
+      technology: [],
+      introduction: '',
+      finish_date: '',
+    }
   }
 }
-const deleteTagRef = ref();
-function handleDelete(tag) {
-  deleteTagRef.value = tag;
+// 打开delete弹窗
+const deleteProjectRef = ref();
+function handleDelete(projectObj) {
+  visibleDeleteRef.value = true;
+  deleteProjectRef.value = projectObj;
 }
-// Upload
+// Upload上传图片
+// 待修改v-model
 const fileListRef = ref([]);
 function handleChange() {
-  console.log(fileListRef.value)
+  // 处理上传的图片
+  projectRef.value.cover = getBase64(fileListRef.value);
 }
 // 新增项目
 function addProjectItem() {
+  const finish_date = getDate();
+  projectRef.value.finish_date = finish_date;
   console.log('新增项目', projectRef.value)
 }
 // 修改项目
-function editProjectItem(project) {
-  console.log('修改项目', project)
+function editProjectItem() {
+  console.log('修改项目', projectRef.value)
 }
 // 删除项目
-function deleteProjectItem(project) {
-  console.log('删除项目', project)
+function deleteProjectItem() {
+  console.log('删除项目', deleteProjectRef.value)
+}
+function handleOk() {
+  if (statusRef.value === 'add') {
+    addProjectItem()
+  } else if (statusRef.value === 'edit') {
+    editProjectItem();
+  }
 }
 </script>
 

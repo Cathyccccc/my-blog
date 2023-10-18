@@ -16,12 +16,14 @@ defineEmits(['update:value'])
 textarea {
   width: 100%;
   box-sizing: border-box;
-  border: none;
   outline: none;
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 5px;
   resize: none;
   border: 1px solid #eee;
+  font: inherit;
+  font-size: 14px;
+  color: #3c3c3c;
 }
 
 textarea::placeholder {
@@ -37,6 +39,10 @@ textarea:-moz-placeholder {
 textarea:-ms-input-placeholder {
   color: #55BBFF;
   font-weight: 600;
+}
+
+textarea:focus {
+  border-color: #55BBFF;
 }
 
 .comment-length {

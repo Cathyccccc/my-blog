@@ -1,5 +1,8 @@
 <template>
   <Table :columns="columns" :data="dataSourceRef" title="文章管理">
+    <template #action>
+      <Button @click="$router.push('/addArticle')">新增文章</Button>
+    </template>
     <template #bodyCell="{ column, row }">
       <template v-if="column.key === 'coverImg'">
         <img :src="row.coverImg" />
@@ -9,12 +12,15 @@
       </template>
       <template v-else-if="column.key === 'operate'">
         <div class="operate-list">
-          <Button type="link" @click="editArticleItem(row)">Edit</Button>
-          <Button type="link" @click="deleteArticleItem(row)">Delete</Button>
+          <Button type="link" @click="$router.push({ path: '/editArticle', params: {articleObj: row}})">Edit</Button>
+          <Button type="link" @click="handleModalOpen(row)">Delete</Button>
         </div>
       </template>
     </template>
   </Table>
+  <Modal>
+
+  </Modal>
 </template>
 
 <script setup>
@@ -22,7 +28,10 @@ import { onMounted, ref } from 'vue';
 import Table from '../components/Table.vue';
 import TagList from '../components/TagList.vue';
 import Button from '../components/Button.vue';
+import Loading from '../components/Loading.vue';
+import Modal from '../components/Modal.vue';
 import { getArticleList } from '../api/article';
+import { getTagList } from '../api/tag';
 
 const columns = [
   {
@@ -63,14 +72,20 @@ const columns = [
   }
 ]
 const dataSourceRef = ref([]);
-onMounted(() => {
-  getArticleList({ page: 1, pageSize: 10 }).then((res) => {
-    dataSourceRef.value = res;
-  })
+const loadingRef = ref(false);
+const tagListRef = ref([]);
+onMounted(async() => {
+  loadingRef.value = true;
+  dataSourceRef.value = await getArticleList({ page: 1, pageSize: 10 });
+  tagListRef.value = await getTagList();
 })
+const visibleRef = ref(false);
+function handleModalOpen() {
+  visibleRef.value = true;
+}
 // 修改文章
-function editArticleItem(article) {
-  console.log('修改文章', article)
+function editArticleItem() {
+  console.log('修改文章', articleRef.value)
 }
 // 删除文章
 function deleteArticleItem(article) {

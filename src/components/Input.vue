@@ -1,9 +1,15 @@
 <template>
-  <input>
+  <input :value="value" @input="$emit('update:value', $event.target.value)">
 </template>
 
 <script setup>
-
+const props = defineProps({
+  value: {
+    type: String,
+    default: '',
+  }
+})
+defineEmits(['update:value']);
 </script>
 
 <style scoped>
