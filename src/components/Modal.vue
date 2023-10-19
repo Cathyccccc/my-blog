@@ -81,6 +81,7 @@ function handleCancel() {
   line-height: 2;
   font-weight: 600;
   font-size: 16px;
+  color: #55BBFF;
 }
 
 .content {

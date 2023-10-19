@@ -34,7 +34,9 @@
             content_css: 'http://127.0.0.1:5173/css/editor.css', // 设置内部样式。规定的6种样式只在classic mode下有效
           }" />
       </FormItem>
-      <Button type="primary" @click="publishArticle">发布文章</Button>
+      <FormItem>
+        <Button type="primary" @click="publishArticle">发布文章</Button>
+      </FormItem>
     </Form>
   </div>
 </template>

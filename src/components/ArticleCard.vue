@@ -1,25 +1,21 @@
 <template>
   <div class="article-card">
-    <div class="card-top">
-      <div class="article-img">
-        <img :src="article.coverImg" alt="" >
+    <div class="article-img">
+      <img :src="article.coverImg" alt="">
+    </div>
+    <div class="article-content">
+      <div class="content-top">
+        <h3 class="title">{{ article.title }}</h3>
+        <div class="description">{{ article.content.slice(0, 90) + '...' }}</div>
       </div>
-      <div class="article-content">
-        <h3 class="title">{{article.title}}</h3>
-        <div class="description">{{article.content}}</div>
+      <div class="content-bottom">
+        <TagList :tag-list-data="article.tags" />
+        <div class="numbers">
+          <span>浏览数：{{ article.scanNumber > 99 ? '99+' : article.scanNumber }}</span>
+          <span>评论数：{{ article.commentNumber > 99 ? '99+' : article.commentNumber }}</span>
+        </div>
       </div>
     </div>
-    <div class="card-bottom">
-      <TagList :tag-list-data="article.tags" />
-      <!-- <div class="tag-list">
-        <span class="tag-item" v-for="(t, index) in article.tags" :key="t" :style="{backgroundColor: gradient[index]}">{{ t }}</span>
-      </div> -->
-      <div class="numbers">
-        <span>浏览数：{{ article.scanNumber }}</span>
-        <span>评论数：{{ article.commentNumber }}</span>
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -42,20 +38,17 @@ const props = defineProps({
   box-sizing: border-box;
   transition: all .5s;
   cursor: pointer;
+  display: flex;
 }
 
 .article-card:hover {
   /* transform: scale(1.005); */
-  box-shadow: 1px 2px 30px rgba(50, 50, 50, .2);
+  box-shadow: 1px 2px 30px rgba(150, 150, 150, .2);
 }
 
-.card-top,
-.card-bottom {
+.content-bottom {
   display: flex;
   justify-content: space-between;
-}
-
-.card-bottom {
   height: 30px;
   line-height: 30px;
   margin-top: 5px;
@@ -63,11 +56,12 @@ const props = defineProps({
 
 
 .article-img {
-  width: 200px;
-  height: 115px;
+  width: 240px;
+  height: 140px;
   background: #ddd;
   border-radius: 10px;
 }
+
 .article-img img {
   border-radius: 10px;
 }
@@ -87,17 +81,18 @@ const props = defineProps({
   font-weight: 600;
   margin: 0;
 }
+
 .article-content .description {
-  height: 75px;
+  height: 65px;
   font-size: 14px;
   overflow: hidden;
-  line-height: 25px;
+  line-height: 22px;
   letter-spacing: 0.05em;
 }
 
 .numbers {
-  display: flex;
   color: #888;
+  overflow: hidden;
 }
 
 .numbers span {
@@ -108,7 +103,4 @@ const props = defineProps({
 .numbers span:first-child {
   margin-right: 15px;
 }
-
-
-
 </style>

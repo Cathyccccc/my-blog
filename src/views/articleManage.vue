@@ -1,5 +1,6 @@
 <template>
-  <Table :columns="columns" :data="dataSourceRef" title="文章管理">
+  <Loading v-if="loadingRef" class="loading" />
+  <Table v-else :columns="columns" :data="dataSourceRef" title="文章管理">
     <template #action>
       <Button @click="$router.push('/addArticle')">新增文章</Button>
     </template>
@@ -78,6 +79,7 @@ onMounted(async() => {
   loadingRef.value = true;
   dataSourceRef.value = await getArticleList({ page: 1, pageSize: 10 });
   tagListRef.value = await getTagList();
+  loadingRef.value = false;
 })
 const visibleRef = ref(false);
 const articleRef = ref();
@@ -96,5 +98,11 @@ function deleteArticleItem() {
 <style scoped>
 img {
   width: 100px;
+}
+.loading {
+  position: relative;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
 }
 </style>
