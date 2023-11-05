@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: 'https://mock.apifox.cn/m1/3317083-0-default',
-  timeout: 1000,
+  baseURL: 'http://localhost:3000/',
+  timeout: 50000,
+  withCredentials: true,
 })
+
+instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 
 instance.interceptors.request.use((config) => {
@@ -13,7 +16,12 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use((resp) => {
   // console.log(resp)
-  return resp.data;
+  if(resp.data.success) {
+    return resp.data.data;
+  }else {
+    console.log(resp.data)
+  }
+  
 }, (err) => console.log(err))
 
 export default instance;

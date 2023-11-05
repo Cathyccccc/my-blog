@@ -35,7 +35,7 @@ const emits = defineEmits(['change', 'update:fileList']);
 const vImg = {
   beforeMount(el, binding, vnode, prevVnode) {
     // console.log(el, binding, vnode, prevVnode)
-    console.log(binding.value)
+    // console.log(binding.value)
     showSelectFile(binding.value, el)
   },
   // beforeUpdate(el, binding) {

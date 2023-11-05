@@ -19,6 +19,7 @@
 <style scoped>
 .empty-container {
   text-align: center;
+  background-color: #fff;
 }
 .content {
   color: #8f8f8f;

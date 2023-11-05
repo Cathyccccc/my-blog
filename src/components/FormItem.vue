@@ -9,10 +9,6 @@
 import { inject } from 'vue';
 const wrapperCol = inject('wrapperCol');
 const labelCol = inject('labelCol');
-const props = defineProps({
-  wrapperCol: Object,
-  labelCol: Object,
-})
 
 
 </script>

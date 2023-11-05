@@ -6,10 +6,10 @@
     </template>
     <template #bodyCell="{ column, row }">
       <template v-if="column.key === 'coverImg'">
-        <img :src="row.coverImg" />
+        <img :src="'http://localhost:3000/static/'+row.coverImg" />
       </template>
-      <template v-else-if="column.key === 'tags'">
-        <TagList v-if="column" :tag-list-data="row.tags" />
+      <template v-else-if="column.key === 'tag'">
+        <TagList v-if="column" :tag-list-data="row.tag" />
       </template>
       <template v-else-if="column.key === 'operate'">
         <div class="operate-list">
@@ -31,7 +31,7 @@ import TagList from '../components/TagList.vue';
 import Button from '../components/Button.vue';
 import Loading from '../components/Loading.vue';
 import Modal from '../components/Modal.vue';
-import { getArticleList } from '../api/article';
+import { getArticleList, deleteArticle } from '../api/article';
 import { getTagList } from '../api/tag';
 
 const columns = [
@@ -50,8 +50,8 @@ const columns = [
     title: '文章封面',
   },
   {
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'tag',
+    dataIndex: 'tag',
     title: '文章分类'
   },
   {
@@ -77,10 +77,14 @@ const loadingRef = ref(false);
 const tagListRef = ref([]);
 onMounted(async() => {
   loadingRef.value = true;
-  dataSourceRef.value = await getArticleList({ page: 1, pageSize: 10 });
+  await fetchData();
   tagListRef.value = await getTagList();
   loadingRef.value = false;
 })
+async function fetchData() {
+  const result = await getArticleList({ page: 1, pageSize: 10 });
+  dataSourceRef.value = result.list;
+}
 const visibleRef = ref(false);
 const articleRef = ref();
 function handleModalOpen(article) {
@@ -88,10 +92,12 @@ function handleModalOpen(article) {
   articleRef.value = article;
 }
 // 删除文章
-function deleteArticleItem() {
-  console.log('删除文章', articleRef.value);
-  // 删除接口调用
+async function deleteArticleItem() {
   visibleRef.value = false;
+  loadingRef.value = true;
+  await deleteArticle(articleRef.value.id);
+  await fetchData();
+  loadingRef.value = false;
 }
 </script>
 

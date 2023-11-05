@@ -22,7 +22,7 @@ onMounted(() => {
 .project-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   gap: 20px 30px;
   margin-top: 20px;
 }

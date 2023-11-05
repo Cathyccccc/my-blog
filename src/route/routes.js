@@ -40,7 +40,7 @@ import TagManage from '../views/TagManage.vue';
 }
 
 const routes = [
-  { path: '/article', component: Article },
+  { path: '/article', name: '/article', component: Article },
   { path: '/project', component: Project },
   { path: '/individual', component: Individual },
   { path: '/', component: Home },

@@ -11,9 +11,11 @@
     </template>
   </Table>
   <Modal v-model:open="visibleAddRef" title="新增标签" @on-ok="addTagItem">
-    <FormItem label="标签名称" name="tag_name">
-      <Input v-model.trim="tagNameRef" />
-    </FormItem>
+    <Form :wrapper-col="{span: 21}" :label-col="{span: 3}">
+      <FormItem label="标签名称" name="tag_name">
+        <Input v-model:value.trim="tagNameRef" />
+      </FormItem>
+    </Form>
   </Modal>
   <Modal v-model:open="visibleDeleteRef" title="删除标签" @on-ok="deleteTagItem">
     确认删除标签
@@ -27,11 +29,12 @@ import { onMounted, ref } from 'vue'
 import Table from '../components/Table.vue';
 import Button from '../components/Button.vue';
 import Modal from '../components/Modal.vue';
+import Form from '../components/Form.vue';
 import FormItem from '../components/FormItem.vue';
 import Input from '../components/Input.vue';
 import Loading from '../components/Loading.vue';
 import TagList from '../components/TagList.vue';
-import { getTagList } from '../api/tag';
+import { getTagList, addTag, deleteTag } from '../api/tag';
 
 const searchQuery = ref('')
 const gridColumns = [
@@ -59,12 +62,13 @@ const gridColumns = [
 ]
 const gridData = ref([])
 const loadingRef = ref(false);
-onMounted(() => {
+async function fetchData() {
+  gridData.value = await getTagList();
+}
+onMounted(async () => {
   loadingRef.value = true;
-  getTagList().then((res) => {
-    gridData.value = res;
-    loadingRef.value = false;
-  })
+  await fetchData();
+  loadingRef.value = false;
 })
 
 const visibleAddRef = ref(false); // 控制新增 Modal弹窗
@@ -72,22 +76,27 @@ const visibleDeleteRef = ref(false); // 控制删除 Modal弹窗
 // 打开弹窗
 const deleteTagRef = ref();
 function handleDelete(row) {
-  console.log('handle delete')
   visibleDeleteRef.value = true;
   deleteTagRef.value = row;
 }
 // 新增标签
 const tagNameRef = ref('');
-function addTagItem() {
-  console.log(tagNameRef.value)
+async function addTagItem() {
   if (tagNameRef.value === '') return; // 表单验证
-  console.log('新增标签', tagNameRef.value)
   visibleAddRef.value = false;
+  loadingRef.value = true;
+  await addTag(tagNameRef.value);
+  await fetchData();
+  loadingRef.value = false;
+  tagNameRef.value = '';
 }
 // 删除标签项
-function deleteTagItem() {
-  console.log('删除标签', deleteTagRef.value)
+async function deleteTagItem() {
   visibleDeleteRef.value = false;
+  loadingRef.value = true;
+  await deleteTag(deleteTagRef.value.id)
+  await fetchData();
+  loadingRef.value = false;
 }
 </script>
 

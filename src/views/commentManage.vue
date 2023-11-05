@@ -1,7 +1,7 @@
 <template>
   <Loading v-if="loadingRef" class="loading" />
   <Table v-else title="评论管理" :columns="columns" :data="dataSourceRef">
-    <template #bodyCell="{column, row}">
+    <template #bodyCell="{ column, row }">
       <template v-if="column.key === 'avatar'">
         <img :src="row.avatar">
       </template>
@@ -13,17 +13,17 @@
   <Modal v-model:open="visibleRef" title="删除评论" @on-ok="deleteCommentItem">
     <h4>确认删除当前评论吗？</h4>
     <p>评论内容：</p>
-    <div :style="{textIndent: '2em'}">{{ commentRef.commentTxt }}</div>
+    <div :style="{ textIndent: '2em' }">{{ commentRef.commentTxt }}</div>
   </Modal>
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import Table from '../components/Table.vue';
 import Button from '../components/Button.vue';
 import Modal from '../components/Modal.vue';
 import Loading from '../components/Loading.vue';
-import { getArticleList } from '../api/article';
+import { getComments, deleteComment } from '../api/comment';
 
 const columns = [
   {
@@ -65,17 +65,13 @@ const dataSourceRef = ref([]);
 const loadingRef = ref(false);
 onMounted(() => {
   loadingRef.value = true;
-  getArticleList().then((res) => {
-    dataSourceRef.value = res.flatMap(article => {
-      return article.comments.map(item => {
-        return {
-          ...item,
-          title: article.title,
-          articleId: article.id,
-          replyNumber: item.replyArr ? item.replyArr.length : 0,
-        }
-      })
-    })
+  getComments().then((res) => {
+    dataSourceRef.value = res.map((item) => {
+      return {
+        ...item,
+        ...item.comment
+      }
+    });
     loadingRef.value = false;
   })
 })
@@ -87,8 +83,11 @@ function handleOpenModal(comment) {
   commentRef.value = comment;
 }
 // 删除评论
-function deleteCommentItem(comment) {
-  console.log('删除评论', comment)
+function deleteCommentItem() {
+  console.log(commentRef.value)
+  // deleteComment(commentRef.value.id, commentRef.value.commentId).then((res) => {
+  //   console.log(res.msg)
+  // })
 }
 </script>
 
@@ -96,6 +95,7 @@ function deleteCommentItem(comment) {
 img {
   width: 50px;
 }
+
 .loading {
   position: relative;
   left: 50%;

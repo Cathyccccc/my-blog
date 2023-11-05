@@ -1,5 +1,5 @@
 <template>
-  <textarea :value="value" v-bind="$attrs" @change="$emit('update:value', $event.target.value)" />
+  <textarea :value="value" v-bind="$attrs" @change="handleChange" />
 </template>
 
 <script setup>
@@ -9,7 +9,11 @@ const props = defineProps({
     default: '',
   },
 })
-defineEmits(['update:value'])
+const emit = defineEmits(['update:value', 'change'])
+function handleChange(e) {
+  emit('update:value', e.target.value)
+  emit('change', e.target.value)
+}
 </script>
 
 <style scoped>

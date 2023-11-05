@@ -1,14 +1,15 @@
 <template>
   <div class="add-article-container">
-    <Form :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
+    <Loading v-if="loadingRef" class="loading" />
+    <Form v-else :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
       <FormItem label="文章标题" name="title">
         <Input v-model:value.trim="articleObjRef.title" />
       </FormItem>
       <FormItem label="文章封面" name="coverImg">
         <Upload v-model:file-list="fileListRef" @change="handleFilesChange" />
       </FormItem>
-      <FormItem label="文章分类" name="tags">
-        <Select v-model:value="articleObjRef.tags" :options="tagListRef" mode="multiple" />
+      <FormItem label="文章分类" name="tag">
+        <Select v-model:value="articleObjRef.tag" :options="tagListRef" />
       </FormItem>
       <FormItem label="文章内容" name="content">
         <Editor v-model="articleObjRef.content" id="content" api-key="z9yxdow4c2vjkoulvv8b6dyg7ge1jete9gzqwpi5gj98sv6v"
@@ -43,7 +44,7 @@
 
 <script setup>
 import { onBeforeMount, ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Form from '../components/Form.vue';
 import FormItem from '../components/FormItem.vue';
 import Input from '../components/Input.vue';
@@ -51,9 +52,11 @@ import Editor from '@tinymce/tinymce-vue';
 import Select from '../components/Select.vue';
 import Button from '../components/Button.vue';
 import Upload from '../components/Upload.vue';
+import Loading from '../components/Loading.vue';
 import { getTagList } from '../api/tag';
-import { getBase64 } from '../utils/encode';
-import { getArticleById } from '../api/article';
+import { getArticleById, addArticle, updateArticle } from '../api/article';
+import { getDateTime } from '../utils/date';
+import { uploadImage, getImage } from '../api/upload';
 
 const route = useRoute();
 const { id } = route.params;
@@ -61,14 +64,22 @@ const articleObjRef = ref({
   title: '',
   content: '',
   coverImg: '',
-  tags: [],
+  tag: '',
 });
+const loadingRef = ref(false);
 onMounted(() => {
   if (route.matched[0].path === '/editArticle/:id') {
+    loadingRef.value = true;
     getArticleById(id).then((res) => {
-      res.tags.map(item => ({label: item, value: item}));
+      res.tag = res.tag[0].id;
       articleObjRef.value = res;
-      console.log(articleObjRef.value)
+      getImage(articleObjRef.value.coverImg).then((res) => {
+        const arr = articleObjRef.value.coverImg.split('/');
+        const filename = arr[arr.length - 1];
+        const file = new File([res], filename, {type: res.type});
+        fileListRef.value = [file];
+      })
+      loadingRef.value = false;
     })
   }
 })
@@ -84,22 +95,65 @@ onBeforeMount(() => {
 })
 // 处理文件列表
 const fileListRef = ref([]);
+const fileChangeStatus = ref(false);
 function handleFilesChange() {
-  console.log('处理所有file', fileListRef.value)
   if (fileListRef.value.length > 0) {
-    articleObjRef.value.coverImg = getBase64(fileListRef.value)
+    fileChangeStatus.value = true;
   } else {
     articleObjRef.value.coverImg = '';
   }
 }
 // 发布文章
-function publishArticle() {
+const router = useRouter();
+async function publishArticle() {
   if (articleObjRef.value.title === '') return;
   if (articleObjRef.value.content === '') return;
-  if (!articleObjRef.value.tags.length) return;
-  console.log('发布文章', articleObjRef.value)
-  // 发布文章接口调用
-  // 清空表单
+  if (!articleObjRef.value.tag.length) return;
+  const date = getDateTime(new Date());
+  const tag = tagListRef.value.filter(item => item.value === articleObjRef.value.tag)
+    .map(item => {
+      return {
+        id: articleObjRef.value.tag,
+        tag_name: item.label,
+      }
+    });
+  loadingRef.value = true;
+  // 第一种 formData（表单形式传递）
+  if (fileChangeStatus) {
+    const formData = new FormData();
+    formData.append('coverImg', fileListRef.value[0])
+    const { path } = await uploadImage(formData);
+    articleObjRef.value.coverImg = path;
+  }
+  // 第二种 Buffer
+  // const reader = new FileReader();
+  // reader.onload = function (e) {
+  //   uploadImage(e.target.result).then((res) => {
+  //     console.log(res)
+  //   })
+  // }
+  // reader.readAsArrayBuffer(fileListRef.value[0])
+  // 第三种 Base64
+  // uploadImage(articleObjRef.value.coverImg).then((res) => {
+  //   console.log(res)
+  // })
+  if (route.matched[0].path === '/editArticle/:id') {
+    await updateArticle({...articleObjRef.value, tag, date});
+    loadingRef.value = false;
+  } else {
+    const scanNumber = 0;
+    const commentNumber = 0;
+    await addArticle({ ...articleObjRef.value, tag, date, scanNumber, commentNumber });
+    loadingRef.value = false;
+  }
+  articleObjRef.value = {
+    title: '',
+    content: '',
+    coverImg: '',
+    tag: '',
+  }
+  fileChangeStatus.value = false;
+  router.back()
 }
 </script>
 
@@ -131,5 +185,11 @@ input[type="text"] {
   padding: 2px 6px;
   box-sizing: border-box;
   color: #616161;
+}
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div class="tag-list">
-    <span class="tag-item" v-for="(t, index) in tagListData" :key="index" :style="{ backgroundColor: gradient[index] }">{{ t
-    }}</span>
+    <span class="tag-item" v-for="(t, index) in tagListData" :key="index" :style="{ backgroundColor: gradient[index] }">{{ t.tag_name }}</span>
   </div>
 </template>
 

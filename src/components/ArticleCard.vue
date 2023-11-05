@@ -1,7 +1,7 @@
 <template>
   <div class="article-card">
     <div class="article-img">
-      <img :src="article.coverImg" alt="">
+      <img :src="'http://localhost:3000/static/' + article.coverImg" alt="">
     </div>
     <div class="article-content">
       <div class="content-top">
@@ -9,7 +9,7 @@
         <div class="description">{{ article.content.slice(0, 90) + '...' }}</div>
       </div>
       <div class="content-bottom">
-        <TagList :tag-list-data="article.tags" />
+        <TagList :tag-list-data="article.tag" />
         <div class="numbers">
           <span>浏览数：{{ article.scanNumber > 99 ? '99+' : article.scanNumber }}</span>
           <span>评论数：{{ article.commentNumber > 99 ? '99+' : article.commentNumber }}</span>
@@ -64,6 +64,9 @@ const props = defineProps({
 
 .article-img img {
   border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .article-content {

@@ -8,8 +8,9 @@
     </div>
     <!-- 导航 -->
     <div class="nav-bar">
-      <router-link to="/article">Articles</router-link>
+      <router-link :to="{path: '/article', params: {filterKey: searchValRef}}" ref="articlePage">Articles</router-link>
       <router-link to="/project">Projects</router-link>
+      <router-link to="/individual">Individual</router-link>
     </div>
     <svg id="headerBump" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 20">
       <path d="M180 0 C240 0 240 18 280 18 C320 18 320 0 380 0 Z" transform="matrix(1,0,0,1,-76.1984879008934,0)"
@@ -62,8 +63,8 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { useRouter, useLink, useRoute } from 'vue-router';
+import { onMounted, ref, watch, provide } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { getArticleList } from './api/article';
 import { getProjectList } from './api/project';
 import Button from './components/Button.vue';
@@ -155,17 +156,20 @@ watch(() => router.currentRoute.value.path, (newVal, oldVal) => {
 })
 // 搜索
 const searchValRef = ref('');
+const articlePage = ref(null);
 const handleSearch = () => {
   if (!searchValRef.value) return;
+  console.log(searchValRef.value)
   const path = route.fullPath;
   switch (path) {
     case '/article':
-      getArticleList({ page: 1, pageSize: 5, searchStr: searchValRef.value }).then((res) => {
+      getArticleList({ page: 1, pageSize: 5, filterKey: searchValRef.value }).then((res) => {
         console.log('搜索后的文章列表', res)
+        console.log(articlePage.value.articleListRef)
       })
       break;
     case '/project':
-      getProjectList({ searchStr: searchValRef.value }).then((res) => {
+      getProjectList({ filterKey: searchValRef.value }).then((res) => {
         console.log('搜索后的项目列表', res)
       })
       break;
@@ -217,6 +221,7 @@ function controlOperationList() {
 .nav-bar {
   width: 70%;
   height: 60px;
+  margin-left: 50px;
   display: flex;
   justify-content: space-evenly;
 }

@@ -1,10 +1,10 @@
 <template>
-  <table class="table-container" v-if="filteredData.length">
+  <table class="table-container">
     <caption>
       <slot name="title">{{ title }}</slot>
       <div class="action"><slot name="action"></slot></div>
     </caption>
-    <thead>
+    <thead v-if="filteredData.length">
       <tr>
         <th v-for="key in columns" :key="key" @click="sortBy(key)" :class="{ active: sortKey == key }">
           {{ key.title }}
@@ -12,7 +12,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody v-if="filteredData.length">
       <tr v-for="(entry, index) in filteredData" :key="index">
         <td v-for="key in columns" :key="key.dataIndex">
           <slot name="bodyCell" :column="key" :row="entry">
@@ -21,8 +21,8 @@
         </td>
       </tr>
     </tbody>
+    <Empty v-else />
   </table>
-  <Empty v-else />
 </template>
 
 <script setup>
@@ -122,6 +122,8 @@ caption {
   text-align: left;
   padding: 0 15px;
   box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 15px;
 }
 .action {
   float: right;
