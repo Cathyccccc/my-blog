@@ -1,7 +1,11 @@
 import instance from '.';
 
-const getProjectList = () => {
-  return instance.get('/project');
+const getProjectList = ({ filterKey } = { filterKey: '' }) => {
+  return instance.get('/project', {
+    params: {
+      filterKey
+    }
+  });
 }
 
 const addProject = (project) => {

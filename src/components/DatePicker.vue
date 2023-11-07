@@ -56,7 +56,7 @@
             </thead>
             <tbody>
               <tr v-for="(arr, index) in daysArrRef" :key="index">
-                <td v-for="i in arr" :key="i" :class="{active: currentDay === i}" @mousedown.prevent="handleChangeDay(i)">{{ i }}</td>
+                <td v-for="(i, idx) in arr" :key="idx" :class="{active: currentDay === i}" @mousedown.prevent="handleChangeDay(i)">{{ i }}</td>
               </tr>
             </tbody>
           </table>
@@ -100,17 +100,27 @@ function handleChangeDay(day) {
 }
 
 function handleChangeMonth(num) {
-  const month = dateRef.getMonth() + num;
+  let month = dateRef.getMonth() + num;
+  let year = dateRef.getFullYear();
+  if (month > 11) {
+    year = year + 1
+  }
+  if (month < 0) {
+    year = year - 1;
+  }
   dateRef.setMonth(month);
-  monthRef.value = dateRef.toDateString().split(' ')[1];
-  const year = dateRef.getFullYear();
   dateRef.setFullYear(year);
+  monthRef.value = dateRef.toDateString().split(' ')[1];
+  yearRef.value = year;
+  console.log(dateRef)
+  daysArrRef.value = formatDaysAsWeek(dateRef);
 }
 
 function handleChangeYear(num) {
   const year = dateRef.getFullYear() + num;
   dateRef.setFullYear(year);
   yearRef.value = year;
+  daysArrRef.value = formatDaysAsWeek(dateRef);
 }
 
 const inputRef = ref(null);

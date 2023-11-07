@@ -20,6 +20,7 @@ instance.interceptors.response.use((resp) => {
     return resp.data.data;
   }else {
     console.log(resp.data)
+    return resp.data;
   }
   
 }, (err) => console.log(err))

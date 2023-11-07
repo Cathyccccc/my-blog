@@ -53,8 +53,12 @@ export function formatDaysAsWeek(date) {
     monthArr.push(i);
   }
   while (monthArr.length > 0) {
+    console.log(start.getDay())
     if (monthArr.length === days && start.getDay() !== 0) {
-      const group = monthArr.slice(0, start.getDay() + 1);
+      const group = monthArr.slice(0, 7 - start.getDay());
+      while(group.length < 7) {
+        group.unshift('');
+      }
       monthArr.splice(0, start.getDay() + 1);
       arr.push(group)
     } else {
@@ -63,5 +67,6 @@ export function formatDaysAsWeek(date) {
       arr.push(group);
     }
   }
+  // console.log(arr)
   return arr;
 }

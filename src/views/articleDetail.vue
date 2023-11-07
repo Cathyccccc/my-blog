@@ -41,7 +41,8 @@
     </div>
     <!-- 历史评论列表 -->
     <div class="comment-list-wrapper" v-if="article.comments && article.comments.length">
-      <CommentCard v-for="item in article.comments" :key="item.commentId" :commentObj="item" :article-id="article.id" :reply-arr="article.comments.replyArr" @updataData="fetchData" />
+      <CommentCard v-for="item in article.comments" :key="item.commentId" :commentObj="item" :article-id="article.id"
+        :reply-arr="article.comments.replyArr" @updataData="fetchData" />
     </div>
   </div>
 </template>
@@ -56,6 +57,7 @@ import CommentBox from '../components/CommentBox.vue';
 import Loading from '../components/Loading.vue';
 import { getDateTime } from '../utils/date';
 import { addComment } from '../api/comment';
+import { updateArticle } from '../api/article';
 import { getRandomName, getRandomHashAvatar } from '../utils/random';
 
 const route = useRoute()
@@ -63,42 +65,42 @@ const { id } = route.params;
 const article = ref({});
 const commentTxt = ref('');
 const loadingRef = ref(false);
-onBeforeMount(() => {
-  fetchData();
+onBeforeMount(async () => {
+  await fetchData();
 })
-function fetchData() {
+async function fetchData() {
   loadingRef.value = true;
-  getArticleById(id).then((res) => {
-    if (res.comments.length) {
-      res.comments = res.comments.map((item) => {
-        return {
-          ...item,
-          avatar: getRandomHashAvatar(item.commentId),
-          replyArr: item.replyArr ? item.replyArr.map((i) => {
-            return {
-              ...i,
-              avatar: getRandomHashAvatar(i.replyId),
-            }
-          }) : [],
-        }
-      })
-    }
-    article.value = res;
-    loadingRef.value = false;
-  })
+  const res = await getArticleById(id)
+  if (res.comments.length) {
+    res.comments = res.comments.map((item) => {
+      return {
+        ...item,
+        avatar: getRandomHashAvatar(item.commentId),
+        replyArr: item.replyArr ? item.replyArr.map((i) => {
+          return {
+            ...i,
+            avatar: getRandomHashAvatar(i.replyId),
+          }
+        }) : [],
+      }
+    })
+  }
+  article.value = res;
+  loadingRef.value = false;
 }
 // 发布评论
-function publishComment() {
+async function publishComment() {
   const nickname = getRandomName(2);
   const comment = {
     commentTxt: commentTxt.value,
     nickname,
     createTime: getDateTime(),
   }
-  addComment(article.value.id, undefined, comment).then(() => {
-    commentTxt.value = '';
-    fetchData();
-  })
+  await addComment(article.value.id, undefined, comment)
+  commentTxt.value = '';
+  await fetchData();
+  article.value.coment++;
+  await updateArticle(article);
 }
 </script>
 

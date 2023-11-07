@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, inject } from 'vue';
 import Table from '../components/Table.vue';
 import TagList from '../components/TagList.vue';
 import Button from '../components/Button.vue';
@@ -81,8 +81,8 @@ onMounted(async() => {
   tagListRef.value = await getTagList();
   loadingRef.value = false;
 })
-async function fetchData() {
-  const result = await getArticleList({ page: 1, pageSize: 10 });
+async function fetchData(filterKey = '') {
+  const result = await getArticleList({ page: 1, pageSize: 10, filterKey });
   dataSourceRef.value = result.list;
 }
 const visibleRef = ref(false);
@@ -99,6 +99,12 @@ async function deleteArticleItem() {
   await fetchData();
   loadingRef.value = false;
 }
+
+const emitter = inject('emitter')
+emitter.on('searchArticleManage', (value) => {
+  console.log('search article manage', value)
+  fetchData(value);
+})
 </script>
 
 <style scoped>

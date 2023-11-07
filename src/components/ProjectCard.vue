@@ -15,7 +15,8 @@ const props = defineProps({
 
 <style scoped>
 .project-card-container {
-  min-width: 300px;
+  width: 30%;
+  min-width: 250px;
   height: 220px;
   flex: initial;
   border-radius: 10px;

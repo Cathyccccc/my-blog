@@ -8,7 +8,7 @@
     </div>
     <!-- 导航 -->
     <div class="nav-bar">
-      <router-link :to="{path: '/article', params: {filterKey: searchValRef}}" ref="articlePage">Articles</router-link>
+      <router-link to="/article">Articles</router-link>
       <router-link to="/project">Projects</router-link>
       <router-link to="/individual">Individual</router-link>
     </div>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <!-- 用户 -->
-    <button v-if="!userInfoRef" class="login-btn" @click="handleLogon">登录</button>
+    <Button v-if="!userInfoRef" class="login-btn" @click="handleLogon">登录</Button>
     <div v-else class="personal">
       <div class="avatar">
         <img src="/favicon.svg">
@@ -68,12 +68,18 @@ import { useRouter, useRoute } from 'vue-router';
 import { getArticleList } from './api/article';
 import { getProjectList } from './api/project';
 import Button from './components/Button.vue';
+import mitt from './utils/mitt';
 // import {stretchWater, shrinkWater} from './utils/index';
 
+const emitter = mitt();
+provide('emitter', emitter)
+
 const userInfoRef = ref(null);
-const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
 
 onMounted(() => {
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+  userInfoRef.value = userInfo;
   const headerBump = document.getElementById('headerBump');
   const navBar = document.querySelector('.nav-bar-container');
   const path = headerBump.childNodes[0];
@@ -124,10 +130,6 @@ onMounted(() => {
       path.style.transform = `matrix(${a}, 0, 0, ${d}, ${tx}, 0)`
     }, 50)
   })
-  // 刷新页面
-  if (userInfo) {
-    userInfoRef.value = userInfo;
-  }
 })
 
 const route = useRoute();
@@ -135,7 +137,7 @@ const route = useRoute();
 // 点击登录按钮
 const router = useRouter();
 const handleLogon = () => {
-  if (!userInfo) {
+  if (!userInfoRef.value) {
     router.push({ path: '/login' });
   }
 }
@@ -145,7 +147,7 @@ const noPaddingList = ['/articleManage', '/projectManage', '/commentManage', '/t
 // 监听路由变化
 watch(() => router.currentRoute.value.path, (newVal, oldVal) => {
   if (oldVal === '/login' && newVal === '/article') {
-    userInfoRef.value = JSON.parse(localStorage.getItem('userInfo'));
+    userInfoRef.value = JSON.parse(sessionStorage.getItem('userInfo'));
   }
   // console.log(noPaddingList.includes(router.currentRoute.value.path))
   if (noPaddingList.includes(router.currentRoute.value.path)) {
@@ -156,22 +158,27 @@ watch(() => router.currentRoute.value.path, (newVal, oldVal) => {
 })
 // 搜索
 const searchValRef = ref('');
-const articlePage = ref(null);
 const handleSearch = () => {
-  if (!searchValRef.value) return;
-  console.log(searchValRef.value)
   const path = route.fullPath;
   switch (path) {
     case '/article':
       getArticleList({ page: 1, pageSize: 5, filterKey: searchValRef.value }).then((res) => {
-        console.log('搜索后的文章列表', res)
-        console.log(articlePage.value.articleListRef)
+        emitter.emit('searchArticle', res);
+        searchValRef.value = '';
       })
       break;
     case '/project':
       getProjectList({ filterKey: searchValRef.value }).then((res) => {
         console.log('搜索后的项目列表', res)
+        emitter.emit('searchProject', res);
+        searchValRef.value = '';
       })
+      break;
+    case '/articleManage':
+      emitter.emit('searchArticleManage', searchValRef.value);
+      break;
+    case '/projectManage':
+      emitter.emit('searchProjectManage', searchValRef.value)
       break;
   }
 }
@@ -279,6 +286,10 @@ function controlOperationList() {
 }
 
 .login-btn {
+  width: 80px;
+}
+
+/* .login-btn {
   width: 50px;
   height: 35px;
   background: #fff;
@@ -286,7 +297,7 @@ function controlOperationList() {
   font-size: 16px;
   font-weight: bold;
   flex: 0 0 50px;
-}
+} */
 
 .personal {
   /* height: 60px; */
@@ -375,6 +386,7 @@ li {
 .has-padding {
   padding: 0 10%;
 }
+
 .v-enter-active {
   animation: toggle .15s;
   transform-origin: 0 -5px;

@@ -6,7 +6,7 @@
     <div class="article-content">
       <div class="content-top">
         <h3 class="title">{{ article.title }}</h3>
-        <div class="description">{{ article.content.slice(0, 90) + '...' }}</div>
+        <div class="description">{{ article.content.replace(/<[^<>]+>/g, '').slice(0, 90) + '...' }}</div>
       </div>
       <div class="content-bottom">
         <TagList :tag-list-data="article.tag" />
@@ -23,7 +23,8 @@
 import TagList from './TagList.vue';
 const props = defineProps({
   article: Object,
-})
+});
+
 </script>
 
 <style scoped>

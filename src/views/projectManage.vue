@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import Table from '../components/Table.vue';
 import TagList from '../components/TagList.vue';
 import Button from '../components/Button.vue';
@@ -118,9 +118,9 @@ onMounted(async () => {
   tagListRef.value = tagList.map(item => ({ value: item.id, label: item.tag_name }))
   loadingRef.value = false;
 })
-async function fetchData() {
+async function fetchData(filterKey = '') {
   loadingRef.value = true;
-  dataSourceRef.value = await getProjectList();
+  dataSourceRef.value = await getProjectList({filterKey});
   loadingRef.value = false;
 }
 const projectRef = ref({
@@ -229,6 +229,12 @@ function clearForm() {
   }
   fileListRef.value = [];
 }
+
+const emitter = inject('emitter');
+emitter.on('searchProjectManage', (value) => {
+  console.log('search project manage', value);
+  fetchData(value);
+})
 </script>
 
 <style scoped>

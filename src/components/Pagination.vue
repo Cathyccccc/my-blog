@@ -53,7 +53,6 @@ const props = defineProps({
     default: 0
   }
 })
-console.log(props)
 const emit = defineEmits(['update:current', 'update:pageSize', 'change']);
 const totalPage = computed(() => {
   return Math.ceil(props.total / props.pageSize)

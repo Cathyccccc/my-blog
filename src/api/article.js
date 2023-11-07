@@ -31,7 +31,6 @@ const deleteArticle = (id) => {
 const updateArticle = (article) => {
   article.tag = JSON.stringify(article.tag);
   article.comments = JSON.stringify(article.comments);
-  console.log(article)
   return instance.put('/article', article)
 }
 

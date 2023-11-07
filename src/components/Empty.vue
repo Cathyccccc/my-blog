@@ -20,6 +20,7 @@
 .empty-container {
   text-align: center;
   background-color: #fff;
+  margin: 0 auto;
 }
 .content {
   color: #8f8f8f;
