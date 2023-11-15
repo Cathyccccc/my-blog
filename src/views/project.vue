@@ -30,9 +30,9 @@ emitter.on('searchProject', (value) => {
 <style scoped>
 .project-container {
   display: flex;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px 5%;
+  gap: 30px 3%;
   margin-top: 20px;
 }
 .loading {

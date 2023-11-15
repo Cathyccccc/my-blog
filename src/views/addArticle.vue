@@ -29,10 +29,13 @@
             // init_instance_callback: (editor) => {}, // 在editor实例每次被初始化时执行
             // auto_focus: 'el_id', // 自动聚焦，值为editor实例的id
             // inline: true, // 设置editor为行内模式（直接在页面上显示内容，不显示边框和操作台。点击一行时显示边框和操作台）
-            toolbar: true, // 显示工具栏
+            toolbar: 'restoredraft save | styles bold italic | numlist bullist table | emoticons link image | outdent indent | preview', // 显示工具栏
             menubar: true, // 显示菜单栏
             statusbar: true, // 显示底部状态栏
-            content_css: 'http://127.0.0.1:5173/css/editor.css', // 设置内部样式。规定的6种样式只在classic mode下有效
+            content_css: '/css/editor.css', // 设置内部样式。规定的6种样式只在classic mode下有效
+            plugins: 'autosave save lists autolink table emoticons link image preview',
+            automatic_uploads: true,
+            save_onsavecallback: () => temporaryStorage()
           }" />
       </FormItem>
       <FormItem>
@@ -56,6 +59,7 @@ import Loading from '../components/Loading.vue';
 import { getTagList } from '../api/tag';
 import { getArticleById, addArticle, updateArticle } from '../api/article';
 import { getDateTime } from '../utils/date';
+import { getBase64, convertBase64ToFile } from '../utils/encode';
 import { uploadImage, getImage } from '../api/upload';
 
 const route = useRoute();
@@ -76,11 +80,18 @@ onMounted(() => {
       getImage(articleObjRef.value.coverImg).then((res) => {
         const arr = articleObjRef.value.coverImg.split('/');
         const filename = arr[arr.length - 1];
-        const file = new File([res], filename, {type: res.type});
+        const file = new File([res], filename, { type: res.type });
         fileListRef.value = [file];
       })
       loadingRef.value = false;
     })
+  } else {
+    const article = JSON.parse(localStorage.getItem('article'));
+    if (article) {
+      articleObjRef.value = article;
+      fileListRef.value[0] = convertBase64ToFile(article.coverImg);
+      // console.log(article)
+    }
   }
 })
 
@@ -102,6 +113,14 @@ function handleFilesChange() {
   } else {
     articleObjRef.value.coverImg = '';
   }
+}
+// 缓存文章
+function temporaryStorage() {
+  console.log('Saved');
+  getBase64(fileListRef.value[0], (base64) => {
+    articleObjRef.value.coverImg = base64;
+    localStorage.setItem('article', JSON.stringify(articleObjRef.value))
+  })
 }
 // 发布文章
 const router = useRouter();
@@ -138,7 +157,7 @@ async function publishArticle() {
   //   console.log(res)
   // })
   if (route.matched[0].path === '/editArticle/:id') {
-    await updateArticle({...articleObjRef.value, tag, date});
+    await updateArticle({ ...articleObjRef.value, tag, date });
     loadingRef.value = false;
   } else {
     const scanNumber = 0;
@@ -153,6 +172,7 @@ async function publishArticle() {
     tag: '',
   }
   fileChangeStatus.value = false;
+  localStorage.removeItem('article'); // 文章发布后清理缓存
   router.back()
 }
 </script>
@@ -186,6 +206,7 @@ input[type="text"] {
   box-sizing: border-box;
   color: #616161;
 }
+
 .loading {
   position: absolute;
   left: 50%;

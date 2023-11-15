@@ -1,8 +1,15 @@
 <template>
   <div class="project-card-container">
-    <!-- 背景图 -->
-    <img :src="`http://localhost:3000/static/${projectObj.cover}`">
-    <div class="project-title"><a href="#">{{ projectObj.project_name }}</a></div>
+    <!-- 图片 -->
+    <div class="left">
+      <img :src="`http://localhost:3000/static/${projectObj.cover}`">
+      <div class="project-title">{{ projectObj.project_name }}</div>
+    </div>
+    <!-- 描述 -->
+    <div class="right">
+      <div class="introduction">简介：{{ projectObj.introduction }}</div>
+      <div class="url">链接：<a :href="projectObj.project_url" target="_blank">{{ projectObj.project_url }}</a></div>
+    </div>
   </div>
 </template>
 
@@ -15,33 +22,59 @@ const props = defineProps({
 
 <style scoped>
 .project-card-container {
-  width: 30%;
-  min-width: 250px;
-  height: 220px;
-  flex: initial;
-  border-radius: 10px;
+  width: 47%;
+  height: 230px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  border-radius: 12px;
   overflow: hidden;
-  position: relative;
   transition: all .5s;
 }
+
 .project-card-container:hover {
-  transform: scale(1.01);
+  box-shadow: 1px 2px 30px rgba(150, 150, 150, .2);
 }
+
+.left {
+  width: 280px;
+  height: 100%;
+}
+
 img {
-  width: 100%;
+  width: 280px;
   height: 180px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 5px;
 }
-.project-title{
+
+.project-title {
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
   text-align: center;
-}
-.project-title a {
   font-size: 20px;
-  color: #3c3c3c;
-  text-decoration: none;
 }
+
+
+.right {
+  height: 100%;
+  margin-left: 20px;
+  font-size: 14px;
+} 
+.introduction {
+  height: 180px;
+  line-height: 26px;
+  letter-spacing: 1px;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+a {
+  font-size: 13px;
+  line-height: 40px;
+  text-decoration: none;
+  color: #55BBFF;
+}
+
 </style>

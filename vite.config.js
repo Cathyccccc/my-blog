@@ -6,10 +6,14 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     // proxy: {
-    //   '/static/*': {
-    //     target: 'http://localhost:3000/',
-    //     changeOrigin: true
-    //   }
+      // '/': {
+        // target: 'http://localhost:3000',
+        // changeOrigin: true,
+        // ws: false,
+      // }
     // }
+    hmr: {
+      port: 5170
+    }
   }
 })

@@ -2,15 +2,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Article from '../views/article.vue';
 import Project from '../views/project.vue';
-import Individual from '../views/Individual.vue';
-import Home from '../views/Home.vue';
+import Individual from '../views/individual.vue';
 import ArticleDetail from '../views/articleDetail.vue';
 import Login from '../views/login.vue';
 import AddArticle from '../views/addArticle.vue';
-import ArticleManage from '../views/ArticleManage.vue';
-import ProjectManage from '../views/ProjectManage.vue';
-import CommentManage from '../views/CommentManage.vue';
-import TagManage from '../views/TagManage.vue';
+import ArticleManage from '../views/articleManage.vue';
+import ProjectManage from '../views/projectManage.vue';
+import CommentManage from '../views/commentManage.vue';
+import TagManage from '../views/tagManage.vue';
 {
   // console.log(router)
   //   NavigationFailureType: (...)

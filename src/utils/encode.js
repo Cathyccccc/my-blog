@@ -1,3 +1,4 @@
+import { getRandomName } from "./random";
 /**
  * 获取 Base64 格式的图片（将图片文件转为 Base64字符串）
  * @param {File} file 文件对象 
@@ -17,12 +18,15 @@ export function getBase64(file, callback) {
  * @returns {File} File对象
  */
 export function convertBase64ToFile(base64Data) {
-  let bstr = atob(base64Data), // 对base64字符串进行解码
+  var arr = base64Data.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), // 对base64字符串进行解码
     n = bstr.length,
     u8arr = new Uint8Array(n);
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n);
   }
+  const filename = getRandomName(4);
   return new File([u8arr], filename, { type: mime });
 }
 
