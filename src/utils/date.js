@@ -42,7 +42,7 @@ export function getDays(year, month) {
   return daysArr[month];
 }
 
-export function formatDaysAsWeek(date) {
+export function formatDaysAsWeek(date = new Date()) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const start = new Date(`${year}-${month}-01`);
@@ -53,20 +53,13 @@ export function formatDaysAsWeek(date) {
     monthArr.push(i);
   }
   while (monthArr.length > 0) {
-    console.log(start.getDay())
-    if (monthArr.length === days && start.getDay() !== 0) {
-      const group = monthArr.slice(0, 7 - start.getDay());
-      while(group.length < 7) {
-        group.unshift('');
-      }
-      monthArr.splice(0, start.getDay() + 1);
-      arr.push(group)
+    if (arr.length === 0) {
+      const weekArr = monthArr.splice(0, 7 - start.getDay() + 1);
+      arr.push(weekArr);
     } else {
-      const group = monthArr.slice(0, 7);
-      monthArr.splice(0, 7);
-      arr.push(group);
+      const weekArr = monthArr.splice(0, 7);
+      arr.push(weekArr);
     }
   }
-  // console.log(arr)
   return arr;
 }
