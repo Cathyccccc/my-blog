@@ -15,5 +15,13 @@ export default defineConfig({
     hmr: {
       port: 5170
     }
+  },
+  optimizeDeps: {
+      include:  [
+        'vue',
+        'vue-router',
+        'axios',
+        'identicon.js'
+      ]
   }
 })
