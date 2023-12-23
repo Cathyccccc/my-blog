@@ -1,21 +1,23 @@
 <template>
-  <Transition>
-    <div class="modal-container" v-if="open">
-      <div class="mask"></div>
-      <div class="modal" tabindex="-1">
-        <div class="modal-content">
-          <div class="title">{{ $attrs.title }}</div>
-          <div class="content">
-            <slot></slot>
-          </div>
-          <div class="footer">
-            <Button @click="handleCancel">{{ cancelText }}</Button>
-            <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+  <Teleport to="body">
+    <Transition>
+      <div class="modal-container" v-if="open">
+        <div class="mask"></div>
+        <div class="modal" tabindex="-1">
+          <div class="modal-content">
+            <div class="title">{{ $attrs.title }}</div>
+            <div class="content">
+              <slot></slot>
+            </div>
+            <div class="footer">
+              <Button @click="handleCancel">{{ cancelText }}</Button>
+              <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
