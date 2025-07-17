@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import Button from './Button.vue';
+import Button from './uc/Button.vue';
 import Textarea from './Textarea.vue';
 
 const props = defineProps({

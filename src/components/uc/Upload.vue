@@ -1,6 +1,6 @@
 <template>
   <div class="upload-container" v-if="fileList.length === 0|| multiple">
-    <input type="file" id="coverImg" ref="chooseFileRef" style="display: none;" accept="*" @change="handleChange">
+    <input type="file" id="coverImg" ref="chooseFileRef" style="display: none;" accept="image/*" @change="handleChange">
     <span class="add-icon" @click="chooseCover">
       <svg t="1695717093407" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
         p-id="910" width="20" height="20">

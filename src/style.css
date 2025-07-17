@@ -1,6 +1,7 @@
 :root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
-  font: normal normal 'Avenir LT W01_35 Light1475496',Helvetica,Arial,sans-serif;
+  /* font: normal normal 'Avenir LT W01_35 Light1475496',Helvetica,Arial,sans-serif; */
   line-height: 1.5;
   font-weight: 400;
 
@@ -11,29 +12,39 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  --theme-color: #f4f0fd;
+  --text-color: #9772E0;
+  --text-base-color: #111112;
+  --text-title-color: #01025c;
+  --line-color: #e8dcff;
+  --bs-ingido: #6610f2;
+  --bs-purple: #6f42c1;
+  --dark-bg-color: #0b0020;
+  --dark-theme-color: #5E27CA;
+  --dark-nav-bg-color: #3b1682;
+  --dark-text-base-color: #ddd;
+  --dark-line-color: #552aa8;
 }
 
-/* a {
-  font-weight: 500;
-  color: #335dff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #335dff;
-} */
 
 
 #app {
-  background-color: #fff;
+  width: 100%;
+  /* background-color: #fff; */
+  /* color: var(--text-base-color); */
   color: #3c3c3c;
+  user-select: none;     /* 禁止选中文本 */
 }  
 
-
+html {
+  overflow-x: hidden;
+}
 
 body {
   margin: 0;
   display: flex;
   place-items: center;
+  /* font-family: "Sora", serif; */
 }
 
 h1 {
@@ -54,28 +65,11 @@ li {
 p {
   margin: 0;
 }
-input, textarea {
-  background-color: #fff;
-  color: #3c3c3c;
-}
-label {
-  color: #3c3c3c;
-}
+
 a {
-  cursor: pointer;
-  color: #72c7ff;
+  text-decoration: none;
+  transition: all 0.1s ease-out;
 }
-
-
-
-
-
-#app {
-  /* max-width: 1280px; */
-  width: 100%;
-  margin: 0 auto;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -85,8 +79,11 @@ a {
     color: #747bff;
   } */
 }
+/* .table-container {
+  height: max-content;
+}
 /* 设置Table表格操作按钮样式 */
-.table-container .operate-list {
+/* .table-container .operate-list {
   display: flex;
   column-gap: 5px;
-}
+} */

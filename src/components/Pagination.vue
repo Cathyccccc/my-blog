@@ -38,7 +38,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import Button from './Button.vue';
+import Button from './uc/Button.vue';
 const props = defineProps({
   current: {
     type: Number,

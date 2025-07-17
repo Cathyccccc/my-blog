@@ -1,15 +1,17 @@
 <template>
   <Transition>
     <div class="modal-container" v-if="open">
-      <div class="mask" @click="handleBlur"></div>
-      <div class="modal-content" tabindex="-1">
-        <div class="title">{{ $attrs.title }}</div>
-        <div class="content">
-          <slot></slot>
-        </div>
-        <div class="footer">
-          <Button @click="handleCancel">{{ cancelText }}</Button>
-          <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+      <div class="mask"></div>
+      <div class="modal" tabindex="-1">
+        <div class="modal-content dark:bg-[--dark-theme-color]">
+          <div class="title">{{ $attrs.title }}</div>
+          <div class="content">
+            <slot></slot>
+          </div>
+          <div class="footer">
+            <Button @click="handleCancel">{{ cancelText }}</Button>
+            <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+          </div>
         </div>
       </div>
     </div>
@@ -17,34 +19,35 @@
 </template>
 
 <script setup>
-import Button from "./Button.vue";
-defineProps({
+import Button from './Button.vue';
+const props = defineProps({
   open: {
     type: Boolean,
     default: false,
   },
   okText: {
     type: String,
-    default: "Ok",
+    default: 'Ok'
   },
   cancelText: {
     type: String,
-    default: "Cancel",
+    default: 'Cancel'
   },
-});
-const emits = defineEmits(["onCancel", "onOk", "update:open"]);
+})
+const emits = defineEmits(['onCancel', 'onOk', 'update:open'])
 function handleBlur() {
-  console.log("失焦");
+  console.log('失焦')
 }
 // 点击cancel按钮
 function handleCancel() {
-  emits("update:open", false);
-  emits("onCancel");
+  emits('update:open', false)
+  emits('onCancel')
 }
 </script>
 
 <style scoped>
-.mask {
+.mask,
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,11 +66,9 @@ function handleCancel() {
 }
 
 .modal-content {
-  background-color: #fff;
   border-radius: 10px;
   width: 520px;
   margin: 100px auto 50px;
-  color: #3c3c3c;
   padding: 15px 20px;
   box-sizing: border-box;
   scroll-behavior: smooth;
@@ -78,7 +79,7 @@ function handleCancel() {
   line-height: 2;
   font-weight: 600;
   font-size: 16px;
-  color: #55bbff;
+  color: #55BBFF;
 }
 
 .content {
@@ -95,14 +96,14 @@ function handleCancel() {
 /* transition动画 */
 .v-enter-active,
 .v-leave-active {
-  transition: all 0.3s;
+  transition: all .3s;
 }
 .v-enter-active .modal-content {
   animation: bounce-in 0.3s;
 }
 
 .v-leave-active .modal-content {
-  animation: bounce-in 0.3s reverse forwards;
+  animation: bounce-in .3s reverse forwards;
 }
 
 @keyframes bounce-in {

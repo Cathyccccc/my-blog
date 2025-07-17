@@ -1,6 +1,5 @@
 <template>
-  <div class="login-container">
-    <div class="login-box">
+    <div class="absolute w-[400px] left-1/2 top-[150px] -translate-x-1/2">
       <Form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
         <FormItem label="Account">
           <Input v-model:value.trim="loginObj.loginId" />
@@ -9,59 +8,48 @@
           <Input v-model:value.trim="loginObj.loginPwd" type="password" />
         </FormItem>
         <FormItem>
-          <Button type="primary" @click="handleLogin">Sign in</Button>
+          <Button type="primary" @click.prevent="handleLogin">Sign in</Button>
         </FormItem>
       </Form>
     </div>
-  </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-import { useRouter } from 'vue-router';
-import { logOn } from '/src/api/login';
-import Form from '../components/Form.vue';
-import FormItem from '../components/FormItem.vue';
-import Input from '../components/Input.vue';
-import Button from '../components/Button.vue';
-import Message from '../components/Message.vue';
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { logIn } from "/src/api/login";
+import Form from "../components/uc/Form.vue";
+import FormItem from "../components/uc/FormItem.vue";
+import Input from "../components/uc/Input.vue";
+import Button from "../components/uc/Button.vue";
+// import Message from "../components/Message.vue";
 
 const loginObj = reactive({
   loginId: null,
   loginPwd: null,
-})
-const isShow = ref(false);
-const messageType = ref('success');
-const messageTxt = ref(null);
+});
+// const isShow = ref(false);
+// const messageType = ref("success");
+// const messageTxt = ref(null);
 const router = useRouter();
 const handleLogin = () => {
   if (!loginObj.loginId || !loginObj.loginPwd) return;
-  logOn(loginObj).then((res) => {
-    if (res.success === false) {
-      console.log(res.data.msg);
-    } else {
-      sessionStorage.setItem('userInfo', JSON.stringify(loginObj));
-      router.push({ name: 'article'});
-    }
+  logIn(loginObj).then((res) => {
+    sessionStorage.setItem("token", res.token);
+    sessionStorage.setItem("userInfo", JSON.stringify(loginObj));
     loginObj.loginId = null;
     loginObj.loginPwd = null;
-  })
-}
+    router.push("/");
+  });
+};
 </script>
 
 <style scoped>
-.login-container {
-  width: 100%;
-  height: 100%;
-  padding-top: 100px;
-  box-sizing: border-box;
-  background: #FFF;
-}
-
 .login-box {
   width: 400px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  top: 100px;
 }
 </style>

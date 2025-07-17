@@ -1,241 +1,411 @@
 <template>
-  <!-- 导航区 -->
-  <nav class="nav-bar-container">
-    <!-- 图标 -->
-    <div class="favicon">
-      <img src="/favicon_bgwhite.png" alt="" width="50" height="50">
-      <span>BLOG</span>
-    </div>
-    <!-- 导航 -->
-    <div class="nav-bar">
-      <router-link to="/article">Articles</router-link>
-      <router-link to="/project">Projects</router-link>
-      <router-link to="/individual">Individual</router-link>
-    </div>
-    <svg id="headerBump" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 20">
-      <path d="M180 0 C240 0 240 18 280 18 C320 18 320 0 380 0 Z" transform="matrix(1,0,0,1,-76.1984879008934,0)"
-        data-svg-origin="276.20052234638445 0" style="transform-origin: 0px 0px 0px;"></path>
-    </svg>
-    <!-- 搜索框 -->
-    <div class="search">
-      <input type="search" v-model.trim="searchValRef">
-      <div class="search-btn" @click="handleSearch">
-        <svg t="1695604758202" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-          p-id="913" width="20" height="20">
-          <path
-            d="M1005.312 914.752l-198.528-198.464A448 448 0 1 0 0 448a448 448 0 0 0 716.288 358.784l198.4 198.4a64 64 0 1 0 90.624-90.432zM448 767.936A320 320 0 1 1 448 128a320 320 0 0 1 0 640z"
-            fill="#ffffff" p-id="914"></path>
-        </svg>
+  <div
+    :class="['flex', 'justify-stretch', 'h-fit', 'w-screen', theme]"
+    :style="{
+      background: theme === 'dark' ? '#0b0020' : '#fff',
+      transition: 'background .3s cubic-bezier(0.4, 0, 0.2, 1)',
+    }"
+  >
+    <!-- 左侧栏 -->
+    <Transition name="fade-left" mode="out-in">
+      <div
+        v-if="showLeftSide"
+        class="fixed left-0 hidden bg-switch text-base-color-switch lg:block w-1/5 h-full px-3 pt-10 box-border border-r-1 border-[#f2f2f2] dark:border-white/10 box-border overflow-y-auto"
+      >
+        <div data-watermark="Blog" class="flex items-center p-4 mb-10 watermark-[--dark-bg-color]">
+          <h3
+            class="text-lg font-extrabold text-[--text-base-color] dark:text-white transition relative z-10 left-6 tracking-wide"
+          >
+            BLOG
+          </h3>
+        </div>
+        <Card divider title="推荐文章" extra="更多" class="mb-3">
+          <ul>
+            <li
+              :class="['leading-7 cursor-pointer active:color-gray-400 hover:underline transition-decoration', 
+              'transition-all duration-300 underline-offset-3 decoration-gray-300',
+              favorSelectRef === item.id && 'translate-x-1.5 underline']"
+              v-for="(item, index) in favorListRef"
+              :key="item.id"
+              @click="handleClickArticleTitle(item.id)"
+            >
+              {{ index + 1 }}. {{ item.title }}
+            </li>
+          </ul>
+        </Card>
+        <Card divider title="标签">
+          <Tag
+            :class="[
+              'active:bg-slate-50',
+              'hover:color-violet-400',
+              'transition',
+              'cursor-pointer',
+              'mr-1',
+              'mb-1',
+              item.id == filterTag
+                ? 'bg-[--line-color] dark:bg-[--bs-ingido]'
+                : 'bg-white dark:bg-[--dark-line-color] dark:highlight-white/5 dark:hover:bg-black/20',
+            ]"
+            v-for="item in tagListRef"
+            :key="item.id"
+            @click="handleClickTag(item.id)"
+            >{{ item.tag_name }}</Tag
+          >
+        </Card>
       </div>
-    </div>
-    <!-- 用户 -->
-    <Button v-if="!userInfoRef" class="login-btn" @click="handleLogon">登录</Button>
-    <div v-else class="personal">
-      <div class="avatar">
-        <img src="/favicon.svg">
+    </Transition>
+    <!-- 主内容区 -->
+    <div
+      :class="[
+        showLeftSide ? 'lg:mx-1/5' : 'lg:mr-1/5',
+        'grow-1',
+        'bg-switch',
+        'text-base-color-switch',
+        'relative',
+        'flex',
+        'flex-col',
+        'transition-margin',
+        'duration-300',
+      ]"
+    >
+      <!-- 窄屏菜单栏（标题区） -->
+      <div
+        class="fixed z-100 lg:hidden flex justify-between items-center left-0 top-0 w-full h-16 px-5 box-border bg-[--theme-color] dark:bg-[--dark-nav-bg-color] transition shadow-md"
+      >
+        <div data-watermark="Blog" class="flex items-center mr-24 watermark-[--dark-nav-bg-color]">
+          <h3
+            class="text-lg font-extrabold text-[--text-base-color] dark:text-white transition relative z-10 left-6 tracking-wide"
+          >
+            BLOG
+          </h3>
+        </div>
+        <h3 class="w-30 leading-8 c-[--text-color] text-md font-semibold">
+          {{ $route.meta.title }}
+        </h3>
+        <div class="flex justify-between items-center w-30 h-full shrink-0">
+          <div
+            class="inline-block rounded-full bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left hover:bg-right transition-background duration-300 w-12 h-12 p-3 leading-3"
+            @click="changeTheme"
+          >
+            <Transition name="theme-toggle">
+              <span
+                id="light"
+                v-if="theme === 'light'"
+                class="i-tabler:sun absolute text-4 c-white h-6 w-6"
+              ></span>
+              <span
+                id="dark"
+                v-else-if="theme === 'dark'"
+                class="i-tabler:moon absolute text-4 c-white h-6 w-6"
+              ></span>
+            </Transition>
+          </div>
+          <MenuToggle :value="toggle" @toggle="(value) => (toggle = value)" />
+        </div>
       </div>
-      <div class="username">
-        <router-link to="/individual">{{ userInfoRef.loginId }}</router-link>
+      <!-- 折叠导航栏 -->
+      <Transition name="toggle">
+        <Navbar
+          v-show="toggle"
+          :paths="userInfoRef ? [...paths, ...managePaths] : paths"
+          class="lg:hidden absolute top-16 z-10 w-full bg-violet-50 dark:bg-[--dark-nav-bg-color] shadow-sm shrink-0"
+        />
+      </Transition>
+      <div class="pt-19 lg:pt-3 absolute lg:static min-h-screen w-full pb-3 pl-3 pr-4 box-border bg-switch">
+        <!-- 宽屏标题区 -->
+        <h3
+          v-if="$route.path.startsWith('/manage') || $route.path.startsWith('/add')"
+          class="hidden lg:block bg-switch c-[--text-color] text-md font-semibold h-10 pb-3 leading-7"
+        >
+          <span
+            v-if="$route.path.startsWith('/add')"
+            class="i-tabler:square-rounded-arrow-left-filled text-xl align-middle h-7 mr-1 hover:opacity-70 transition"
+            @click="$router.back()"
+          ></span>
+          {{ $route.meta.title }}
+        </h3>
+        <!-- 导航各页面内容 -->
+        <router-view v-slot="{ Component }">
+          <transition name="fade-right">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </div>
-      <Button class="operation" @click="controlOperationList">
-        <svg :class="{ 'rotate': isShowOperationListRef }" t="1697359298131" class="icon" viewBox="0 0 1024 1024"
-          version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1240" width="20" height="20">
-          <path
-            d="M755.2 544L390.4 874.666667c-17.066667 14.933333-44.8 14.933333-59.733333-2.133334-6.4-8.533333-10.666667-19.2-10.666667-29.866666v-661.333334c0-23.466667 19.2-42.666667 42.666667-42.666666 10.666667 0 21.333333 4.266667 27.733333 10.666666l362.666667 330.666667c17.066667 14.933333 19.2 42.666667 2.133333 59.733333 2.133333 2.133333 0 2.133333 0 4.266667z"
-            fill="#fff" p-id="1241"></path>
-        </svg>
-      </Button>
-      <div class="mask"></div>
-      <Transition>
-        <ul v-show="isShowOperationListRef" class="operation-list" @click="controlOperationList">
-          <li><router-link to="/articleManage">文章管理</router-link></li>
-          <li><router-link to="/projectManage">项目管理</router-link></li>
-          <li><router-link to="/commentManage">评论管理</router-link></li>
-          <li><router-link to="/tagManage">标签管理</router-link></li>
-        </ul>
+      <!-- 遮罩层 -->
+      <Transition name="fade">
+        <div
+          v-show="toggle"
+          class="lg:hidden absolute left-0 top-0 right-0 bottom-0 w-full h-screen bg-black/40 dark:bg-gray-600/20"
+          @click="toggle = !toggle"
+        ></div>
       </Transition>
     </div>
-  </nav>
-  <!-- 主内容区 -->
-  <div class="main-content" :class="{ 'has-padding': showPadding }">
-    <router-view></router-view>
+    <!-- 右侧栏 -->
+    <div class="fixed right-0 hidden lg:block w-1/5 h-screen nav-bg-switch text-base-color-switch">
+      <div
+        :class="[
+          'pt-10',
+          userInfoRef ? 'pb-4' : 'pb-16',
+          'px-6',
+          'flex',
+          'justify-between',
+          'flex-items-center',
+        ]"
+      >
+        <div>
+          <span
+            class="i-tabler:brand-github-filled mr-2 text-black dark:text-white transition"
+          ></span>
+          <span class="i-tabler:brand-wechat mr-2 text-black dark:text-white transition"></span>
+        </div>
+        <!-- 主题切换图标按钮 -->
+        <div
+          class="inline-block rounded-full bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left hover:bg-right transition-background duration-300 w-12 h-12 p-3 leading-3"
+          @click="changeTheme"
+        >
+          <Transition name="theme-toggle">
+            <span
+              id="light"
+              v-if="theme === 'light'"
+              class="i-tabler:sun absolute text-4 c-white h-6 w-6"
+            ></span>
+            <span
+              id="dark"
+              v-else-if="theme === 'dark'"
+              class="i-tabler:moon absolute text-4 c-white h-6 w-6"
+            ></span>
+          </Transition>
+        </div>
+      </div>
+      <div v-if="userInfoRef">
+        <p class="px-6 py-3 h-12">你好！{{ userInfoRef?.loginId }}</p>
+      </div>
+      <!-- 导航 -->
+      <Navbar :paths="userInfoRef ? [...paths, ...managePaths] : paths" />
+      <!-- 登录 -->
+      <div>
+        <Button
+          v-if="!userInfoRef"
+          class="login-btn mx-6 mt-6"
+          @click="$router.push({ path: '/login' })"
+        >
+          <span>登录</span>
+        </Button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch, provide } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { getArticleList } from './api/article';
-import { getProjectList } from './api/project';
-import Button from './components/Button.vue';
-import mitt from './utils/mitt';
-// import {stretchWater, shrinkWater} from './utils/index';
-
-const emitter = mitt();
-provide('emitter', emitter)
-
-const userInfoRef = ref(null);
-
-
-onMounted(() => {
-  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-  userInfoRef.value = userInfo;
-  const headerBump = document.getElementById('headerBump');
-  const navBar = document.querySelector('.nav-bar-container');
-  const path = headerBump.childNodes[0];
-  const speed_a = 0.0220011;
-  const speed_d = -0.00611333;
-  const speed_tx = -6.0111333;
-  let a = 1, d = 1, tx = -76.1984879008934, timer = null;
-  navBar.addEventListener('mousemove', (e) => {
-    headerBump.style.left = e.clientX;
-  })
-  navBar.addEventListener('mouseenter', () => {
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-      if (a < 2) {
-        a += speed_a;
-      }
-      if (d > 0.7) {
-        d += speed_d;
-      }
-      if (tx > -352.3911023420891) {
-        tx += speed_tx;
-      }
-      if (a >= 2 && d <= 0.7 && tx <= -352.3911023420891) {
-        clearInterval(timer);
-        timer = null;
-        a = 2; d = 0.7; tx = -352.3911023420891;
-      }
-      path.style.transform = `matrix(${a}, 0, 0, ${d}, ${tx}, 0)`
-    }, 50);
-  })
-  navBar.addEventListener('mouseleave', () => {
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-      if (a > 1) {
-        a -= speed_a * 2.9800033;
-      }
-      if (d < 1) {
-        d -= speed_d * 2.00033;
-      }
-      if (tx < -76.1984879008934) {
-        tx -= speed_tx * 3.00033;
-      }
-      if (a <= 1 && d >= 1 && tx >= -76.1984879008934) {
-        clearInterval(timer);
-        timer = null;
-        a = 1; d = 1; tx = -76.1984879008934;
-      }
-      path.style.transform = `matrix(${a}, 0, 0, ${d}, ${tx}, 0)`
-    }, 50)
-  })
-})
+import { onMounted, ref, watch, provide } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useTheme } from "@/hooks";
+import Navbar from "@/components/bc/Navbar.vue";
+import Button from "@/components/uc/Button.vue";
+import Card from "@/components/uc/Card.vue";
+import Tag from "@/components/uc/Tag.vue";
+import MenuToggle from "@/components/bc/MenuToggle.vue";
+import mitt from "@/utils/mitt";
+import { paths, managePaths } from "@/utils/constant";
+import { getTagList } from "@/api/tag.js";
+import api from "@/api";
 
 const route = useRoute();
-
-// 点击登录按钮
 const router = useRouter();
-const handleLogon = () => {
-  if (!userInfoRef.value) {
-    router.push({ path: '/login' });
+const [theme, setTheme] = useTheme(); // 控制主题切换，默认 light
+const emitter = mitt();
+const userInfoRef = ref(null);
+const favorListRef = ref([]);
+const tagListRef = ref([]);
+const toggle = ref(false);
+const showLeftSide = ref(true); // 根据当前页面路径判断是否需要展示 left-side，初始加载页面时默认显示
+const filterTag = ref(null); // 点击的标签（用于过滤文章）
+const favorSelectRef = ref(null);
+// const searchValRef = ref(""); // 搜索框的值
+provide("emitter", emitter);
+
+onMounted(async () => {
+  const userInfo = sessionStorage.getItem("userInfo");
+  if (userInfo) {
+    userInfoRef.value = JSON.parse(userInfo);
   }
-}
-// 根据不同情况显示不同 main-content样式，当为管理界面时，去掉padding
-const showPadding = ref(false);
-const noPaddingList = ['/articleManage', '/projectManage', '/commentManage', '/tagManage']
+  fetchData();
+});
 // 监听路由变化
-watch(() => router.currentRoute.value.path, (newVal, oldVal) => {
-  if (oldVal === '/login' && newVal === '/article') {
-    userInfoRef.value = JSON.parse(sessionStorage.getItem('userInfo'));
+watch(
+  () => route.path,
+  (newVal, oldVal) => {
+    // 从登录页跳转到文章页时，获取用户信息
+    if (oldVal === "/login" && newVal.startsWith("/articleDetail")) {
+      userInfoRef.value = JSON.parse(sessionStorage.getItem("userInfo"));
+    }
+    // 根据路由路径判断是否需要展示左侧菜单
+    if (
+      newVal.startsWith("/manage") ||
+      newVal.startsWith("/add") ||
+      newVal.startsWith("/editArticle")
+    ) {
+      showLeftSide.value = false;
+    } else {
+      showLeftSide.value = true;
+    }
+    if (newVal.startsWith("/articleDetail")) {
+      favorSelectRef.value = newVal.split('/')[2];
+    } else {
+      favorListRef.value = null;
+    }
   }
-  // console.log(noPaddingList.includes(router.currentRoute.value.path))
-  if (noPaddingList.includes(router.currentRoute.value.path)) {
-    showPadding.value = false;
-  } else {
-    showPadding.value = true;
+);
+
+async function fetchData() {
+  // 获取标签列表数据
+  const tagList = JSON.parse(localStorage.getItem("tagList"));
+  if (!tagList) {
+    tagListRef.value = await getTagList();
+    localStorage.setItem("tagList", JSON.stringify(tagListRef.value));
   }
-})
-// 搜索
-const searchValRef = ref('');
-const handleSearch = () => {
-  const path = route.fullPath;
-  switch (path) {
-    case '/article':
-      getArticleList({ page: 1, pageSize: 5, filterKey: searchValRef.value }).then((res) => {
-        emitter.emit('searchArticle', res);
-        searchValRef.value = '';
-      })
+  tagListRef.value = tagList;
+  // 获取推荐文章数据
+  const result = await api.article.getArticleList({ filterKey: "favor" });
+  favorListRef.value = result.list;
+}
+
+// 修改主题
+function changeTheme(e) {
+  switch (e.target.id) {
+    case "light":
+      setTheme("dark");
       break;
-    case '/project':
-      getProjectList({ filterKey: searchValRef.value }).then((res) => {
-        console.log('搜索后的项目列表', res)
-        emitter.emit('searchProject', res);
-        searchValRef.value = '';
-      })
-      break;
-    case '/articleManage':
-      emitter.emit('searchArticleManage', searchValRef.value);
-      break;
-    case '/projectManage':
-      emitter.emit('searchProjectManage', searchValRef.value)
+    case "dark":
+      setTheme("light");
       break;
   }
 }
-// 展示/隐藏操作按钮列表
-const isShowOperationListRef = ref(false)
-function controlOperationList() {
-  isShowOperationListRef.value = !isShowOperationListRef.value;
+
+// 跳转到指定文章
+function handleClickArticleTitle(articleId) {
+  filterTag.value = null;
+  favorSelectRef.value = articleId;
+  router.push({ path: `/articleDetail/${articleId}` });
 }
 
-
+// 跳转到指定标签的文章列表（文章列表筛选）
+function handleClickTag(tagId) {
+  filterTag.value = tagId;
+  router.push({ path: "/article", query: { tag: tagId } });
+}
 </script>
 
 <style scoped>
-.nav-bar-container {
-  position: fixed;
-  width: 100%;
-  height: 60px;
-  /* background: #3DCBFF; */
-  background-color: #55BBFF;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 15px;
-  box-sizing: border-box;
-  z-index: 100;
+/* 主题按钮切换动画 */
+.theme-toggle-enter-active,
+.theme-toggle-leave-active {
+  transition: all 0.1s ease-in;
+}
+
+.theme-toggle-leave-to {
+  opacity: 0;
+  transform: scale(1);
+}
+
+.theme-toggle-enter-from {
+  opacity: 1;
+  transform: scale(0);
+}
+/* 主内容区内容切换动画 */
+.fade-right-enter-active {
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.fade-right-leave-active {
+  transition: all 0.1s ease-in-out;
+}
+.fade-right-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.fade-right-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-left-enter-active,
+.fade-left-leave-active {
+  transition: all 0.1s ease-in-out;
+}
+.fade-left-enter-from {
+  opacity: 0;
+  width: 200px;
+}
+.fade-left-leave-to {
+  opacity: 0;
+  width: 200px;
+}
+
+.fade-top-enter-active,
+.fade-top-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+.fade-top-enter-from {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+.fade-top-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.toggle-enter-active,
+.toggle-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.toggle-leave-to,
+.toggle-enter-from {
+  transform: translateY(-100%);
 }
 
 .favicon {
+  width: 160px;
   height: 60px;
   padding: 5px 0;
   box-sizing: border-box;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
 }
 
 .favicon span {
   display: inline-block;
+  width: 110px;
   height: 50px;
+  text-align: center;
   line-height: 50px;
   font-size: 34px;
-  color: #FFF;
-  margin-left: 8px;
+  color: #fff;
   font-weight: 600;
   letter-spacing: 1px;
 }
 
 .nav-bar {
-  width: 70%;
   height: 60px;
-  margin-left: 50px;
+  flex: 1;
   display: flex;
   justify-content: space-evenly;
 }
 
 #headerBump {
   height: 20px;
-  fill: #55BBFF;
+  fill: #55bbff;
   position: absolute;
   left: 0;
   top: 59px;
@@ -248,9 +418,9 @@ function controlOperationList() {
   font-weight: 600;
   font-size: 18px;
   text-decoration: inherit;
-  color: #FFF;
-  margin-right: 80px;
-  transition: color .5s;
+  color: #fff;
+  margin: 0 10px;
+  transition: color 0.5s;
 }
 
 .nav-bar a:hover {
@@ -258,12 +428,14 @@ function controlOperationList() {
 }
 
 .search {
+  width: 300px;
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin: 0 20px;
 }
 
 .search input {
+  flex: 1;
   border: none;
   outline: none;
   height: 35px;
@@ -273,12 +445,14 @@ function controlOperationList() {
 }
 
 .search-btn {
-  margin: 0 10px;
+  width: 40px;
+  padding: 0 10px;
+  box-sizing: border-box;
   cursor: pointer;
 }
 
 .search-btn path {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .search-btn:hover path {
@@ -287,6 +461,7 @@ function controlOperationList() {
 
 .login-btn {
   width: 80px;
+  min-width: 54px;
 }
 
 /* .login-btn {
@@ -322,13 +497,13 @@ function controlOperationList() {
 }
 
 .operation {
-  background-color: #55BBFF;
+  background-color: #55bbff;
   border: none;
   margin: 3px 0;
 }
 
 .operation svg {
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .rotate {
@@ -341,61 +516,14 @@ function controlOperationList() {
 
 .username a {
   text-decoration: inherit;
-  color: #FFF;
+  color: #fff;
   font-weight: 600;
 }
 
-.operation-list {
-  box-sizing: border-box;
-  position: absolute;
-  top: 60px;
-  right: 0px;
-  background: #55BBFF;
-  margin: 0;
-  padding-bottom: 10px;
-  z-index: 101;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
-li {
-  list-style: none;
-  height: 40px;
-  line-height: 20px;
-  box-sizing: border-box;
-  padding: 10px 20px;
-}
-
-.operation-list li a {
-  text-decoration: none;
-  color: #fff;
-  font-size: 14px;
-  height: 20px;
-  line-height: 20px;
-}
-
-.main-content {
-  height: calc(100vh - 60px);
-  margin-top: 60px;
-  box-sizing: border-box;
-  background-color: #f8f8f8;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
-
-.has-padding {
-  padding: 0 10%;
-}
-
-.v-enter-active {
-  animation: toggle .15s;
-  transform-origin: 0 -5px;
-}
-
-.v-leave-active {
-  animation: toggle .15s reverse;
-  transform-origin: 0 -5px;
-}
+/* .theme-toggle-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+} */
 
 @keyframes toggle {
   0% {

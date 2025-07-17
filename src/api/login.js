@@ -1,5 +1,5 @@
-import instance from ".";
+import instance from "./instance";
 
-export const logOn = (data) => {
-  return instance.post('/logon', data)
-}
+export const logIn = (data) => {
+  return instance.post("/login", data);
+};

@@ -19,11 +19,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import Table from '../components/Table.vue';
-import Button from '../components/Button.vue';
-import Modal from '../components/Modal.vue';
-import Loading from '../components/Loading.vue';
-import { getComments, deleteComment } from '../api/comment';
+import Table from '../../components/uc/Table.vue';
+import Button from '../../components/uc/Button.vue';
+import Modal from '../../components/uc/Modal.vue';
+import Loading from '../../components/uc/Loading.vue';
+import { getComments, deleteComment } from '../../api/comment';
 
 const columns = [
   {

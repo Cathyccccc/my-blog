@@ -53,22 +53,22 @@
 
 <script setup>
 import { ref, onMounted, inject } from 'vue';
-import Table from '../components/Table.vue';
-import TagList from '../components/TagList.vue';
-import Button from '../components/Button.vue';
-import Loading from '../components/Loading.vue';
-import Form from '../components/Form.vue';
-import FormItem from '../components/FormItem.vue';
-import Input from '../components/Input.vue';
-import Select from '../components/Select.vue';
-import Modal from '../components/Modal.vue';
-import Upload from '../components/Upload.vue';
-import DatePicker from '../components/DatePicker.vue';
-import Textarea from '../components/Textarea.vue';
-import { getProjectList, addProject, updateProject, deleteProject } from '../api/project';
-import { getTagList } from '../api/tag';
-import { getDate } from '../utils/date';
-import { uploadImage, getImage } from '../api/upload';
+import Table from '../../components/uc/Table.vue';
+import TagList from '../../components/TagList.vue';
+import Button from '../../components/uc/Button.vue';
+import Loading from '../../components/uc/Loading.vue';
+import Form from '../../components/uc/Form.vue';
+import FormItem from '../../components/uc/FormItem.vue';
+import Input from '../../components/uc/Input.vue';
+import Select from '../../components/uc/Select.vue';
+import Modal from '../../components/uc/Modal.vue';
+import Upload from '../../components/uc/Upload.vue';
+import DatePicker from '../../components/DatePicker.vue';
+import Textarea from '../../components/Textarea.vue';
+import { getProjectList, addProject, updateProject, deleteProject } from '../../api/project';
+import { getTagList } from '../../api/tag';
+import { getDate } from '../../utils/date';
+import { uploadImage, getImage } from '../../api/upload';
 
 const columns = [
   {

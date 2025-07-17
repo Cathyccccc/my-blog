@@ -29,7 +29,7 @@ export default {
 import { ref } from 'vue'
 import CommentCard from '../components/CommentCard.vue'
 import CommentBox from './CommentBox.vue';
-import Button from './Button.vue';
+import Button from './uc/Button.vue';
 import { getDateTime } from '../utils/date';
 import { getRandomName } from '../utils/random';
 import { addComment } from '../api/comment';

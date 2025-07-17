@@ -1,5 +1,5 @@
 <template>
-  <input :value="value" @input="$emit('update:value', $event.target.value)">
+  <input class="w-full" :value="value" @input="$emit('update:value', $event.target.value)">
 </template>
 
 <script setup>

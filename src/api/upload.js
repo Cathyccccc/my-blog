@@ -1,27 +1,24 @@
-import instance from ".";
+import instance from "./instance";
 
 // 图片上传
 function uploadImage(img) {
-  return instance.post('/upload', img)
+  return instance.post("/upload", img);
 }
 
 function getImage(path) {
   return instance.get(`/static/${path}`, {
     headers: {
-      'Accept': 'image/jpeg'
+      Accept: "image/jpeg",
     },
-    responseType: 'blob',
+    responseType: "blob",
     transformResponse: (res) => {
       return {
         code: 0,
         success: true,
-        data: res
-      }
-    }
-  })
+        data: res,
+      };
+    },
+  });
 }
 
-export {
-  uploadImage,
-  getImage,
-}
+export { uploadImage, getImage };

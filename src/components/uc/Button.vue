@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   type: { // 按钮类型 ('default', 'primary', 'danger', 'link')
     type: String,
     default: 'default',
@@ -18,7 +18,7 @@ const props = defineProps({
   size: { // 按钮大小 ('small', 'middle', 'large')
     type: String,
     default: 'middle',
-  }
+  },
 })
 </script>
 
