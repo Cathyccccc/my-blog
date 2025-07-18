@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3001/",
+  // baseURL: "http://localhost:3001/",
   timeout: 50000,
   withCredentials: true,
 });
@@ -10,7 +10,7 @@ instance.defaults.headers.post["Content-Type"] = "application/x-www-form-urlenco
 
 instance.interceptors.request.use(
   (config) => {
-    // console.log(config);
+    config.url = "/api" + config.url;
     config.headers["Authorization"] = sessionStorage.getItem("token") || null; //- 获取token，并且设置到请求头里面
     // config.headers['Content-Type'] = 'application/json;charset=UTF-8';
     return config;

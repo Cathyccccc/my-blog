@@ -1,16 +1,22 @@
 <template>
+  <!-- 使用的时候可以嵌套Teleport -->
   <Transition>
     <div class="modal-container" v-if="open">
-      <div class="mask"></div>
+      <div class="mask" @click.stop="handleBlur"></div>
       <div class="modal" tabindex="-1">
-        <div class="modal-content dark:bg-[--dark-theme-color]">
-          <div class="title">{{ $attrs.title }}</div>
+        <div class="modal-content bg-white dark:bg-[--dark-theme-color]" v-bind:style="$attrs.style">
+          <div class="flex justify-between">
+            <p class="text-base-color-switch">{{ $attrs.title }}</p>
+            <span v-if="closable" class="i-tabler:circle-x w-6 h-6 text-gray-400 cursor-pointer" @click="$emit('update:open', false)"></span>
+          </div>
           <div class="content">
             <slot></slot>
           </div>
-          <div class="footer">
-            <Button @click="handleCancel">{{ cancelText }}</Button>
-            <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+          <div class="footer" v-if="$attrs.footer !== null">
+            <slot name="footer">
+              <Button @click="handleCancel">{{ cancelText }}</Button>
+              <Button type="primary" @click="$emit('onOk')">{{ okText }}</Button>
+            </slot>
           </div>
         </div>
       </div>
@@ -20,7 +26,7 @@
 
 <script setup>
 import Button from './Button.vue';
-const props = defineProps({
+defineProps({
   open: {
     type: Boolean,
     default: false,
@@ -33,6 +39,10 @@ const props = defineProps({
     type: String,
     default: 'Cancel'
   },
+  closable: { // 是否显示右上角关闭按钮
+    type: Boolean,
+    default: false
+  }
 })
 const emits = defineEmits(['onCancel', 'onOk', 'update:open'])
 function handleBlur() {
@@ -73,13 +83,6 @@ function handleCancel() {
   box-sizing: border-box;
   scroll-behavior: smooth;
   font-size: 14px;
-}
-
-.title {
-  line-height: 2;
-  font-weight: 600;
-  font-size: 16px;
-  color: #55BBFF;
 }
 
 .content {

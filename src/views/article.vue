@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="px-3 lg:p-0" v-show="articleListRef.length">
+      <div class="md:px-3 lg:p-0" v-show="articleListRef.length">
         <Card
           v-for="item in articleListRef"
           :key="item.id"
@@ -9,6 +9,7 @@
         >
           <!-- 文章卡片--头部 -->
           <template #title>
+            <div class="w-full md:flex md:justify-between md:items-center">
             <div class="flex items-baseline">
               <svg
                 t="1752569670588"
@@ -29,7 +30,7 @@
                 >{{ item.title }}</span
               >
             </div>
-            <div class="mr-6">
+            <div class="md:mr-6 lg:mr-10 ml-12 md:ml-0 mt-1 md:mt-0">
               <Tag
                 bordered
                 size="small"
@@ -40,6 +41,7 @@
                 >{{ t.tag_name }}</Tag
               >
             </div>
+          </div>
           </template>
           <!-- 文章卡片--内容 -->
           <div class="flex pr-6">
@@ -60,7 +62,7 @@
                 class="selected"
               ></path>
             </svg>
-            <div class="text-[--text-base-color] dark:text-slate-500 group-hover:text-slate-600 transition-color duration-150">{{ item.content.replace(/[*#]+/g, " ").slice(0, 120) + "..." }}</div>
+            <div class="h-10 overflow-y-hidden md:h-auto text-[--text-base-color] dark:text-slate-500 group-hover:text-slate-600 transition-color duration-150">{{ item.content.replace(/[*#]+/g, " ").slice(0, 120) + "..." }}</div>
           </div>
           <!-- 文章卡片-尾部 -->
           <template #footer>
@@ -72,7 +74,7 @@
         </Card>
         <!-- <Pagination v-model:current="pagination.page" :total="pagination.total" /> -->
       </div>
-      <Loading v-if="loadingRef" class="loading" />
+      <!-- <Loading v-if="loadingRef" class="loading" /> -->
       <!-- <Empty v-show="articleListRef.length === 0" class="empty" /> -->
     </div>
 </template>

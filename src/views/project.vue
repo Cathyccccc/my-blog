@@ -1,6 +1,6 @@
 <template>
-  <div class="project-container">
-    项目列表
+  <div>
+    内容正在更新中，敬请期待。
     <!-- <Loading v-if="loadingRef" class="loading" /> -->
     <!-- <ProjectCard v-for="item in projectListRef" :key="item.id" :projectObj="item" /> -->
   </div>

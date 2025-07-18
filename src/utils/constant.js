@@ -1,3 +1,4 @@
+// 应该根据 router 进行菜单的创建（待办）
 const paths = [
   {
     path: "/article",
@@ -8,6 +9,10 @@ const paths = [
     path: "/project",
     pathname: "项目列表",
     icon: "i-tabler:browser-check",
+  },
+  {
+    path: "/personal",
+    pathname: "个人简介",
   },
 ];
 

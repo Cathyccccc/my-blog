@@ -13,11 +13,6 @@ export const getArticleList = (
   });
 };
 
-// 获取浏览量最高的5个文章
-// export const getFavorArticles = () => {
-//   return instance.get("/article/favor");
-// };
-
 // 根据id获取文章
 export const getArticleById = (id) => {
   return instance.get(`/article/${id}`);
@@ -26,7 +21,6 @@ export const getArticleById = (id) => {
 // 新增文章
 export const addArticle = (article) => {
   article.tag = JSON.stringify(article.tag);
-  console.log("发送新增文章请求", article.tag);
   return instance.post("/article", article);
 };
 

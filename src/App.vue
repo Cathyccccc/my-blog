@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['flex', 'justify-stretch', 'h-fit', 'w-screen', theme]"
+    :class="['flex justify-stretch w-screen', theme]"
     :style="{
       background: theme === 'dark' ? '#0b0020' : '#fff',
       transition: 'background .3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -24,7 +24,7 @@
             <li
               :class="['leading-7 cursor-pointer active:color-gray-400 hover:underline transition-decoration', 
               'transition-all duration-300 underline-offset-3 decoration-gray-300',
-              favorSelectRef === item.id && 'translate-x-1.5 underline']"
+              favorSelectRef === item.id && 'translate-x-1.5 underline text-gray-500']"
               v-for="(item, index) in favorListRef"
               :key="item.id"
               @click="handleClickArticleTitle(item.id)"
@@ -70,7 +70,7 @@
     >
       <!-- 窄屏菜单栏（标题区） -->
       <div
-        class="fixed z-100 lg:hidden flex justify-between items-center left-0 top-0 w-full h-16 px-5 box-border bg-[--theme-color] dark:bg-[--dark-nav-bg-color] transition shadow-md"
+        class="fixed w-screen z-100 lg:hidden flex justify-between items-center left-0 top-0 right-0 h-16 px-3 md:px-5 box-border bg-[--theme-color] dark:bg-[--dark-nav-bg-color] transition shadow-md"
       >
         <div data-watermark="Blog" class="flex items-center mr-24 watermark-[--dark-nav-bg-color]">
           <h3
@@ -82,9 +82,11 @@
         <h3 class="w-30 leading-8 c-[--text-color] text-md font-semibold">
           {{ $route.meta.title }}
         </h3>
-        <div class="flex justify-between items-center w-30 h-full shrink-0">
+        <div class="flex justify-between items-center w-22 md:w-30 h-full shrink-0">
           <div
-            class="inline-block rounded-full bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left hover:bg-right transition-background duration-300 w-12 h-12 p-3 leading-3"
+            class="inline-block w-10 h-10 p-2 md:w-12 md:h-12 md:p-3 leading-3 rounded-full 
+            bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left 
+            hover:bg-right transition-background duration-300"
             @click="changeTheme"
           >
             <Transition name="theme-toggle">
@@ -108,10 +110,10 @@
         <Navbar
           v-show="toggle"
           :paths="userInfoRef ? [...paths, ...managePaths] : paths"
-          class="lg:hidden absolute top-16 z-10 w-full bg-violet-50 dark:bg-[--dark-nav-bg-color] shadow-sm shrink-0"
+          class="lg:hidden fixed top-16 z-10 w-full bg-violet-50 dark:bg-[--dark-nav-bg-color] shadow-sm shrink-0"
         />
       </Transition>
-      <div class="pt-19 lg:pt-3 absolute lg:static min-h-screen w-full pb-3 pl-3 pr-4 box-border bg-switch">
+      <div class="pt-19 lg:pt-3 lg:static min-h-screen w-full pb-3 px-2 md:pl-3 md:pr-4 box-border bg-switch">
         <!-- 宽屏标题区 -->
         <h3
           v-if="$route.path.startsWith('/manage') || $route.path.startsWith('/add')"
@@ -126,7 +128,7 @@
         </h3>
         <!-- 导航各页面内容 -->
         <router-view v-slot="{ Component }">
-          <transition name="fade-right">
+          <transition name="fade-right" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
@@ -135,7 +137,7 @@
       <Transition name="fade">
         <div
           v-show="toggle"
-          class="lg:hidden absolute left-0 top-0 right-0 bottom-0 w-full h-screen bg-black/40 dark:bg-gray-600/20"
+          class="lg:hidden fixed left-0 top-0 right-0 bottom-0 w-full h-screen bg-black/40 dark:bg-gray-600/20 transition"
           @click="toggle = !toggle"
         ></div>
       </Transition>
@@ -153,14 +155,19 @@
         ]"
       >
         <div>
+          <a href="https://github.com/Cathyccccc" target="_blank">
+            <span
+              class="i-tabler:brand-github-filled mr-2 text-black dark:text-white transition cursor-pointer"
+            ></span>
+          </a>
           <span
-            class="i-tabler:brand-github-filled mr-2 text-black dark:text-white transition"
+            class="relative i-tabler:brand-wechat mr-2 text-black dark:text-white transition cursor-pointer"
+            @click="showQRCode = true"
           ></span>
-          <span class="i-tabler:brand-wechat mr-2 text-black dark:text-white transition"></span>
         </div>
         <!-- 主题切换图标按钮 -->
         <div
-          class="inline-block rounded-full bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left hover:bg-right transition-background duration-300 w-12 h-12 p-3 leading-3"
+          class="inline-block w-12 h-12 p-3 leading-3 rounded-full bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left hover:bg-right transition-background duration-300"
           @click="changeTheme"
         >
           <Transition name="theme-toggle">
@@ -194,6 +201,9 @@
       </div>
     </div>
   </div>
+  <Modal v-model:open="showQRCode" closable :style="{ width: '240px'}" :footer="null">
+    <img src="../public/wechat.jpg" width="200" alt="">
+  </Modal>
 </template>
 
 <script setup>
@@ -205,10 +215,11 @@ import Button from "@/components/uc/Button.vue";
 import Card from "@/components/uc/Card.vue";
 import Tag from "@/components/uc/Tag.vue";
 import MenuToggle from "@/components/bc/MenuToggle.vue";
+import Modal from "@/components/uc/Modal.vue";
 import mitt from "@/utils/mitt";
-import { paths, managePaths } from "@/utils/constant";
-import { getTagList } from "@/api/tag.js";
 import api from "@/api";
+import { paths, managePaths } from "@/utils/constant";
+// import {routes} from "@/route/routes.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -221,6 +232,7 @@ const toggle = ref(false);
 const showLeftSide = ref(true); // 根据当前页面路径判断是否需要展示 left-side，初始加载页面时默认显示
 const filterTag = ref(null); // 点击的标签（用于过滤文章）
 const favorSelectRef = ref(null);
+const showQRCode = ref(false);
 // const searchValRef = ref(""); // 搜索框的值
 provide("emitter", emitter);
 
@@ -252,7 +264,7 @@ watch(
     if (newVal.startsWith("/articleDetail")) {
       favorSelectRef.value = newVal.split('/')[2];
     } else {
-      favorListRef.value = null;
+      favorSelectRef.value = null;
     }
   }
 );
@@ -261,13 +273,12 @@ async function fetchData() {
   // 获取标签列表数据
   const tagList = JSON.parse(localStorage.getItem("tagList"));
   if (!tagList) {
-    tagListRef.value = await getTagList();
+    tagListRef.value = await api.tag.getTagList();
     localStorage.setItem("tagList", JSON.stringify(tagListRef.value));
   }
   tagListRef.value = tagList;
   // 获取推荐文章数据
-  const result = await api.article.getArticleList({ filterKey: "favor" });
-  favorListRef.value = result.list;
+  favorListRef.value = JSON.parse(localStorage.getItem("favorList"));
 }
 
 // 修改主题
@@ -297,6 +308,13 @@ function handleClickTag(tagId) {
 </script>
 
 <style scoped>
+.wechat:hover::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: #000;
+}
 /* 主题按钮切换动画 */
 .theme-toggle-enter-active,
 .theme-toggle-leave-active {
@@ -357,7 +375,7 @@ function handleClickTag(tagId) {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s;
+  transition: all 0.3s;
 }
 .fade-enter-from,
 .fade-leave-to {

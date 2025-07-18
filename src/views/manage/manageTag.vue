@@ -1,31 +1,32 @@
 <template>
-  <Loading v-if="loadingRef" class="loading" />
-  <template v-else>
-    <Table :data="gridData" :columns="gridColumns" :filter-key="searchQuery" title="标签管理">
-      <template #header>
-        <Button @click="visibleAddRef = true">新增标签</Button>
-      </template>
-
-      <template #bodyCell="{ column, row }">
-        <template v-if="column.key === 'operate'">
-          <Button type="link" @click="handleDelete(row)">Delete</Button>
+  <div>
+    <Loading v-if="loadingRef" class="loading" />
+    <template v-else>
+      <Table :data="gridData" :columns="gridColumns" :filter-key="searchQuery" title="标签管理">
+        <template #header>
+          <Button @click="visibleAddRef = true">新增标签</Button>
         </template>
-      </template>
-    </Table>
-  </template>
-  <Modal v-model:open="visibleAddRef" title="新增标签" @on-ok="addTagItem">
-    <Form :wrapper-col="{ span: 21 }" :label-col="{ span: 3 }">
-      <FormItem label="标签名称" name="tag_name">
-        <Input v-model:value.trim="tagNameRef" />
-      </FormItem>
-    </Form>
-  </Modal>
-  <Modal v-model:open="visibleDeleteRef" title="删除标签" @on-ok="deleteTagItem">
-    确认删除标签
-    <Tag type="info" class="bg-slate-50">{{ deleteTagRef.tag_name }}</Tag>
-    <!-- <TagList :tag-list-data="[deleteTagRef.tag_name]" /> -->
-    吗？
-  </Modal>
+
+        <template #bodyCell="{ column, row }">
+          <template v-if="column.key === 'operate'">
+            <Button type="link" @click="handleDelete(row)">Delete</Button>
+          </template>
+        </template>
+      </Table>
+    </template>
+    <Modal v-model:open="visibleAddRef" title="新增标签" @on-ok="addTagItem">
+      <Form :wrapper-col="{ span: 21 }" :label-col="{ span: 3 }">
+        <FormItem label="标签名称" name="tag_name">
+          <Input v-model:value.trim="tagNameRef" />
+        </FormItem>
+      </Form>
+    </Modal>
+    <Modal v-model:open="visibleDeleteRef" title="删除标签" @on-ok="deleteTagItem">
+      确认删除标签
+      <Tag type="info" class="bg-slate-50">{{ deleteTagRef.tag_name }}</Tag>
+      吗？
+    </Modal>
+  </div>
 </template>
 
 <script setup>
