@@ -20,8 +20,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
