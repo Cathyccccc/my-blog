@@ -21,7 +21,6 @@
         </div>
       </div>
     </Transition>
-  </Teleport>
 </template>
 
 <script setup>
