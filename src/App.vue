@@ -269,6 +269,13 @@ watch(
   }
 );
 
+watch(() => route.query, (newVal) => {
+  console.log(newVal)
+  if (!newVal.tag) {
+    filterTag.value = null;
+  }
+});
+
 async function fetchData() {
   // 获取标签列表数据
   const tagList = JSON.parse(localStorage.getItem("tagList"));
@@ -295,7 +302,6 @@ function changeTheme(e) {
 
 // 跳转到指定文章
 function handleClickArticleTitle(articleId) {
-  filterTag.value = null;
   favorSelectRef.value = articleId;
   router.push({ path: `/articleDetail/${articleId}` });
 }

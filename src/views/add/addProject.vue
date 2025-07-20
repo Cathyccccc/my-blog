@@ -1,5 +1,5 @@
 <template>
-  add journal
+  add project
 </template>
 
 <script setup>

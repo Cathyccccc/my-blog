@@ -7,7 +7,7 @@
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.key === 'coverImg'">
-          <img v-if="row.coverImg" :src="'http://localhost:3000/static/' + row.coverImg" />
+          <img v-if="row.coverImg" src="" />
           <div v-else class="inline-block p-2 bg-gray-50 dark:bg-[--dark-line-color]">
             <svg
               t="1752479314026"
