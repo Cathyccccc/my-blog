@@ -1,13 +1,20 @@
 <template>
   <!-- 使用的时候可以嵌套Teleport -->
   <Transition>
-    <div class="modal-container" v-if="open">
+    <div v-if="open">
       <div class="mask" @click.stop="handleBlur"></div>
       <div class="modal" tabindex="-1">
-        <div class="modal-content bg-white dark:bg-[--dark-theme-color]" v-bind:style="$attrs.style">
+        <div
+          class="modal-content bg-white dark:bg-[--dark-theme-color]"
+          v-bind:style="$attrs.style"
+        >
           <div class="flex justify-between">
             <p class="text-base-color-switch">{{ $attrs.title }}</p>
-            <span v-if="closable" class="i-tabler:circle-x w-6 h-6 text-gray-400 cursor-pointer" @click="$emit('update:open', false)"></span>
+            <span
+              v-if="closable"
+              class="i-tabler:circle-x w-6 h-6 text-gray-400 cursor-pointer"
+              @click="$emit('update:open', false)"
+            ></span>
           </div>
           <div class="content">
             <slot></slot>
@@ -20,11 +27,12 @@
           </div>
         </div>
       </div>
-    </Transition>
+    </div>
+  </Transition>
 </template>
 
 <script setup>
-import Button from './Button.vue';
+import Button from "./Button.vue";
 defineProps({
   open: {
     type: Boolean,
@@ -32,25 +40,26 @@ defineProps({
   },
   okText: {
     type: String,
-    default: 'Ok'
+    default: "Ok",
   },
   cancelText: {
     type: String,
-    default: 'Cancel'
+    default: "Cancel",
   },
-  closable: { // 是否显示右上角关闭按钮
+  closable: {
+    // 是否显示右上角关闭按钮
     type: Boolean,
-    default: false
-  }
-})
-const emits = defineEmits(['onCancel', 'onOk', 'update:open'])
+    default: false,
+  },
+});
+const emits = defineEmits(["onCancel", "onOk", "update:open"]);
 function handleBlur() {
-  console.log('失焦')
+  console.log("失焦");
 }
 // 点击cancel按钮
 function handleCancel() {
-  emits('update:open', false)
-  emits('onCancel')
+  emits("update:open", false);
+  emits("onCancel");
 }
 </script>
 
@@ -98,14 +107,14 @@ function handleCancel() {
 /* transition动画 */
 .v-enter-active,
 .v-leave-active {
-  transition: all .3s;
+  transition: all 0.3s;
 }
 .v-enter-active .modal-content {
   animation: bounce-in 0.3s;
 }
 
 .v-leave-active .modal-content {
-  animation: bounce-in .3s reverse forwards;
+  animation: bounce-in 0.3s reverse forwards;
 }
 
 @keyframes bounce-in {
