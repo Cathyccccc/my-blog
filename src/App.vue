@@ -10,21 +10,17 @@
     <Transition name="fade-left" mode="out-in">
       <div
         v-if="showLeftSide"
-        class="fixed left-0 hidden bg-switch text-base-color-switch lg:block w-1/5 h-full px-3 pt-10 box-border border-r-1 border-[#f2f2f2] dark:border-white/10 box-border overflow-y-auto"
+        class="fixed left-0 hidden lg:block bg-switch text-base-color-switch w-1/5 h-full px-3 pt-10 box-border border-r-1 border-[#f2f2f2] dark:border-white/10 box-border overflow-y-auto"
       >
-        <div data-watermark="Blog" class="flex items-center p-4 mb-10 watermark-[--dark-bg-color]">
-          <h3
-            class="text-lg font-extrabold text-[--text-base-color] dark:text-white transition relative z-10 left-6 tracking-wide"
-          >
-            BLOG
-          </h3>
-        </div>
-        <Card divider title="推荐文章" extra="更多" class="mb-3">
+        <BlogIcon />
+        <Card divider title="推荐文章" extra="更多" class="my-3">
           <ul>
             <li
-              :class="['leading-7 cursor-pointer active:color-gray-400 hover:underline transition-decoration', 
-              'transition-all duration-300 underline-offset-3 decoration-gray-300',
-              favorSelectRef === item.id && 'translate-x-1.5 underline text-gray-500']"
+              :class="[
+                'leading-7 cursor-pointer active:color-gray-400 hover:underline transition-decoration',
+                'transition-all duration-300 underline-offset-3 decoration-gray-300 oneline-text-overflow',
+                favorSelectRef === item.id && 'translate-x-1.5 underline text-gray-500',
+              ]"
               v-for="(item, index) in favorListRef"
               :key="item.id"
               @click="handleClickArticleTitle(item.id)"
@@ -72,21 +68,13 @@
       <div
         class="fixed w-screen z-100 lg:hidden flex justify-between items-center left-0 top-0 right-0 h-16 px-3 md:px-5 box-border bg-[--theme-color] dark:bg-[--dark-nav-bg-color] transition shadow-md"
       >
-        <div data-watermark="Blog" class="flex items-center mr-24 watermark-[--dark-nav-bg-color]">
-          <h3
-            class="text-lg font-extrabold text-[--text-base-color] dark:text-white transition relative z-10 left-6 tracking-wide"
-          >
-            BLOG
-          </h3>
-        </div>
+        <BlogIcon />
         <h3 class="w-30 leading-8 c-[--text-color] text-md font-semibold">
           {{ $route.meta.title }}
         </h3>
         <div class="flex justify-between items-center w-22 md:w-30 h-full shrink-0">
           <div
-            class="inline-block w-10 h-10 p-2 md:w-12 md:h-12 md:p-3 leading-3 rounded-full 
-            bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left 
-            hover:bg-right transition-background duration-300"
+            class="inline-block w-10 h-10 p-2 md:w-12 md:h-12 md:p-3 leading-3 rounded-full bg-linear-to-r from-[#5E27CB] via-[#210C4B] to-[#5E27CB] custom-bg-size bg-left hover:bg-right transition-background duration-300"
             @click="changeTheme"
           >
             <Transition name="theme-toggle">
@@ -102,18 +90,19 @@
               ></span>
             </Transition>
           </div>
-          <MenuToggle :value="toggle" @toggle="(value) => (toggle = value)" />
+          <MenuToggleIcon :value="toggle" @toggle="(value) => (toggle = value)" />
         </div>
       </div>
-      <!-- 折叠导航栏 -->
       <Transition name="toggle">
         <Navbar
           v-show="toggle"
           :paths="userInfoRef ? [...paths, ...managePaths] : paths"
-          class="lg:hidden fixed top-16 z-10 w-full bg-violet-50 dark:bg-[--dark-nav-bg-color] shadow-sm shrink-0"
+          class="lg:hidden top-16 z-10 bg-violet-50 dark:bg-[--dark-nav-bg-color] shadow-sm shrink-0"
         />
       </Transition>
-      <div class="pt-19 lg:pt-3 lg:static min-h-screen w-full pb-3 px-2 md:pl-3 md:pr-4 box-border bg-switch">
+      <div
+        class="pt-19 lg:pt-3 lg:static min-h-screen w-full pb-3 px-2 md:pl-3 md:pr-4 box-border bg-switch"
+      >
         <!-- 宽屏标题区 -->
         <h3
           v-if="$route.path.startsWith('/manage') || $route.path.startsWith('/add')"
@@ -201,8 +190,8 @@
       </div>
     </div>
   </div>
-  <Modal v-model:open="showQRCode" closable :style="{ width: '240px'}" :footer="null">
-    <img src="../public/wechat.jpg" width="200" alt="">
+  <Modal v-model:open="showQRCode" closable :style="{ width: '240px' }" :footer="null">
+    <img src="../public/wechat.jpg" width="200" alt="" />
   </Modal>
 </template>
 
@@ -214,7 +203,8 @@ import Navbar from "@/components/bc/Navbar.vue";
 import Button from "@/components/uc/Button.vue";
 import Card from "@/components/uc/Card.vue";
 import Tag from "@/components/uc/Tag.vue";
-import MenuToggle from "@/components/bc/MenuToggle.vue";
+import MenuToggleIcon from "@/components/bc/MenuToggleIcon.vue";
+import BlogIcon from "@/components/bc/BlogIcon.vue";
 import Modal from "@/components/uc/Modal.vue";
 import mitt from "@/utils/mitt";
 import api from "@/api";
@@ -226,8 +216,8 @@ const router = useRouter();
 const [theme, setTheme] = useTheme(); // 控制主题切换，默认 light
 const emitter = mitt();
 const userInfoRef = ref(null);
-const favorListRef = ref([]);
-const tagListRef = ref([]);
+const favorListRef = ref(null);
+const tagListRef = ref(null);
 const toggle = ref(false);
 const showLeftSide = ref(true); // 根据当前页面路径判断是否需要展示 left-side，初始加载页面时默认显示
 const filterTag = ref(null); // 点击的标签（用于过滤文章）
@@ -236,11 +226,11 @@ const showQRCode = ref(false);
 // const searchValRef = ref(""); // 搜索框的值
 provide("emitter", emitter);
 
-onMounted(async () => {
+onMounted(() => {
   const userInfo = sessionStorage.getItem("userInfo");
   if (userInfo) {
     userInfoRef.value = JSON.parse(userInfo);
-  }
+  } 
   fetchData();
 });
 // 监听路由变化
@@ -262,30 +252,39 @@ watch(
       showLeftSide.value = true;
     }
     if (newVal.startsWith("/articleDetail")) {
-      favorSelectRef.value = newVal.split('/')[2];
+      favorSelectRef.value = newVal.split("/")[2];
     } else {
       favorSelectRef.value = null;
     }
   }
 );
 
-watch(() => route.query, (newVal) => {
-  console.log(newVal)
-  if (!newVal.tag) {
-    filterTag.value = null;
+watch(
+  () => route.query,
+  (newVal) => {
+    if (!newVal.tag) {
+      filterTag.value = null;
+    }
   }
-});
+);
 
 async function fetchData() {
   // 获取标签列表数据
-  const tagList = JSON.parse(localStorage.getItem("tagList"));
-  if (!tagList) {
-    tagListRef.value = await api.tag.getTagList();
-    localStorage.setItem("tagList", JSON.stringify(tagListRef.value));
+  if (!localStorage.tagList) {
+    const res = await api.tag.getTagList();
+    if (res?.length > 0) {
+      tagListRef.value = res;
+      localStorage.setItem("tagList", JSON.stringify(tagListRef.value));
+    }
   }
-  tagListRef.value = tagList;
+  tagListRef.value = JSON.parse(localStorage.getItem("tagList"));
   // 获取推荐文章数据
-  favorListRef.value = JSON.parse(localStorage.getItem("favorList"));
+  if (!localStorage.favorList) {
+    const result = await api.article.getArticleList({ filterKey: "favor" });
+    favorListRef.value = result.list;
+  } else {
+    favorListRef.value = JSON.parse(localStorage.getItem("favorList"));
+  }
 }
 
 // 修改主题
@@ -315,7 +314,7 @@ function handleClickTag(tagId) {
 
 <style scoped>
 .wechat:hover::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 200px;
   height: 200px;

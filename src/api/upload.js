@@ -5,8 +5,9 @@ function uploadImage(img) {
   return instance.post("/upload", img);
 }
 
+// axios#get(url[, config])
 function getImage(path) {
-  return instance.get(`/static/${path}`, {
+  return instance.get(`/static${path}`, {
     headers: {
       Accept: "image/jpeg",
     },
@@ -21,4 +22,15 @@ function getImage(path) {
   });
 }
 
-export { uploadImage, getImage };
+// axios#post(url[, data[, config]])
+function uploadFile(file) {
+  return instance.post("/upload/file", file, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
+function mergeFile({ filename, size }) {
+  return instance.post("/upload/merge", { data: { filename, size } });
+}
+
+export { uploadImage, getImage, uploadFile, mergeFile };

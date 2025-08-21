@@ -11,7 +11,7 @@
       @mousedown.prevent.self="toggleSelectList"
       @focus.capture="handleFocus"
     >
-      <!-- 上面这里如果mousedown不加prevent后缀会影响input的聚焦效果，不知道什么原因。self是只有点击元素自己才toggle，比如点击内部tag时不toggle -->
+      <!-- mousedown的默认行为，对于设置了tabindex的元素会触发元素的聚焦行为。self是只有点击元素自己才toggle，比如点击内部tag时不toggle -->
       <div v-if="!mode" class="selected-item">{{ selected && selected.label }}</div>
       <div v-else class="inline-block">
         <Tag
@@ -32,7 +32,6 @@
         autocomplete="off"
         :style="{ opacity: mode ? 1 : 0, width: inputWidth }"
         @input="handleInput"
-        @compositionupdate="handleCompositionUpdate"
       />
       <span ref="calculateRef" class="invisible whitespace-pre absolute text-sm"></span>
     </div>
@@ -104,7 +103,7 @@ const inputRef = ref(null); // input元素的引用
 const inputValRef = ref(""); // input的值
 const calculateRef = ref(""); // 用于计算input宽度的隐藏元素
 const selectContainerRef = ref(null);
-const newWidth = ref(4);
+const newWidth = ref(0);
 const open = ref(false); // 控制是否显示下拉选项列表
 const focusRef = ref(false);
 
@@ -130,26 +129,22 @@ const newOptions = computed(() => {
 
 // 计算选中的标签数据
 const selected = computed(() => {
-  console.log('value：', props.value)
   const selectedList = newOptions.value.filter((item) => props.value.includes(item.value));
-  console.log('selectedList', selectedList)
   return props.mode ? selectedList : selectedList[0];
 })
-// input输入为英文时计算input宽度
-function handleInput() {
+
+function handleInput(e) {
   open.value = true;
-  calculateRef.value.textContent = inputValRef.value;
+  // input输入为中文时计算input宽度（输入状态input框内暂时显示的是拼音，需要进行处理）
+  calculateRef.value.textContent = inputValRef.value + e.data;
   newWidth.value = calculateRef.value.offsetWidth + 4;
-}
-// input输入为中文时计算input宽度（输入状态input框内暂时显示的是拼音，需要进行处理）
-function handleCompositionUpdate(event) {
-  calculateRef.value.textContent = inputValRef.value + event.data;
-  newWidth.value = calculateRef.value.offsetWidth + 4;
+  if (inputValRef.value === '') {
+    newWidth.value = 0;
+  }
 }
 
 // 添加选中标签
 function changeSelect(value) {
-  console.log('选中标签', value)
   if (!props.mode) {
     open.value = false;
     emit("update:value", value);

@@ -25,8 +25,18 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 8088,
     https: {
-      cert: fs.readFileSync(path.resolve(__dirname, "C:/Users/Lenovo/Desktop/cert/self-sign.cer")),
-      key: fs.readFileSync(path.resolve(__dirname, "C:/Users/Lenovo/Desktop/cert/private.key")),
+      cert: fs.readFileSync(
+        path.resolve(
+          __dirname,
+          "D:/Esther/Project/Server/my-blog-server/public/cert/seeyoutomorrow.cyou.pem"
+        )
+      ),
+      key: fs.readFileSync(
+        path.resolve(
+          __dirname,
+          "D:/Esther/Project/Server/my-blog-server/public/cert/seeyoutomorrow.cyou.key"
+        )
+      ),
     },
     proxy: {
       "/api": {
@@ -35,9 +45,14 @@ export default defineConfig({
         changeOrigin: true,
         ws: false,
       },
+      "/static": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+        ws: false,
+      },
     },
-    // hmr: {
-    //   port: 5170,
+    // build: {
+    //   sourcemap: true,
     // },
     hmr: true,
   },

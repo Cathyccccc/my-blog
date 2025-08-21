@@ -1,0 +1,19 @@
+name: deploy blog
+
+on: 
+  push:
+    branches:
+    - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+    - uses: actions/checkout@v4 # 签出 $GITHUB_WORKSPACE 下的存储库，以便工作流可以访问它
+    - name: 设置 Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.18.0
+    - name: 运行测试
+      run: npm test

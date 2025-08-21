@@ -1,13 +1,12 @@
 <template>
   <div>
-    <Loading v-if="loadingRef" />
     <Table :columns="articleColumns" :data="dataSourceRef" title="文章管理">
       <template #header>
         <Button @click="$router.push('/add/addArticle')">新增文章</Button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.key === 'coverImg'">
-          <img v-if="row.coverImg" src="" />
+          <img v-if="row.coverImg" class="object-contain h-12" :src="row.coverImg" />
           <div v-else class="inline-block p-2 bg-gray-50 dark:bg-[--dark-line-color]">
             <svg
               t="1752479314026"
@@ -59,27 +58,22 @@ import { onMounted, ref, inject } from "vue";
 import Table from "@/components/uc/Table.vue";
 import Tag from "@/components/uc/Tag.vue";
 import Button from "@/components/uc/Button.vue";
-import Loading from "@/components/uc/Loading.vue";
 import Modal from "@/components/uc/Modal.vue";
-import { getArticleList, deleteArticle } from "@/api/article";
-import { getTagList } from "@/api/tag";
+import api from "@/api";
 import { articleColumns } from "@/utils/constant";
 
 const dataSourceRef = ref([]);
-const loadingRef = ref(false);
 const tagListRef = ref([]);
 const visibleRef = ref(false);
 const articleRef = ref();
 
 onMounted(async () => {
-  loadingRef.value = true;
   await fetchData();
-  tagListRef.value = await getTagList();
-  loadingRef.value = false;
+  tagListRef.value = await api.tag.getTagList();
 });
 
 async function fetchData(filterKey = "") {
-  const result = await getArticleList({ page: 1, pageSize: 10, filterKey });
+  const result = await api.article.getArticleList({ page: 1, pageSize: 10, filterKey });
   dataSourceRef.value = result.list;
 }
 
@@ -90,21 +84,12 @@ function handleModalOpen(article) {
 // 删除文章
 async function deleteArticleItem() {
   visibleRef.value = false;
-  loadingRef.value = true;
-  await deleteArticle(articleRef.value.id);
+  await api.article.deleteArticle(articleRef.value.id);
   await fetchData();
-  loadingRef.value = false;
 }
 
 const emitter = inject("emitter");
 emitter.on("searchArticleManage", (value) => {
-  console.log("search article manage", value);
   fetchData(value);
 });
 </script>
-
-<style scoped>
-img {
-  width: 100px;
-}
-</style>

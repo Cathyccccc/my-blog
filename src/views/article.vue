@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <div class="md:px-3 lg:p-0" v-show="articleListRef.length">
+  <div class="article-container">
+      <div class="md:px-3 lg:p-0" ref="scrollElmRef" v-show="articleListRef.length" @scroll="handleScroll">
         <Card
           v-for="item in articleListRef"
           :key="item.id"
@@ -26,7 +26,7 @@
                 ></path>
               </svg>
               <span
-                class="text-xl font-bold text-title-color-switch group-hover:bg-linear-to-r dark:bg-linear-to-r group-hover:from-[#5E27CB] dark:from-[#5E27CB] group-hover:to-[#E7DBFF] dark:to-[#E7DBFF] group-hover:bg-clip-text dark:bg-clip-text group-hover:text-transparent dark:text-transparent transition duration-150"
+                class="text-xl font-bold oneline-text-overflow text-title-color-switch group-hover:bg-linear-to-r dark:bg-linear-to-r group-hover:from-[#5E27CB] dark:from-[#5E27CB] group-hover:to-[#E7DBFF] dark:to-[#E7DBFF] group-hover:bg-clip-text dark:bg-clip-text group-hover:text-transparent dark:text-transparent transition duration-150"
                 >{{ item.title }}</span
               >
             </div>
@@ -45,9 +45,12 @@
           </template>
           <!-- 文章卡片--内容 -->
           <div class="flex pr-6">
+            <div class="mr-4 shrink-0">
+              <img v-if="item.coverImg" :src="item.coverImg" class="h-10 object-contain" alt="">
             <svg
+              v-else
               t="1752545660799"
-              class="w-8 mr-4 shrink-0"
+              class="w-8"
               viewBox="0 0 1417 1024"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +65,7 @@
                 class="selected"
               ></path>
             </svg>
+            </div>
             <div class="h-10 overflow-y-hidden md:h-auto text-[--text-base-color] dark:text-slate-500 group-hover:text-slate-600 transition-color duration-150">{{ item.content.replace(/[*#]+/g, " ").slice(0, 120) + "..." }}</div>
           </div>
           <!-- 文章卡片-尾部 -->
@@ -83,12 +87,12 @@
 import { ref, onMounted, watch, inject } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useTheme } from "@/hooks";
-import Loading from "../components/uc/Loading.vue";
+// import Loading from "../components/uc/Loading.vue";
 import Card from "@/components/uc/Card.vue";
 import Tag from "@/components/uc/Tag.vue";
-import Pagination from "../components/Pagination.vue";
-import Empty from "../components/uc/Empty.vue";
-import { getArticleList, updateArticle } from "/src/api/article";
+// import Pagination from "../components/Pagination.vue";
+// import Empty from "../components/uc/Empty.vue";
+import api from "@/api";
 
 const route = useRoute();
 const router = useRouter();
@@ -99,9 +103,10 @@ const articleListRef = ref([]);
 const loadingRef = ref(false);
 const pagination = ref({
   page: 1,
-  pageSize: 5,
+  pageSize: 30, // 这个后面要修改，整体页面结构优化
   total: 0,
 });
+const scrollElmRef = ref(null);
 
 emitter.on("searchArticle", (value) => {
   pagination.value.total = value.total;
@@ -124,7 +129,7 @@ watch(() => route.query, (newVal) => {
 
 async function fetchData(filterKey) {
   loadingRef.value = true;
-  const result = await getArticleList({ ...pagination.value, filterKey });
+  const result = await api.article.getArticleList({ ...pagination.value, filterKey });
   articleListRef.value = result.list;
   pagination.value.total = result.total;
   loadingRef.value = false;
@@ -132,8 +137,13 @@ async function fetchData(filterKey) {
 
 function browseArticle(article) {
   article.scanNumber++;
-  updateArticle({ ...article });
+  api.article.updateArticle({ ...article });
   router.push({ path: `/articleDetail/${article.id}` });
+}
+
+function handleScroll() {
+  // console.log('scroll')
+  // console.log(scrollElmRef.value.scrollTop)
 }
 
 // watchEffect(async () => {
@@ -152,11 +162,9 @@ function browseArticle(article) {
 
 <style scoped>
 .article-container {
-  width: 100%;
-  height: 100%;
-  background-color: lightblue;
-  color: #333;
-  font-size: 16px;
+  /* height: calc(100vh - 88px);
+  background-color: #fff;
+  overflow-y: auto; */
 }
 
 .content {

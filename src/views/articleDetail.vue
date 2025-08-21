@@ -1,8 +1,10 @@
 <template>
   <Loading v-if="loadingRef" />
-  <div v-else>
+  <div v-else class="mr-2">
     <!-- 文章标题等信息 -->
-    <div class="mx-2 px-6 pt-4 pb-2 bg-linear-to-b from-gray-100 dark:from-gray-900 transition from-30% to-white dark:to-[--dark-bg-color]">
+    <div
+      class="px-6 pt-4 pb-2 bg-linear-to-b from-gray-100 dark:from-gray-900 transition from-30% to-white dark:to-[--dark-bg-color]"
+    >
       <h3 class="text-title-color-switch text-3xl pb-2">{{ articleRef?.title }}</h3>
       <div class="text-xs text-gray-400">
         <span class="mr-3">发布日期：{{ articleRef?.date }}</span>
@@ -11,9 +13,10 @@
       </div>
     </div>
     <!-- 文章内容 -->
-     <div class="editor-wrapper" :class="{'dark-mode': theme === 'dark'}">
-      <v-md-editor :model-value="articleRef?.content" mode="preview"></v-md-editor>
-     </div>
+    <div class="editor-wrapper" :class="{ 'dark-mode': theme === 'dark' }">
+      <!-- <v-md-editor :model-value="articleRef?.content" mode="preview"></v-md-editor> -->
+      <div class="markdown-body p-4 box-border" v-html="renderedMarkdown"></div>
+    </div>
     <!-- <h4>评论</h4> -->
     <!-- 评论发布框 -->
     <!-- <div class="comment-box">
@@ -30,50 +33,56 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { useTheme } from '@/hooks';
-import { getArticleById } from "/src/api/article";
-import Loading from "../components/uc/Loading.vue";
+import { useTheme } from "@/hooks";
+import api from "@/api";
+import Loading from "@/components/uc/Loading.vue";
+import MarkdownIt from "markdown-it";
+import "github-markdown-css";
 // import CommentCard from "../components/CommentCard.vue";
 // import CommentBox from "../components/CommentBox.vue";
 // import { getDateTime } from "../utils/date";
-// import { addComment } from "../api/comment";
-// import { updateArticle } from "../api/article";
 // import { getRandomName, getRandomHashAvatar } from "../utils/random";
 
+const mdIt = new MarkdownIt();
 const route = useRoute();
 const [theme] = useTheme();
 const loadingRef = ref(false);
 const articleRef = ref(null); // 如果这里使用null，template中需要使用?.来读取对象属性值
+const renderedMarkdown = ref(null);
 // const commentTxt = ref("");
 
 onMounted(() => {
   fetchData();
 });
 
-watch(() => route.params.id, () => {
-  fetchData();
-})
+watch(
+  () => route.params.id,
+  () => {
+    fetchData();
+  }
+);
 
 async function fetchData() {
   loadingRef.value = true;
-  const res = await getArticleById(route.params.id);
-//   if (res.comments.length) {
-//     res.comments = res.comments.map((item) => {
-//       return {
-//         ...item,
-//         avatar: getRandomHashAvatar(item.commentId),
-//         replyArr: item.replyArr
-//           ? item.replyArr.map((i) => {
-//               return {
-//                 ...i,
-//                 avatar: getRandomHashAvatar(i.replyId),
-//               };
-//             })
-//           : [],
-//       };
-//     });
-//   }
+  const res = await api.article.getArticleById(route.params.id);
+  //   if (res.comments.length) {
+  //     res.comments = res.comments.map((item) => {
+  //       return {
+  //         ...item,
+  //         avatar: getRandomHashAvatar(item.commentId),
+  //         replyArr: item.replyArr
+  //           ? item.replyArr.map((i) => {
+  //               return {
+  //                 ...i,
+  //                 avatar: getRandomHashAvatar(i.replyId),
+  //               };
+  //             })
+  //           : [],
+  //       };
+  //     });
+  //   }
   articleRef.value = res;
+  renderedMarkdown.value = mdIt.render(res.content);
   loadingRef.value = false;
 }
 
@@ -97,11 +106,48 @@ async function fetchData() {
 /* :global(.v-md-editor) {
   background: #000;
 } */
-.editor-wrapper .v-md-editor {
-  background: transparent;
-  transition: background .3s cubic-bezier(0.4, 0, 0.2, 1);
+.editor-wrapper .markdown-body {
+  background: #fff;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
- .dark-mode .v-md-editor {
-  background: transparent;
- }
+
+.dark-mode .markdown-body {
+  background-color: var(--dark-bg-color);
+  color: var(--dark-text-base-color);
+}
+
+@media (max-width: 768px) and (min-width: 640px) {
+  .markdown-body {
+    width: 640px;
+  }
+}
+
+@media (max-width: 980px) and (min-width: 768px) {
+  .markdown-body {
+    width: 760px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 980px) {
+  .markdown-body {
+    width: 980px;
+  }
+}
+
+@media (max-width: 1240px) and (min-width: 1024px) {
+  .markdown-body {
+    width: 600px;
+  }
+}
+
+@media (max-width: 1300px) and (min-width: 1240px) {
+  .markdown-body {
+    width: 700px;
+  }
+}
+@media (min-width: 1300px) {
+  .markdown-body {
+    width: 800px;
+  }
+}
 </style>

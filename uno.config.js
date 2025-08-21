@@ -81,6 +81,7 @@ export default defineConfig({
         "text-[--text-base-color] dark:text-[--dark-text-base-color] switch-animation",
       "text-title-color-switch":
         "text-[--text-title-color] dark:text-[--dark-text-base-color] switch-animation",
+      "oneline-text-overflow": "whitespace-nowrap overflow-hidden text-ellipsis",
     },
     [
       /^watermark-(.*)$/,

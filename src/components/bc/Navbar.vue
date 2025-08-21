@@ -1,5 +1,5 @@
 <template>
-  <ul class="border-b-solid border-b-1 line-color-switch relative">
+  <ul class="fixed lg:static w-full border-b-solid border-b-1 line-color-switch">
     <template v-for="item in paths" :key="item.path">
       <!-- <div
         v-if="item.children"
@@ -11,13 +11,13 @@
         <span class="i-tabler:chevron-up"></span>
       </div> -->
       <li
-        class="h-14 box-border border-t-solid border-t-1 line-color-switch"
+        class="h-14 box-border border-t-solid border-t-1 line-color-switch hover:bg-white/50 dark:hover:bg-black/50"
       >
         <router-link
           :to="item.path"
           active-class="text-slate-800 dark:text-white"
           exact-active-class="text-slate-800 dark:text-white"
-          class="c-[--text-color] h-full px-10 flex flex-items-center hover:bg-white/50 dark:hover:bg-black/50"
+          class="c-[--text-color] h-full px-10 flex flex-items-center"
         >
           <!-- <span :class="item.icon"></span> -->
           <span class="ml-2">{{ item.pathname }}</span>
@@ -33,7 +33,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 defineProps({
   paths: {
     type: Array,
@@ -41,38 +40,8 @@ defineProps({
   },
 });
 
-const activeGroup = ref(null);
-
-function handleClick(path) {
-  console.log(path)
-  if (path === activeGroup.value) {
-    // 收起
-  }
-  activeGroup.value = path
-}
 </script>
 
 <style scoped>
-.toggle-move,
-.toggle-enter-active,
-.toggle-leave-active {
-  transition: all 0.3s ease-in-out;
-}
 
-.toggle-leave-to,
-.toggle-enter-from {
-  height: 0;
-  transform: translateY(-100%);
-  /* transform-origin: center; */
-}
-
-.toggle-leave-from,
-.toggle-enter-to {
-  height: 100%;
-  transform: translateY(0);
-}
-
-/* .toggle-leave-active {
-  position: absolute;
-} */
 </style>

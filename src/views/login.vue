@@ -17,7 +17,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { logIn } from "/src/api/login";
+import api from "@/api";
 import Form from "../components/uc/Form.vue";
 import FormItem from "../components/uc/FormItem.vue";
 import Input from "../components/uc/Input.vue";
@@ -34,7 +34,7 @@ const loginObj = reactive({
 const router = useRouter();
 const handleLogin = () => {
   if (!loginObj.loginId || !loginObj.loginPwd) return;
-  logIn(loginObj).then((res) => {
+  api.login.logIn(loginObj).then((res) => {
     sessionStorage.setItem("token", res.token);
     sessionStorage.setItem("userInfo", JSON.stringify(loginObj));
     loginObj.loginId = null;

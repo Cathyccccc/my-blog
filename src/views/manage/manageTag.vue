@@ -39,7 +39,7 @@ import FormItem from "@/components/uc/FormItem.vue";
 import Input from "@/components/uc/Input.vue";
 import Loading from "@/components/uc/Loading.vue";
 import Tag from "@/components/uc/Tag.vue";
-import { getTagList, addTag, deleteTag } from "@/api/tag";
+import api from "@/api";
 
 const searchQuery = ref("");
 const gridData = ref([]);
@@ -79,7 +79,7 @@ onMounted(() => {
 
 async function fetchData() {
   loadingRef.value = true;
-  gridData.value = await getTagList();
+  gridData.value = await api.tag.getTagList();
   localStorage.setItem("tagList", JSON.stringify(gridData.value));
   loadingRef.value = false;
 }
@@ -94,7 +94,7 @@ function handleDelete(row) {
 async function addTagItem() {
   if (tagNameRef.value === "") return; // 表单验证
   visibleAddRef.value = false;
-  await addTag(tagNameRef.value);
+  await api.tag.addTag(tagNameRef.value);
   await fetchData();
   tagNameRef.value = "";
 }
@@ -102,7 +102,7 @@ async function addTagItem() {
 // 删除标签
 async function deleteTagItem() {
   visibleDeleteRef.value = false;
-  const result = await deleteTag(deleteTagRef.value.id);
+  const result = await api.tag.deleteTag(deleteTagRef.value.id);
   if (result.success) {
     await fetchData();
   }

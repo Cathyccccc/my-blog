@@ -20,7 +20,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (resp) => {
-    console.log(resp);
     // const token = resp.headers.get("Authentication");
     // console.log(resp.headers.has("Authentication"));
     // console.log("token", token);
@@ -37,7 +36,6 @@ instance.interceptors.response.use(
         return resp.data;
       }
     } else {
-      console.log(resp.data);
       alert(resp.data.message);
       return resp.data;
     }

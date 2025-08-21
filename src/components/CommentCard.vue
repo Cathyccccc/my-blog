@@ -32,7 +32,7 @@ import CommentBox from './CommentBox.vue';
 import Button from './uc/Button.vue';
 import { getDateTime } from '../utils/date';
 import { getRandomName } from '../utils/random';
-import { addComment } from '../api/comment';
+import api from "@/api";
 
 const props = defineProps({
   isReply: Boolean,
@@ -93,8 +93,7 @@ async function publishComment() {
   // };
 
   // console.log(comment, replyObj)
-  console.log(props.replyArr)
-  await addComment(props.articleId, props.commentId || commentObj.commentId, replyObj, props.replyArr)
+  await api.comment.addComment(props.articleId, props.commentId || commentObj.commentId, replyObj, props.replyArr)
   commentTxtRef.value = '';
   isReplyRef.value = false;
   // const data = await fetchData();

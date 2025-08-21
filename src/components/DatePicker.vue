@@ -112,7 +112,6 @@ function handleChangeMonth(num) {
   dateRef.setFullYear(year);
   monthRef.value = dateRef.toDateString().split(' ')[1];
   yearRef.value = year;
-  console.log(dateRef)
   daysArrRef.value = formatDaysAsWeek(dateRef);
 }
 

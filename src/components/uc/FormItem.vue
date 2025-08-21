@@ -2,7 +2,7 @@
   <div :class="formItemClass">
     <label
       :for="$attrs.name"
-      :class="['shrink-0', 'mr-4', labelAlign === 'right' ? 'text-right' : 'text-left']"
+      :class="['shrink-0 mr-4', labelAlign === 'right' ? 'text-right' : 'text-left']"
       :style="{ width: `${(labelCol.span / (labelCol.span + wrapperCol.span)) * 100}%` }"
       >{{ $attrs.label }}</label
     >

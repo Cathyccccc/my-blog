@@ -61,22 +61,20 @@
 
 <script setup>
 import { ref, onMounted, inject } from "vue";
-import Table from "../../components/uc/Table.vue";
-import TagList from "../../components/TagList.vue";
-import Button from "../../components/uc/Button.vue";
-import Loading from "../../components/uc/Loading.vue";
-import Form from "../../components/uc/Form.vue";
-import FormItem from "../../components/uc/FormItem.vue";
-import Input from "../../components/uc/Input.vue";
-import Select from "../../components/uc/Select.vue";
-import Modal from "../../components/uc/Modal.vue";
-import Upload from "../../components/uc/Upload.vue";
-import DatePicker from "../../components/DatePicker.vue";
-import Textarea from "../../components/Textarea.vue";
-import { getProjectList, addProject, updateProject, deleteProject } from "../../api/project";
-import { getTagList } from "../../api/tag";
-import { getDate } from "../../utils/date";
-import { uploadImage, getImage } from "../../api/upload";
+import Table from "@/components/uc/Table.vue";
+import TagList from "@/components/TagList.vue";
+import Button from "@/components/uc/Button.vue";
+import Loading from "@/components/uc/Loading.vue";
+import Form from "@/components/uc/Form.vue";
+import FormItem from "@/components/uc/FormItem.vue";
+import Input from "@/components/uc/Input.vue";
+import Select from "@/components/uc/Select.vue";
+import Modal from "@/components/uc/Modal.vue";
+import Upload from "@/components/uc/Upload.vue";
+import DatePicker from "@/components/DatePicker.vue";
+import Textarea from "@/components/Textarea.vue";
+import api from "@/api";
+import { getDate } from "@/utils/date";
 
 const columns = [
   {
@@ -121,14 +119,14 @@ const tagListRef = ref([]);
 const loadingRef = ref(false);
 onMounted(async () => {
   loadingRef.value = true;
-  dataSourceRef.value = await getProjectList();
-  const tagList = await getTagList();
+  dataSourceRef.value = await api.project.getProjectList();
+  const tagList = await api.tag.getTagList();
   tagListRef.value = tagList.map((item) => ({ value: item.id, label: item.tag_name }));
   loadingRef.value = false;
 });
 async function fetchData(filterKey = "") {
   loadingRef.value = true;
-  dataSourceRef.value = await getProjectList({ filterKey });
+  dataSourceRef.value = await api.project.getProjectList({ filterKey });
   loadingRef.value = false;
 }
 const projectRef = ref({
@@ -152,7 +150,7 @@ function handleModalOpen(status, row) {
       ...row,
       technology: row.technology.map((item) => item.id), // 这样写没问题，但是给projectRef赋值后再修改technology，再次打开edit弹窗数据就没了
     };
-    getImage(projectRef.value.cover).then((res) => {
+    api.upload.getImage(projectRef.value.cover).then((res) => {
       const arr = row.cover.split("/");
       const filename = arr[arr.length - 1];
       const file = new File([res], filename, { type: res.type });
@@ -184,10 +182,10 @@ async function addProjectItem() {
   // 图片上传到服务器
   const formData = new FormData();
   formData.append("coverImg", fileListRef.value[0]);
-  const { path } = await uploadImage(formData);
+  const { path } = await api.upload.uploadImage(formData);
   projectRef.value.cover = path;
   // 调用新增项目api
-  await addProject({ ...projectRef.value, technology });
+  await api.project.addProject({ ...projectRef.value, technology });
   visibleRef.value = false;
   await fetchData();
   clearForm();
@@ -196,15 +194,14 @@ async function addProjectItem() {
 async function editProjectItem() {
   // console.log('修改项目', projectRef.value)
   const technology = formatTechnology();
-  await updateProject({ ...projectRef.value, technology });
+  await api.project.updateProject({ ...projectRef.value, technology });
   visibleRef.value = false;
   await fetchData();
   clearForm();
 }
 // 删除项目
 function deleteProjectItem() {
-  deleteProject(deleteProjectRef.value.id).then((res) => {
-    console.log(res.msg);
+  api.project.deleteProject(deleteProjectRef.value.id).then(() => {
     visibleDeleteRef.value = false;
     fetchData();
   });
@@ -241,7 +238,7 @@ function clearForm() {
 
 const emitter = inject("emitter");
 emitter.on("searchProjectManage", (value) => {
-  console.log("search project manage", value);
+  // console.log("search project manage", value);
   fetchData(value);
 });
 </script>

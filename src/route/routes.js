@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { defineAsyncComponent } from "vue";
 import api from "@/api";
 
 export const routes = [
   {
     path: "/article",
-    component: () => import("@/views/article.vue"),
+    component: defineAsyncComponent(() => import("@/views/article.vue")),
     name: "article",
     meta: { title: "文章列表" },
   },
   {
     path: "/project",
-    component: () => import("@/views/project.vue"),
+    component: defineAsyncComponent(() => import("@/views/project.vue")),
     name: "project",
     meta: { title: "项目列表" },
   },
@@ -21,24 +22,24 @@ export const routes = [
   // },
   {
     path: "/personal",
-    component: () => import("@/views/personal.vue"),
+    component: defineAsyncComponent(() => import("@/views/personal.vue")),
     name: "personal",
     meta: { title: "个人介绍" },
   },
   {
     path: "/login",
-    component: () => import("@/views/login.vue"),
+    component: defineAsyncComponent(() => import("@/views/login.vue")),
     name: "login",
   },
   {
     path: "/editArticle/:id",
-    component: () => import("@/views/add/addArticle.vue"),
+    component: defineAsyncComponent(() => import("@/views/add/addArticle.vue")),
     name: "editArticle",
     meta: { auth: true },
   },
   {
     path: "/articleDetail/:id",
-    component: () => import("@/views/articleDetail.vue"),
+    component: defineAsyncComponent(() => import("@/views/articleDetail.vue")),
     name: "articleDetail",
   },
   {
@@ -47,22 +48,22 @@ export const routes = [
     children: [
       {
         path: "articles",
-        component: () => import("@/views/manage/manageArticle.vue"),
+        component: defineAsyncComponent(() => import("@/views/manage/manageArticle.vue")),
         meta: { title: "文章管理", auth: true },
       },
       {
         path: "projects",
-        component: () => import("@/views/manage/manageProject.vue"),
+        component: defineAsyncComponent(() => import("@/views/manage/manageProject.vue")),
         meta: { title: "项目管理", auth: true },
       },
       {
         path: "comments",
-        component: () => import("@/views/manage/manageComment.vue"),
+        component: defineAsyncComponent(() => import("@/views/manage/manageComment.vue")),
         meta: { title: "评论管理", auth: true },
       },
       {
         path: "tags",
-        component: () => import("@/views/manage/manageTag.vue"),
+        component: defineAsyncComponent(() => import("@/views/manage/manageTag.vue")),
         meta: { title: "标签管理", auth: true },
       },
     ],
@@ -73,18 +74,18 @@ export const routes = [
     children: [
       {
         path: "addArticle",
-        component: () => import("@/views/add/addArticle.vue"),
+        component: defineAsyncComponent(() => import("@/views/add/addArticle.vue")),
         name: "addArticle",
         meta: { title: "新增文章", auth: true },
       },
       {
         path: "addProject",
-        component: () => import("@/views/add/addProject.vue"),
+        component: defineAsyncComponent(() => import("@/views/add/addProject.vue")),
         meta: { title: "新增项目", auth: true },
       },
     ],
   },
-  { path: "/:pathMatch(.*)", component: () => import("@/views/404.vue") }, // 404页面
+  { path: "/:pathMatch(.*)", component: defineAsyncComponent(() => import("@/views/404.vue")) }, // 404页面
   // { path: "/", redirect: `/articleDetail` },
 ];
 const router = createRouter({

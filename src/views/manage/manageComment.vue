@@ -21,11 +21,11 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import Table from "../../components/uc/Table.vue";
-import Button from "../../components/uc/Button.vue";
-import Modal from "../../components/uc/Modal.vue";
-import Loading from "../../components/uc/Loading.vue";
-import { getComments, deleteComment } from "../../api/comment";
+import Table from "@/components/uc/Table.vue";
+import Button from "@/components/uc/Button.vue";
+import Modal from "@/components/uc/Modal.vue";
+import Loading from "@/components/uc/Loading.vue";
+import api from "@/api";
 
 const columns = [
   {
@@ -67,7 +67,7 @@ const dataSourceRef = ref([]);
 const loadingRef = ref(false);
 onMounted(() => {
   loadingRef.value = true;
-  getComments().then((res) => {
+  api.comment.getComments().then((res) => {
     dataSourceRef.value = res.map((item) => {
       return {
         ...item,
@@ -86,9 +86,8 @@ function handleOpenModal(comment) {
 }
 // 删除评论
 function deleteCommentItem() {
-  console.log(commentRef.value);
-  // deleteComment(commentRef.value.id, commentRef.value.commentId).then((res) => {
-  //   console.log(res.msg)
+  // api.comment.deleteComment(commentRef.value.id, commentRef.value.commentId).then((res) => {
+  //   console.log(res.message)
   // })
 }
 </script>
