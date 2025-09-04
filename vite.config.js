@@ -25,20 +25,20 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 8088,
-    https: {
-      cert: fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "D:/Esther/Project/Server/my-blog-server/public/cert/seeyoutomorrow.cyou.pem"
-        )
-      ),
-      key: fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "D:/Esther/Project/Server/my-blog-server/public/cert/seeyoutomorrow.cyou.key"
-        )
-      ),
-    },
+    // https: {
+    //   cert: fs.readFileSync(
+    //     path.resolve(
+    //       __dirname,
+    //       "D:/Esther/Project/Server/my-blog-server/public/cert/seeyoutomorrow.cyou.pem"
+    //     )
+    //   ),
+    //   key: fs.readFileSync(
+    //     path.resolve(
+    //       __dirname,
+    //       "D:/Esther/Project/Server/my-blog-server/public/cert/seeyoutomorrow.cyou.key"
+    //     )
+    //   ),
+    // },
     proxy: {
       "/api": {
         target: "http://localhost:3001/",
