@@ -1,4 +1,4 @@
-name: deploy blog
+name: deploy blog frontend
 
 on: 
   push:
@@ -9,11 +9,30 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+
     - name: Checkout
-    - uses: actions/checkout@v4 # 签出 $GITHUB_WORKSPACE 下的存储库，以便工作流可以访问它
+      uses: actions/checkout@v4 # 签出 $GITHUB_WORKSPACE 下的存储库，以便工作流可以访问它
+    
     - name: 设置 Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 16.18.0
-    - name: 运行测试
-      run: npm test
+
+    - name: build
+      run: |
+        npm install # 安装依赖（因为当前是在远程仓库 github，远程仓库中并没有 node_modules）
+        npm run build # 生成dist目录
+
+    - name: deploy
+      uses: nogsantos/scp-deploy@master
+      with:
+          src: ./dist/*
+          host: ${{ secrets.SSH_HOST }}
+          port: 22
+          user: root
+          key: ${{ secrets.SSH_KEY }}
+
+    - name: manage backend with pm2
+      run: |
+        npm run pm2
+

@@ -1,15 +1,22 @@
 import instance from "./instance";
 
 // 分页获取文章列表（filterKey：根据搜索框输入内容或者tag.id进行数据过滤查询）
-export const getArticleList = (
-  { page, pageSize, filterKey } = { page: 1, pageSize: 5, filterKey: "" }
-) => {
+export const getArticleList = ({
+  page = 0,
+  pageSize = 6,
+  isPublish = 1,
+  filterKey = null,
+} = {}) => {
+  let params = {
+    page,
+    pageSize,
+    isPublish,
+  };
+  if (filterKey) {
+    params.filterKey = filterKey;
+  }
   return instance.get("/article", {
-    params: {
-      page,
-      pageSize,
-      filterKey,
-    },
+    params,
   });
 };
 

@@ -17,9 +17,8 @@
         <Tag
           v-for="item in selected"
           :key="item.value"
-          class="mr-1 bg-slate-100"
-          size="small"
-          type="info"
+          class="mr-1"
+          bordered
           closable
           @close="removeSelect(item.value)"
           >{{ item.label }}</Tag
@@ -73,6 +72,7 @@
 </template>
 <script setup>
 import { computed, ref } from "vue";
+
 import Empty from "./Empty.vue";
 import Tag from "./Tag.vue";
 
@@ -227,7 +227,6 @@ function handleBlur(e) {
   font-size: 14px;
   padding: 3px 2px;
   box-sizing: border-box;
-  color: #3c3c3c;
 }
 
 /* .selected-item.multiple {

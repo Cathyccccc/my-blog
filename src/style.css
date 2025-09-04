@@ -17,13 +17,17 @@
   --text-base-color: #111112;
   --text-title-color: #01025c;
   --line-color: #e8dcff;
-  --bs-ingido: #6610f2;
+  --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
   --dark-bg-color: #0b0020;
   --dark-theme-color: #5E27CA;
   --dark-nav-bg-color: #3b1682;
   --dark-text-base-color: #ddd;
   --dark-line-color: #552aa8;
+  --app-light-bg-color: #f8f8ff;
+
+  --scrollbar-width: .375rem;
+  --scrollbar-padding: .125rem;
 }
 
 
@@ -31,13 +35,27 @@
 #app {
   width: 100%;
   /* background-color: #fff; */
-  /* color: var(--text-base-color); */
-  color: #3c3c3c;
+  color: var(--text-base-color);
   user-select: none;     /* 禁止选中文本 */
 }  
 
 html {
   overflow-x: hidden;
+  /* padding不占据滚动条位置（兼容性一般，宽度最好设置成百分比不要设置成100vw） */
+  scrollbar-gutter: stable;
+  /* 在像素（而不是亚像素）级别平滑字体。对于深色背景上的浅色文本，从亚像素渲染切换为抗锯齿渲染可以使其看起来更清晰。 */
+  -webkit-font-smoothing:antialiased;
+}
+html::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+html::-webkit-scrollbar-thumb {
+  width: var(--scrollbar-width);
+  background-color: #ddd;
+  border-radius: calc(var(--scrollbar-width)/2);
+}
+html::-webkit-scrollbar-track {
+  background-color: #fff !important;
 }
 
 body {

@@ -22,4 +22,4 @@ const updateProject = (project) => {
   return instance.put("/project", project);
 };
 
-export { getProjectList, addProject, deleteProject, updateProject };
+export { addProject, deleteProject, getProjectList, updateProject };

@@ -7,7 +7,7 @@
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.key === 'cover'">
-          <img :src="'http://localhost:3000/static/' + row.cover" width="100" />
+          <img :src="'/static/' + row.cover" width="100" />
         </template>
         <template v-else-if="column.key === 'project_url'">
           <a :href="row.project_url" target="_blank" rel="noopener noreferrer">{{
@@ -60,20 +60,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from "vue";
-import Table from "@/components/uc/Table.vue";
+import { inject,onMounted, ref } from "vue";
+
+import api from "@/api";
+import DatePicker from "@/components/DatePicker.vue";
 import TagList from "@/components/TagList.vue";
+import Textarea from "@/components/Textarea.vue";
 import Button from "@/components/uc/Button.vue";
-import Loading from "@/components/uc/Loading.vue";
 import Form from "@/components/uc/Form.vue";
 import FormItem from "@/components/uc/FormItem.vue";
 import Input from "@/components/uc/Input.vue";
-import Select from "@/components/uc/Select.vue";
+import Loading from "@/components/uc/Loading.vue";
 import Modal from "@/components/uc/Modal.vue";
+import Select from "@/components/uc/Select.vue";
+import Table from "@/components/uc/Table.vue";
 import Upload from "@/components/uc/Upload.vue";
-import DatePicker from "@/components/DatePicker.vue";
-import Textarea from "@/components/Textarea.vue";
-import api from "@/api";
 import { getDate } from "@/utils/date";
 
 const columns = [
@@ -119,9 +120,9 @@ const tagListRef = ref([]);
 const loadingRef = ref(false);
 onMounted(async () => {
   loadingRef.value = true;
-  dataSourceRef.value = await api.project.getProjectList();
-  const tagList = await api.tag.getTagList();
-  tagListRef.value = tagList.map((item) => ({ value: item.id, label: item.tag_name }));
+  // dataSourceRef.value = await api.project.getProjectList();
+  // const tagList = await api.tag.getTagList();
+  // tagListRef.value = tagList.map((item) => ({ value: item.id, label: item.tag_name }));
   loadingRef.value = false;
 });
 async function fetchData(filterKey = "") {
@@ -236,11 +237,6 @@ function clearForm() {
   fileListRef.value = [];
 }
 
-const emitter = inject("emitter");
-emitter.on("searchProjectManage", (value) => {
-  // console.log("search project manage", value);
-  fetchData(value);
-});
 </script>
 
 <style scoped>

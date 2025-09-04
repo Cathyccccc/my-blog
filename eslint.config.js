@@ -1,23 +1,26 @@
 import js from "@eslint/js";
-import globals from "globals";
-import pluginVue from "eslint-plugin-vue";
 import { defineConfig } from "eslint/config";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import pluginVue from "eslint-plugin-vue";
+import globals from "globals";
 
 export default defineConfig([
   {
-    files: ["**/*.{js,mjs,cjs,vue}"],
-    plugins: { js },
-    extends: ["js/recommended"],
+    ignores: ["dist/*"],
   },
   {
-    files: ["**/*.{js,mjs,cjs,vue}"],
+    files: ["**/*.{js,vue}"],
+    plugins: {
+      js,
+      "simple-import-sort": simpleImportSort,
+    },
+    extends: ["js/recommended"],
+    rules: {
+      "vue/max-len": ["error", { code: 100 }],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+    },
     languageOptions: { globals: globals.browser },
   },
   pluginVue.configs["flat/essential"],
-  {
-    ignores: ["dist/"],
-    rules: {
-      "vue/max-len": ["error", { code: 100 }],
-    },
-  },
 ]);

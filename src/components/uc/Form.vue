@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { provide, computed } from 'vue';
+import { computed,provide } from 'vue';
 const props = defineProps({
   wrapperCol: Object,
   labelCol: Object,
@@ -20,7 +20,7 @@ const props = defineProps({
   width: String,
   labelAlign: {
     type: String,
-    default: 'right'
+    default: 'left'
   }
 })
 provide('wrapperCol', props.wrapperCol);

@@ -1,4 +1,4 @@
-import { defineConfig, transformerDirectives, presetWind4, presetIcons } from "unocss";
+import { defineConfig, presetIcons,presetWind4, transformerDirectives } from "unocss";
 
 export default defineConfig({
   // ...UnoCSS options

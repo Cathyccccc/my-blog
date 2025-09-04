@@ -1,6 +1,8 @@
-import { createApp } from "vue";
 import "./style.css";
 import "virtual:uno.css";
+
+import { createApp } from "vue";
+
 import App from "./App.vue";
 import router from "./route/routes";
 // import Message from "@/components/Message.vue";
@@ -13,6 +15,14 @@ import router from "./route/routes";
 //   "dark",
 //   localStorage.theme === "dark" ||
 //     (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+// );
+
+// document.documentElement.addEventListener(
+//   "scroll",
+//   () => {
+//     console.log("scroll");
+//   },
+//   true,
 // );
 
 const app = createApp(App);

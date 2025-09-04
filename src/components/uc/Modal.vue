@@ -1,7 +1,7 @@
 <template>
   <!-- 使用的时候可以嵌套Teleport -->
   <Transition>
-    <div v-if="open">
+    <div v-if="open" class="text-base-color-switch">
       <div class="mask" @click.stop="handleBlur"></div>
       <div class="modal" tabindex="-1">
         <div

@@ -1,6 +1,6 @@
 <template>
   <Loading v-if="loadingRef" />
-  <div v-else class="mr-2">
+  <div v-else>
     <!-- 文章标题等信息 -->
     <div
       class="px-6 pt-4 pb-2 bg-linear-to-b from-gray-100 dark:from-gray-900 transition from-30% to-white dark:to-[--dark-bg-color]"
@@ -31,13 +31,15 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import "github-markdown-css";
+
+import MarkdownIt from "markdown-it";
+import { onMounted,ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { useTheme } from "@/hooks";
+
 import api from "@/api";
 import Loading from "@/components/uc/Loading.vue";
-import MarkdownIt from "markdown-it";
-import "github-markdown-css";
+import { useTheme } from "@/hooks";
 // import CommentCard from "../components/CommentCard.vue";
 // import CommentBox from "../components/CommentBox.vue";
 // import { getDateTime } from "../utils/date";

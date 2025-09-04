@@ -11,12 +11,13 @@
         <span class="i-tabler:chevron-up"></span>
       </div> -->
       <li
-        class="h-14 box-border border-t-solid border-t-1 line-color-switch hover:bg-white/50 dark:hover:bg-black/50"
-      >
+        class="h-14 box-border border-t-solid border-t-1 line-color-switch hover:bg-white/50 dark:hover:bg-black/50 transition"
+        @click="$emit('click-nav')"
+        >
         <router-link
           :to="item.path"
-          active-class="text-slate-800 dark:text-white"
-          exact-active-class="text-slate-800 dark:text-white"
+          active-class="text-slate-800 font-bold bg-white/50 dark:bg-black/50 dark:text-white"
+          exact-active-class="text-slate-800 font-bold bg-white/50 dark:bg-black/50 dark:text-white"
           class="c-[--text-color] h-full px-10 flex flex-items-center"
         >
           <!-- <span :class="item.icon"></span> -->
@@ -39,6 +40,8 @@ defineProps({
     default: () => [],
   },
 });
+
+defineEmits(["click-nav"])
 
 </script>
 

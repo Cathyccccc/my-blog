@@ -35,9 +35,9 @@
         :class="['transition-transform', 'custom-origin-2', { 'active-2': value} ]"
       />
     </svg>
-    <!-- <div class="relative w-8 h-[2px] bg-[--bs-ingido] before:content-[''] before:block 
-            before:w-8 before:h-[2px] before:bg-[--bs-ingido] before:absolute before:-top-3 
-            after:content-[''] after:block after:w-8 after:h-[2px] after:bg-[--bs-ingido] 
+    <!-- <div class="relative w-8 h-[2px] bg-[--bs-indigo] before:content-[''] before:block 
+            before:w-8 before:h-[2px] before:bg-[--bs-indigo] before:absolute before:-top-3 
+            after:content-[''] after:block after:w-8 after:h-[2px] after:bg-[--bs-indigo] 
             after:absolute after:-bottom-3 group-hover:bg-[--theme-color] transition before:origin-bottom before:group-hover:translate-y-3 before:group-hover:rotate-45 before:transition-transform"></div> -->
   </div>
 </template>

@@ -1,16 +1,64 @@
 <template>
   <svg
-    class="animate-spin w-8 h-8 absolute left-1/2 top-[100px] translate-x-[-50%]"
-    t="1752052032429"
-    viewBox="0 0 1024 1024"
-    version="1.1"
+  v-show="show"
+    class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-500"
     xmlns="http://www.w3.org/2000/svg"
-    p-id="1583"
+    fill="none"
+    viewBox="0 0 24 24"
   >
+    <circle
+      class="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      stroke-width="4"
+    ></circle>
     <path
-      fill="#6610f2"
-      d="M512 907c-24.852 0-45-20.148-45-45s20.148-45 45-45c168.446 0 305-136.554 305-305S680.446 207 512 207 207 343.554 207 512c0 24.852-20.148 45-45 45S117 536.852 117 512c0-218.152 176.848-395 395-395S907 293.848 907 512 730.152 907 512 907z"
-      p-id="1584"
+      class="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
     ></path>
   </svg>
 </template>
+
+<script setup>
+import {onBeforeUnmount, ref, watch} from "vue";
+
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  }
+})
+
+const show = ref(false);
+const startTime = ref(0);
+const timer = ref(null);
+const minDuration = 300;
+
+watch(() => props.loading, (newVal) => {
+  if (newVal) {
+    startTime.value = Date.now();
+    show.value = true;
+  } else {
+    // 何时停止loading（值设置为false）
+    const elapsed = Date.now() - startTime.value;
+    if (elapsed < minDuration) {
+      // 未到最小时间
+      clearTimeout(timer.value);
+      timer.value = setTimeout(() => {
+        show.value = false;
+      }, minDuration - elapsed)
+    } else {
+      // 已到达最小时间
+      show.value = false;
+    }
+  }
+})
+
+onBeforeUnmount(() => {
+  clearTimeout(timer.value);
+  timer.value = null;
+})
+</script>

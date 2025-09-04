@@ -27,12 +27,14 @@ export default {
 
 <script setup>
 import { ref } from 'vue'
+
+import api from "@/api";
+
 import CommentCard from '../components/CommentCard.vue'
-import CommentBox from './CommentBox.vue';
-import Button from './uc/Button.vue';
 import { getDateTime } from '../utils/date';
 import { getRandomName } from '../utils/random';
-import api from "@/api";
+import CommentBox from './CommentBox.vue';
+import Button from './uc/Button.vue';
 
 const props = defineProps({
   isReply: Boolean,

@@ -28,32 +28,34 @@
       </FormItem>
       <FormItem>
         <Button class="mr-3" @click.prevent="temporaryStorage">暂存文章</Button>
-        <Button type="primary" @click.prevent="publishArticle">发布文章</Button>
+        <Button type="primary" @click.prevent="submitArticle">提交文章</Button>
       </FormItem>
     </Form>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import "@kangc/v-md-editor/lib/style/base-editor.css";
+import "@kangc/v-md-editor/lib/theme/style/github.css";
+
+import VMdEditor from "@kangc/v-md-editor";
+import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
+// highlightjs（代码块高亮）
+import hljs from "highlight.js";
+import { onMounted,reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useTheme } from "@/hooks";
+
+import api from "@/api";
+import Button from "@/components/uc/Button.vue";
 import Form from "@/components/uc/Form.vue";
 import FormItem from "@/components/uc/FormItem.vue";
 import Input from "@/components/uc/Input.vue";
-import Select from "@/components/uc/Select.vue";
-import Button from "@/components/uc/Button.vue";
-import Upload from "@/components/uc/Upload.vue";
 import Loading from "@/components/uc/Loading.vue";
-import api from "@/api";
+import Select from "@/components/uc/Select.vue";
+import Upload from "@/components/uc/Upload.vue";
+import { useTheme } from "@/hooks";
 import { getDateTime } from "@/utils/date";
-import { getBase64, convertBase64ToFile } from "@/utils/encode";
-import VMdEditor from "@kangc/v-md-editor";
-import "@kangc/v-md-editor/lib/style/base-editor.css";
-import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
-import "@kangc/v-md-editor/lib/theme/style/github.css";
-// highlightjs（代码块高亮）
-import hljs from "highlight.js";
+import { convertBase64ToFile,getBase64 } from "@/utils/encode";
 // 按需引入语言包
 // import json from "highlight.js/lib/languages/json";
 // import javascript from "highlight.js/lib/languages/javascript";
@@ -186,7 +188,7 @@ function temporaryStorage() {
 }
 
 // 发布文章
-async function publishArticle() {
+async function submitArticle() {
   if (articleInfo.title === "") return;
   if (articleInfo.content === "") return;
   if (!articleInfo.tag.length) return;
@@ -219,7 +221,8 @@ async function publishArticle() {
   } else {
     const scanNumber = 0;
     const commentNumber = 0;
-    await api.article.addArticle({ ...articleInfo, tag, date, scanNumber, commentNumber });
+    const isPublish = 0;
+    await api.article.addArticle({ ...articleInfo, tag, date, scanNumber, commentNumber, isPublish });
     loadingRef.value = false;
   }
   articleInfo.title = "";

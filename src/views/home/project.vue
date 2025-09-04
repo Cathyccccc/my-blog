@@ -3,7 +3,7 @@
     内容正在更新中，敬请期待。
     <br />
     <!-- 文件上传 -->
-    <div class="upload-container">
+    <!-- <div class="upload-container">
       <input
         type="file"
         id="coverImg"
@@ -35,18 +35,19 @@
     <br />
     <Button @click="handleClick">上传</Button>
     <Button @click="handleMerge">合并</Button>
-    <Button @click="handleLink">跳转</Button>
+    <Button @click="handleLink">跳转</Button> -->
     <!-- <Loading v-if="loadingRef" class="loading" /> -->
     <!-- <ProjectCard v-for="item in projectListRef" :key="item.id" :projectObj="item" /> -->
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, inject } from "vue";
-import Button from "@/components/uc/Button.vue";
+import { inject,onMounted, ref } from "vue";
+
 // import ProjectCard from '../components/ProjectCard.vue';
 // import Loading from '../components/uc/Loading.vue';
-import {uploadFile, mergeFile} from "@/api/upload";
+import {mergeFile,uploadFile} from "@/api/upload";
+import Button from "@/components/uc/Button.vue";
 
 // const projectListRef = ref([]);
 // const loadingRef = ref(false);
@@ -56,11 +57,6 @@ import {uploadFile, mergeFile} from "@/api/upload";
 //     projectListRef.value = res;
 //     loadingRef.value = false;
 //   })
-// })
-
-// const emitter = inject('emitter');
-// emitter.on('searchProject', (value) => {
-//   projectListRef.value = value;
 // })
 
 const chooseFileRef = ref(null);

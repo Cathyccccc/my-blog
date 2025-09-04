@@ -33,4 +33,4 @@ function mergeFile({ filename, size }) {
   return instance.post("/upload/merge", { data: { filename, size } });
 }
 
-export { uploadImage, getImage, uploadFile, mergeFile };
+export { getImage, mergeFile,uploadFile, uploadImage };

@@ -2,7 +2,7 @@
   <div>
     <Table :columns="articleColumns" :data="dataSourceRef" title="文章管理">
       <template #header>
-        <Button @click="$router.push('/add/addArticle')">新增文章</Button>
+        <Button @click="$router.push('/manage/addArticle')">新增文章</Button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.key === 'coverImg'">
@@ -29,17 +29,19 @@
         </template>
         <template v-else-if="column.key === 'tag'">
           <Tag
-            type="info"
-            size="small"
-            class="mr-1 bg-slate-50"
+            bordered
+            class="mr-1"
             v-for="item in row.tag"
             :key="item.id"
             >{{ item.tag_name }}</Tag
           >
         </template>
+        <template v-else-if="column.key === 'isPublish'">
+          <Switch :checked="Boolean(row.isPublish)" @change="(value) => handleSwitchChange(row, value)" />
+        </template>
         <template v-else-if="column.key === 'operate'">
           <div class="operate-list">
-            <Button type="link" @click="$router.push({ path: `/editArticle/${row.id}` })"
+            <Button type="link" @click="$router.push({ path: `/manage/editArticle/${row.id}` })"
               >Edit</Button
             >
             <Button type="link" @click="handleModalOpen(row)">Delete</Button>
@@ -54,12 +56,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref, inject } from "vue";
-import Table from "@/components/uc/Table.vue";
-import Tag from "@/components/uc/Tag.vue";
+import { inject, onMounted, ref } from "vue";
+
+import api from "@/api";
 import Button from "@/components/uc/Button.vue";
 import Modal from "@/components/uc/Modal.vue";
-import api from "@/api";
+import Switch from "@/components/uc/Switch.vue";
+import Table from "@/components/uc/Table.vue";
+import Tag from "@/components/uc/Tag.vue";
 import { articleColumns } from "@/utils/constant";
 
 const dataSourceRef = ref([]);
@@ -72,8 +76,8 @@ onMounted(async () => {
   tagListRef.value = await api.tag.getTagList();
 });
 
-async function fetchData(filterKey = "") {
-  const result = await api.article.getArticleList({ page: 1, pageSize: 10, filterKey });
+async function fetchData() {
+  const result = await api.article.getArticleList({ page: 1, pageSize: 10, isPublish: 0 });
   dataSourceRef.value = result.list;
 }
 
@@ -88,8 +92,11 @@ async function deleteArticleItem() {
   await fetchData();
 }
 
-const emitter = inject("emitter");
-emitter.on("searchArticleManage", (value) => {
-  fetchData(value);
-});
+// 发布/撤回发布文章
+async function handleSwitchChange(article, value) {
+  article.isPublish = Number(value)
+  console.log(article)
+  await api.article.updateArticle(article)
+}
+
 </script>

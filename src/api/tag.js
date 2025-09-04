@@ -11,4 +11,4 @@ const addTag = (tag_name) => {
 const deleteTag = (id) => {
   return instance.delete(`/tag/${id}`);
 };
-export { getTagList, addTag, deleteTag };
+export { addTag, deleteTag,getTagList };

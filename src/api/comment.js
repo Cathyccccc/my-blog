@@ -18,4 +18,4 @@ function deleteComment(articleId, commentId) {
   return instance.delete(`/comment/${articleId}/${commentId}`);
 }
 
-export { getComments, addComment, deleteComment };
+export { addComment, deleteComment,getComments };

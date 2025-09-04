@@ -1,6 +1,6 @@
 <template>
   <slot name="header"></slot>
-  <div class="w-full bg-[--theme-color] dark:bg-[--dark-nav-bg-color] shadow-md shadow-slate-100 dark:shadow-[--dark-line-color] transition rounded-md my-2">
+  <div class="w-full text-base-color-switch bg-[--theme-color] dark:bg-[--dark-nav-bg-color] shadow-md shadow-slate-100 dark:shadow-[--dark-line-color] transition rounded-md my-2">
     <table :class="['w-full', 'table-auto', 'border-spacing-0', theme]">
       <thead class="w-full">
         <tr>
@@ -52,14 +52,18 @@
       </tbody>
     </table>
     <Empty v-if="!data.length" />
+    <Loading v-show="loading" />
     <slot name="footer"></slot>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed,ref } from "vue";
+
 import { useTheme } from "@/hooks";
+
 import Empty from "./Empty.vue";
+import Loading from "./Loading.vue";
 
 const props = defineProps({
   data: {
@@ -77,6 +81,9 @@ const props = defineProps({
     type: String || Object,
     default: "",
   },
+  loading: {
+    type: Boolean,
+  }
 });
 
 const [theme] = useTheme();

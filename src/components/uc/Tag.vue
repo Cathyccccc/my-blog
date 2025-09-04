@@ -1,10 +1,10 @@
 <template>
-  <div :class="tagClass" :style="{color, borderColor: color}">
+  <div :class="[tagClass, checked && 'shadow-lg drop-shadow-lg']" :style="[color && `background: ${color}`]" @mousedown="handleClickCheckable">
     <slot></slot>
     <!-- 这里需要处理点击关闭按钮时事件不会冒泡到select，导致下拉框toggle -->
     <span v-if="closable" class="cursor-pointer ml-1" @click="$emit('close')">
       <svg
-        class="w-4 h-4 text-gray-300 hover:text-gray-600 transition-color"
+        class="w-4 h-4 text-stone-500"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -23,16 +23,22 @@ const props = defineProps({
   type: {
     type: String,
     default: "default", // 可选值：info, success, warning, error
-  },
-  size: {
-    type: String,
-    default: "medium"
+    validator(value) {
+      // The value must match one of these strings
+      return ["default", "info", "success", "warning", "error"].includes(value);
+    },
   },
   closable: {
     type: Boolean,
     default: false, // 是否可关闭
   },
   checkable: {
+    // 标签是否可选
+    type: Boolean,
+    default: false,
+  },
+  checked: {
+    // 标签可选时的选中状态
     type: Boolean,
     default: false,
   },
@@ -40,49 +46,71 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  color: { // 应与info互斥
+  color: {
+    // 有color时没有border
     type: String,
   },
   circle: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
-defineEmits(["close"]);
+const emit = defineEmits(["close", "change"]);
 
 const tagClass = computed(() => {
-  let baseClass = "inline-flex whitespace-nowrap";
+  let baseClass =
+    "inline-flex whitespace-nowrap text-xs px-2 py-0.5 h-6 box-border flex items-center transition";
   // 定义不同类型和大小的样式
-  const colors = {
-    default: "text-slate-400",
-    info: "text-sky-700 dark:bg-gray-100",
-    success: "text-green-700",
-    warning: "text-yellow-800",
-    error: "text-red-800",
+  let colors = {
+    default: "bg-[--theme-color] dark:bg-zinc-700/80 text-[#000000E0] dark:text-neutral-300",
+    info: "bg-indigo-600 text-white",
+    success: "bg-emerald-600 text-white",
+    warning: "bg-yellow-600 text-white",
+    error: "bg-red-600 text-white",
   };
-  const sizes = {
-    small: "text-xs px-3 py-1",
-    medium: "text-sm px-3 py-1.5",
-    large: "text-base px-5 py-2",
-  };
+  if (props.bordered) {
+    colors = {
+      default: "bg-neutral-50 dark:bg-transparent text-[#000000E0] dark:text-neutral-300",
+      info: "bg-white dark:bg-inherit text-sky-700",
+      success: "bg-white dark:bg-inherit text-emerald-700",
+      warning: "bg-white dark:bg-inherit text-yellow-800",
+      error: "bg-white dark:bg-inherit text-red-800",
+    };
+  }
   const borderColor = {
-    default: "border-slate-400",
+    default: "border-neutral-300 dark:border-neutral-400",
     info: "border-sky-700",
-    success: "border-green-700",
+    success: "border-emerald-700",
     warning: "border-yellow-800",
     error: "border-red-800",
-  }
-  let classStr = `${colors[props.type]} ${sizes[props.size] || sizes.medium} ${baseClass}`
-  if (props.bordered) {
-    classStr += ` border ${!props.color && borderColor[props.type]}`
-  }
-  if (props.circle) {
-    classStr += ' rounded-full'
+  };
+  let classStr = baseClass;
+  if (!props.color) {
+    classStr += ` ${colors[props.type]}`;
+    if (props.bordered) {
+      classStr += ` border ${borderColor[props.type]}`;
+    }
   } else {
-    classStr += ' rounded-md'
+    classStr += ' text-white'
+  }
+
+  if (props.circle) {
+    classStr += " rounded-full";
+  } else {
+    classStr += " rounded-xs";
+  }
+
+  if (!props.closable && props.checkable) {
+    classStr += " cursor-pointer";
   }
   return classStr;
 });
+
+function handleClickCheckable() {
+  if (props.checkable) {
+    emit("change", !props.checked);
+  }
+}
 </script>
 
 <style scoped></style>

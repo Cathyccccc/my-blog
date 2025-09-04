@@ -1,27 +1,33 @@
 <template>
-    <div class="absolute w-[400px] left-1/2 top-[150px] -translate-x-1/2">
+  <div class="w-full h-full px-4 lg:p-0 box-border bg-linear-to-b from-violet-400 via-sky-200 via-40% to-transparent to-50%">
+    <LoginText />
+    <img class="relative z-10 md:w-1/2 lg:w-1/3 mx-auto translate-y-4" src="../../public/img/login.png" alt="" />
+    <div
+      class="relative md:w-1/2 xl:w-1/3 left-1/2 -translate-x-1/2 bg-[--app-light-bg-color] px-4 sm:px-12 py-15 rounded-lg"
+    >
       <Form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-        <FormItem label="Account">
-          <Input v-model:value.trim="loginObj.loginId" />
+        <FormItem label="Account" class="bg-white sm:bg-inherit px-2 sm:px-0 rounded-md">
+          <Input v-model:value.trim="loginObj.loginId" autofocus />
         </FormItem>
-        <FormItem label="Password">
+        <FormItem label="Password" class="bg-white sm:bg-inherit px-2 sm:px-0 rounded-md">
           <Input v-model:value.trim="loginObj.loginPwd" type="password" />
         </FormItem>
-        <FormItem>
-          <Button type="primary" @click.prevent="handleLogin">Sign in</Button>
-        </FormItem>
+        <Button class="mt-8" block type="primary" @click.prevent="handleLogin">Sign in</Button>
       </Form>
     </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+
 import api from "@/api";
-import Form from "../components/uc/Form.vue";
-import FormItem from "../components/uc/FormItem.vue";
-import Input from "../components/uc/Input.vue";
-import Button from "../components/uc/Button.vue";
+import LoginText from '@/components/bc/LoginText.vue';
+import Button from "@/components/uc/Button.vue";
+import Form from "@/components/uc/Form.vue";
+import FormItem from "@/components/uc/FormItem.vue";
+import Input from "@/components/uc/Input.vue";
 // import Message from "../components/Message.vue";
 
 const loginObj = reactive({
@@ -45,11 +51,5 @@ const handleLogin = () => {
 </script>
 
 <style scoped>
-.login-box {
-  width: 400px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 100px;
-}
+
 </style>

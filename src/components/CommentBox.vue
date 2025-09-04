@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import Button from './uc/Button.vue';
 import Textarea from './Textarea.vue';
+import Button from './uc/Button.vue';
 
 const props = defineProps({
   commentTxt: String,

@@ -23,7 +23,7 @@
     </Modal>
     <Modal v-model:open="visibleDeleteRef" title="删除标签" @on-ok="deleteTagItem">
       确认删除标签
-      <Tag type="info" class="bg-slate-50">{{ deleteTagRef.tag_name }}</Tag>
+      <Tag bordered>{{ deleteTagRef.tag_name }}</Tag>
       吗？
     </Modal>
   </div>
@@ -31,15 +31,16 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import Table from "@/components/uc/Table.vue";
+
+import api from "@/api";
 import Button from "@/components/uc/Button.vue";
-import Modal from "@/components/uc/Modal.vue";
 import Form from "@/components/uc/Form.vue";
 import FormItem from "@/components/uc/FormItem.vue";
 import Input from "@/components/uc/Input.vue";
 import Loading from "@/components/uc/Loading.vue";
+import Modal from "@/components/uc/Modal.vue";
+import Table from "@/components/uc/Table.vue";
 import Tag from "@/components/uc/Tag.vue";
-import api from "@/api";
 
 const searchQuery = ref("");
 const gridData = ref([]);

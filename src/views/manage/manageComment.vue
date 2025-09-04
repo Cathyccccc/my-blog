@@ -20,12 +20,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import Table from "@/components/uc/Table.vue";
-import Button from "@/components/uc/Button.vue";
-import Modal from "@/components/uc/Modal.vue";
-import Loading from "@/components/uc/Loading.vue";
+import { onMounted,ref } from "vue";
+
 import api from "@/api";
+import Button from "@/components/uc/Button.vue";
+import Loading from "@/components/uc/Loading.vue";
+import Modal from "@/components/uc/Modal.vue";
+import Table from "@/components/uc/Table.vue";
 
 const columns = [
   {
