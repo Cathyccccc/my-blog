@@ -31,8 +31,3 @@ jobs:
           port: 22
           user: root
           key: ${{ secrets.SSH_KEY }}
-
-    - name: manage backend with pm2
-      run: |
-        npm run pm2
-
