@@ -95,7 +95,6 @@ async function deleteArticleItem() {
 // 发布/撤回发布文章
 async function handleSwitchChange(article, value) {
   article.isPublish = Number(value)
-  console.log(article)
   await api.article.updateArticle(article)
 }
 

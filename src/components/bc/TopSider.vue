@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full flex justify-between items-center px-3 md:px-5 box-border bg-[--theme-color] dark:bg-[--dark-nav-bg-color] transition shadow-md"
+    class="w-full h-full flex justify-between items-center px-3 md:px-5 box-border bg-[#9772E0] dark:bg-[--dark-nav-bg-color] transition shadow-md"
   >
     <!-- <h3 class="w-30 leading-8 c-[--text-color] text-md font-semibold">
       {{ $route.meta.title }}

@@ -91,7 +91,7 @@ onMounted(() => {
   tagListRef.value = data.map((item) => {
     return { value: item.tag_name, label: item.tag_name };
   });
-  if (route.matched[0].path === "/editArticle/:id") {
+  if (route.matched[0].path === "/manage/editArticle/:id") {
     loadingRef.value = true;
     api.article.getArticleById(id).then((res) => {
       article = res;
@@ -215,7 +215,7 @@ async function submitArticle() {
   // api.upload.uploadImage(articleInfo.coverImg).then((res) => {
   //   console.log(res)
   // })
-  if (route.matched[0].path === "/editArticle/:id") {
+  if (route.matched[0].path === "/manage/editArticle/:id") {
     await api.article.updateArticle({ ...article, ...articleInfo, tag, date });
     loadingRef.value = false;
   } else {

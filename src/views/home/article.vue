@@ -78,7 +78,7 @@
       <template #footer>
         <div class="text-xs text-gray-400">
           <span class="mr-3">发布时间：{{ item.date }}</span>
-          <span>浏览量：{{ item.scanNumber > 99 ? "99+" : item.scanNumber }}</span>
+          <!-- <span>浏览量：{{ item.scanNumber > 99 ? "99+" : item.scanNumber }}</span> -->
           <!-- <span>评论数：{{ item.commentNumber > 99 ? "99+" : item.commentNumber }}</span> -->
         </div>
       </template>
@@ -174,7 +174,7 @@ watch(
 
 function browseArticle(article) {
   article.scanNumber++;
-  api.article.updateArticle({ ...article });
+  // api.article.updateArticle({ ...article });
   router.push({ path: `/articleDetail/${article.id}` });
 }
 </script>
