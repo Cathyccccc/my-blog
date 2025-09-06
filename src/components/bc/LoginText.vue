@@ -7,7 +7,7 @@
       :style="{ '--i': index }"
       >{{ item }}</span
     >
-    <div class="relative -translate-y-11 text-zinc-200">
+    <div class="hidden sm:block relative -translate-y-11 text-zinc-200">
       <span v-for="(item, index) in str"
       :key="item">{{ item }}</span>
     </div>

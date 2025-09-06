@@ -40,7 +40,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['change', 'click'])
-
 // 非受控：组件自身控制值
 const checkSelf = ref(props.defaultChecked || props.checked);
 
@@ -59,7 +58,7 @@ const switchClass = computed(() => {
 })
 
 const circleClass = computed(() => {
-  const baseClass = 'bg-white rounded-full transition duration-300';
+  const baseClass = 'bg-[#ffffff] rounded-full transition duration-300';
   const sizes = {
     small: 'w-3 h-3',
     default: 'w-5 h-5',
@@ -73,7 +72,7 @@ const circleClass = computed(() => {
 
 // 受控：根据外部值的变化而变化
 watchEffect(() => {
-  checkSelf.value = props.checked;
+  checkSelf.value = props.defaultChecked || props.checked;
 })
 
 function handleClick(event) {

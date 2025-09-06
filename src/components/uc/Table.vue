@@ -1,6 +1,6 @@
 <template>
   <slot name="header"></slot>
-  <div class="w-full text-base-color-switch bg-[--theme-color] dark:bg-[--dark-nav-bg-color] shadow-md shadow-slate-100 dark:shadow-[--dark-line-color] transition rounded-md my-2">
+  <div class="w-full text-base-color-switch bg-[--theme-color] dark:bg-[#3b1682] shadow-md shadow-slate-100 dark:shadow-[--dark-line-color] transition rounded-md my-2">
     <table :class="['w-full', 'table-auto', 'border-spacing-0', theme]">
       <thead class="w-full">
         <tr>

@@ -13,18 +13,14 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   --theme-color: #f4f0fd;
-  --text-color: #9772E0;
-  --text-base-color: #111112;
-  --text-title-color: #01025c;
-  --line-color: #e8dcff;
-  --bs-indigo: #6610f2;
-  --bs-purple: #6f42c1;
-  --dark-bg-color: #0b0020;
   --dark-theme-color: #5E27CA;
+  --text-base-color: #111112;
+  --line-color: #e8dcff;
+  --dark-bg-color: #0b0020;
   --dark-nav-bg-color: #3b1682;
-  --dark-text-base-color: #ddd;
+  --dark-text-base-color: #dddddd;
   --dark-line-color: #552aa8;
-  --app-light-bg-color: #f8f8ff;
+  --app-bg-color: #f8f8ff;
 
   --scrollbar-width: .375rem;
   --scrollbar-padding: .125rem;
@@ -41,6 +37,7 @@
 
 html {
   overflow-x: hidden;
+  overflow-y: scroll;
   /* padding不占据滚动条位置（兼容性一般，宽度最好设置成百分比不要设置成100vw） */
   scrollbar-gutter: stable;
   /* 在像素（而不是亚像素）级别平滑字体。对于深色背景上的浅色文本，从亚像素渲染切换为抗锯齿渲染可以使其看起来更清晰。 */

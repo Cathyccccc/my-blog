@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text-base-color-switch">
     内容正在更新中，敬请期待。
     <br />
     <!-- 文件上传 -->

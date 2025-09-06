@@ -21,52 +21,10 @@
       <RightSider :user-data="userInfoRef" />
     </template>
   </MainLayout>
-
-  <!-- 主内容区 -->
-  <!-- <div
-      :class="[
-        showLeftSide ? 'lg:mx-1/5' : 'lg:mr-1/5',
-        'grow-1',
-        'bg-switch',
-        'text-base-color-switch',
-        'relative',
-        'flex',
-        'flex-col',
-        'transition-margin',
-        'duration-300',
-      ]"
-    > -->
-  <!-- <div
-        class="pt-19 lg:pt-3 lg:static min-h-screen w-full pb-3 px-2 md:pl-3 md:pr-4 box-border bg-switch"
-      > -->
-  <!-- 宽屏标题区 -->
-  <!-- <h3
-          v-if="$route.path.startsWith('/manage') || $route.path.startsWith('/add')"
-          class="hidden lg:block bg-switch c-[--text-color] text-md font-semibold h-10 pb-3 leading-7"
-        >
-          <span
-            v-if="$route.path.startsWith('/add')"
-            class="i-tabler:square-rounded-arrow-left-filled text-xl align-middle h-7 mr-1 hover:opacity-70 transition"
-            @click="$router.back()"
-          ></span>
-          {{ $route.meta.title }}
-        </h3> -->
-
-  <!-- </div> -->
-  <!-- 遮罩层 -->
-  <!-- <Transition name="fade">
-        <div
-          v-show="toggle"
-          class="lg:hidden fixed left-0 top-0 right-0 bottom-0 w-full h-screen bg-black/40 dark:bg-gray-600/20 transition"
-          @click="toggle = !toggle"
-        ></div>
-      </Transition>
-    </div>
-  </div> -->
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted,ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import api from "@/api";
 import LeftSider from "@/components/bc/LeftSider.vue";
@@ -79,16 +37,12 @@ const favorListRef = ref(null); // 推荐文章列表
 const tagListRef = ref(null);
 const userInfoRef = ref(null);
 
-onBeforeMount(() => {
+onMounted(async () => {
   // 获取用户信息
   const userInfo = sessionStorage.getItem("userInfo");
   if (userInfo) {
     userInfoRef.value = JSON.parse(userInfo);
   }
-})
-
-onMounted(async () => {
-
   // 获取标签列表数据
   if (!localStorage.tagList) {
     const res = await api.tag.getTagList();

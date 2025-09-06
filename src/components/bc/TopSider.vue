@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full flex justify-between items-center px-3 md:px-5 box-border bg-[#9772E0] dark:bg-[--dark-nav-bg-color] transition shadow-md"
+    class="w-svw h-full flex justify-between items-center px-3 md:px-5 box-border bg-[#f4f0fd] dark:bg-[#3b1682] transition shadow-md"
   >
     <!-- <h3 class="w-30 leading-8 c-[--text-color] text-md font-semibold">
       {{ $route.meta.title }}
@@ -15,7 +15,7 @@
     <Navbar
       v-show="toggle"
       :paths="userData ? paths.concat(managePaths) : paths"
-      class="lg:hidden top-20 -z-1 bg-violet-50 dark:bg-[--dark-nav-bg-color] shadow-sm shrink-0"
+      class="lg:hidden top-20 -z-1 bg-violet-50 dark:bg-[#3b1682] shadow-sm shrink-0"
       @click-nav="toggle = false"
     />
   </Transition>

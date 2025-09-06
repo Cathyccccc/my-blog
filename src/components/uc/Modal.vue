@@ -5,11 +5,11 @@
       <div class="mask" @click.stop="handleBlur"></div>
       <div class="modal" tabindex="-1">
         <div
-          class="modal-content bg-white dark:bg-[--dark-theme-color]"
+          class="modal-content min-w-1/5 max-w-4/5 sm:max-w-3/5 bg-[#ffffff] dark:bg-[--dark-theme-color]"
           v-bind:style="$attrs.style"
         >
           <div class="flex justify-between">
-            <p class="text-base-color-switch">{{ $attrs.title }}</p>
+            <p class="text-base-color-switch font-semibold">{{ $attrs.title }}</p>
             <span
               v-if="closable"
               class="i-tabler:circle-x w-6 h-6 text-gray-400 cursor-pointer"
@@ -33,6 +33,7 @@
 
 <script setup>
 import Button from "./Button.vue";
+
 defineProps({
   open: {
     type: Boolean,
@@ -53,6 +54,7 @@ defineProps({
   },
 });
 const emits = defineEmits(["onCancel", "onOk", "update:open"]);
+
 function handleBlur() {
   console.log("失焦");
 }
@@ -85,7 +87,6 @@ function handleCancel() {
 
 .modal-content {
   border-radius: 10px;
-  width: 520px;
   margin: 100px auto 50px;
   padding: 15px 20px;
   box-sizing: border-box;

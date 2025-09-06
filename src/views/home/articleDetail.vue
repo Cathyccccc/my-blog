@@ -13,10 +13,12 @@
       </div>
     </div>
     <!-- 文章内容 -->
-    <div class="editor-wrapper" :class="{ 'dark-mode': theme === 'dark' }">
+    <div class="editor-wrapper grow" :class="{ 'dark-mode': theme === 'dark' }">
       <!-- <v-md-editor :model-value="articleRef?.content" mode="preview"></v-md-editor> -->
       <div class="markdown-body p-4 box-border" v-html="renderedMarkdown"></div>
     </div>
+    <!-- 底部切换区 -->
+    <ArticleBottom :current="articleRef?.id" />
     <!-- <h4>评论</h4> -->
     <!-- 评论发布框 -->
     <!-- <div class="comment-box">
@@ -40,6 +42,7 @@ import { useRoute } from "vue-router";
 import api from "@/api";
 import Loading from "@/components/uc/Loading.vue";
 import { useTheme } from "@/hooks";
+import ArticleBottom from "@/components/bc/ArticleBottom.vue";
 // import CommentCard from "../components/CommentCard.vue";
 // import CommentBox from "../components/CommentBox.vue";
 // import { getDateTime } from "../utils/date";

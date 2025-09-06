@@ -31,13 +31,13 @@ const props = defineProps({
 
 const buttonClass = computed(() => {
   const baseClass =
-    "inline-block w-fit cursor-pointer outline-none leading-none transition flex justify-center items-center";
+    "cursor-pointer outline-none leading-none transition";
   let types = {
     default:
-      "bg-white border border-transparent text-gray-700 shadow-sm border hover:text-violet-500",
+      "bg-[#ffffff] border border-transparent text-gray-700 shadow-sm border hover:text-violet-500",
     primary:
-      "bg-violet-500 text-white hover:bg-violet-500/80 shadow-sm",
-    danger: "bg-rose-500 text-white hover:bg-rose-500/80 shadow-sm",
+      "bg-indigo-500 text-[#ffffff] hover:bg-violet-500/80 shadow-sm",
+    danger: "bg-red-600 text-[#ffffff] hover:bg-red-600/80 shadow-sm",
     link: "text-blue-600 hover:text-blue-400",
   };
   const shapes = {
@@ -46,16 +46,16 @@ const buttonClass = computed(() => {
     circle: "rounded-full",
   };
   let sizes = {
-    small: "px-2 py-2 text-base sm:text-sm h-8 box-border",
-    middle: "px-4 py-3 text-lg sm:text-base h-10 box-border",
-    large: "px-6 py-4 text-xl sm:text-lg h-12 box-border",
+    small: "px-2 py-1 text-sm sm:text-xs min-w-12 h-6 box-border w-fit",
+    middle: "px-3 py-2 text-base sm:text-sm min-w-16 h-8 box-border w-fit",
+    large: "px-4 py-3 text-lg sm:text-base min-w-20 h-10 box-border w-fit",
   };
   const block = "w-full block";
   if (props.shape === "circle") {
     sizes = {
-      small: "p-2 text-sm w-8 h-8 box-border",
-      middle: "p-2 text-base w-10 h-10 box-border",
-      large: "p-2 text-lg w-12 h-12 box-border",
+      small: "text-sm w-6 h-6 align-middle inline-flex justify-center items-center",
+      middle: "text-base w-8 h-8  align-middle inline-flex justify-center items-center",
+      large: "text-lg w-10 h-10  align-middle inline-flex justify-center items-center",
     };
     types.link = types.default; // 为 circle 时 link 失效，仍然显示默认样式
   }

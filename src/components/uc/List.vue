@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[--theme-color] px-4 py-3 rounded-xl">
+  <div class="bg-theme sm:bg-[--theme-color] px-4 py-3 rounded-xl">
     <slot name="header"></slot>
     <ul>
       <li v-for="(item, index) in data" :key="index">{{ item }}</li>

@@ -1,5 +1,3 @@
-import { onBeforeUnmount } from "vue";
-
 const allEvents = new Map(); // 事件池
 
 // 事件触发
@@ -36,15 +34,9 @@ function eventOff(eventType, handler) {
     //
   }
 }
-
-export function useEvent() {
-  return {
-    all: allEvents, // 可以调用map上的方法
-    on: eventOn,
-    emit: eventEmit,
-  };
-}
-
-onBeforeUnmount(() => {
-  console.log("unmount");
-});
+export const event = {
+  all: allEvents, // 可以调用map上的方法
+  on: eventOn,
+  emit: eventEmit,
+  off: eventOff,
+};

@@ -1,4 +1,4 @@
-import { defineConfig, presetIcons,presetWind4, transformerDirectives } from "unocss";
+import { defineConfig, presetIcons, presetWind4, transformerDirectives } from "unocss";
 
 export default defineConfig({
   // ...UnoCSS options
@@ -15,15 +15,54 @@ export default defineConfig({
     }),
     // presetUno() - if you want to use other atomic CSS as well
   ],
+  theme: {
+    colors: {
+      "c-default": "#111112",
+      primary: "#6366f1",
+      success: "#059669",
+      warning: "#eab308",
+      danger: "#dc2626",
+      theme: "#f4f0fd",
+      app: "#f8f8ff",
+    },
+    darkColors: {
+      theme: "#5E27CA",
+      nav: "#3b1682",
+      line: "#552aa8",
+    },
+  },
   rules: [
+    [
+      /^text-(.*)$/,
+      ([, c], { theme }) => {
+        if (theme.colors[c]) return { color: theme.colors[c] };
+      },
+    ],
+    [
+      /^dark:text-(.*)$/,
+      ([, c], { theme }) => {
+        if (theme.colors[c]) return { color: theme.darkColors[c] };
+      },
+    ],
+    [
+      /^bg-(.*)$/,
+      ([, c], { theme }) => {
+        if (theme.colors[c]) return { backgroundColor: theme.colors[c] };
+      },
+    ],
+    [
+      /^dark:bg-(.*)$/,
+      ([, c], { theme }) => {
+        if (theme.colors[c]) return { backgroundColor: theme.darkColors[c] };
+      },
+    ],
+    [
+      /^dark:border-(.*)$/,
+      ([, c], { theme }) => {
+        if (theme.colors[c]) return { borderColor: theme.darkColors[c] };
+      },
+    ],
     ["custom-bg-size", { "background-size": "200% auto" }],
-    // [
-    //   "custom-bg-linear",
-    //   {
-    //     background: "linear-gradient(to right, #5E27CB 0, #210C4B 51%, #5E27CB 100%)",
-    //     transition: "background 0.3s ease-in-out",
-    //   },
-    // ],
     [
       "custom-origin-1",
       {
@@ -51,20 +90,6 @@ export default defineConfig({
           "linear-gradient(to right, #0b0020, #0b0020) padding-box, linear-gradient(135deg, #5E27CA, #D1BEF6) border-box",
       },
     ],
-    // [
-    //   "custom-text-linear",
-    //   {
-    //     background: "linear-graident(to right, #5E27CB, #E7DBFF)",
-    //     "backgroud-clip": "text",
-    //     "--webkit-text-fill-color": "rgba(0, 0, 0, 0)",
-    //   },
-    // ],
-    // [
-    //   "custom-dark-bg-linear",
-    //   {
-    //     background: "linear-gradient(to bottom, #E7DBFF 0, #5E27CA 50%, rgba(11, 0, 32, 0) 95%)",
-    //   },
-    // ],
   ],
 
   shortcuts: [
@@ -72,7 +97,7 @@ export default defineConfig({
       "card-bg-linear":
         "bg-linear-to-r from-[--theme-color] dark:from-[--dark-bg-color] from-90% to-white dark:to-[--dark-bg-color]",
       "switch-animation": "transition duration-300",
-      "bg-switch": "bg-white dark:bg-[--dark-bg-color] switch-animation",
+      "bg-switch": "bg-[#ffffff] dark:bg-[--dark-bg-color] switch-animation",
       "nav-bg-switch": "bg-[--theme-color] dark:bg-[--dark-nav-bg-color] switch-animation",
       "bg-linear-switch":
         "bg-[--theme-color] dark:bg-[--dark-bg-color] lg:card-bg-linear switch-animation border border-1 border-white dark:border-[--dark-line-color]",

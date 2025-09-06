@@ -11,6 +11,11 @@ const paths = [
     icon: "i-tabler:browser-check",
   },
   {
+    path: "/components",
+    pathname: "组件集合",
+    icon: "",
+  },
+  {
     path: "/personal",
     pathname: "个人简介",
   },

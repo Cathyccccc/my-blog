@@ -3,14 +3,14 @@
     <LoginText />
     <img class="relative z-10 md:w-1/2 lg:w-1/3 mx-auto translate-y-4" src="../../public/img/login.png" alt="" />
     <div
-      class="relative md:w-1/2 xl:w-1/3 left-1/2 -translate-x-1/2 bg-[--app-light-bg-color] px-4 sm:px-12 py-15 rounded-lg"
+      class="relative md:w-1/2 xl:w-1/3 left-1/2 -translate-x-1/2 bg-app sm:bg-[--app-bg-color] px-4 sm:px-12 py-15 rounded-lg"
     >
       <Form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-        <FormItem label="Account" class="bg-white sm:bg-inherit px-2 sm:px-0 rounded-md">
-          <Input v-model:value.trim="loginObj.loginId" autofocus />
+        <FormItem label="Account" class="bg-[#ffffff] sm:bg-inherit px-2 sm:px-0 rounded-md">
+          <Input v-model:value.trim="loginObj.loginId" class="border-none" autofocus />
         </FormItem>
-        <FormItem label="Password" class="bg-white sm:bg-inherit px-2 sm:px-0 rounded-md">
-          <Input v-model:value.trim="loginObj.loginPwd" type="password" />
+        <FormItem label="Password" class="bg-[#ffffff] sm:bg-inherit px-2 sm:px-0 rounded-md">
+          <Input v-model:value.trim="loginObj.loginPwd" class="border-none" type="password" />
         </FormItem>
         <Button class="mt-8" block type="primary" @click.prevent="handleLogin">Sign in</Button>
       </Form>

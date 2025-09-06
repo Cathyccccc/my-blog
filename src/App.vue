@@ -11,17 +11,16 @@
 </template>
 
 <script setup>
-import { onMounted, provide } from "vue";
+import { onMounted } from "vue";
 
-import { useEvent } from "@/hooks";
 import { useTheme } from "@/hooks";
+import {event} from "@/utils/event";
 
-const { emit } = useEvent();
 const [theme] = useTheme(); // 控制主题切换，默认 light
 
 onMounted(() => {
   document.addEventListener("scroll", () => {
-    emit("scroll", event);
+    event.emit("scroll", event);
   });
 });
 </script>

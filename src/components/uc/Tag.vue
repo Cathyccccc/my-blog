@@ -4,7 +4,7 @@
     <!-- 这里需要处理点击关闭按钮时事件不会冒泡到select，导致下拉框toggle -->
     <span v-if="closable" class="cursor-pointer ml-1" @click="$emit('close')">
       <svg
-        class="w-4 h-4 text-stone-500"
+        class="w-4 h-4 text-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -18,14 +18,15 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, computed } from "vue";
+
 const props = defineProps({
   type: {
     type: String,
-    default: "default", // 可选值：info, success, warning, error
+    default: "default", // 可选值：info, success, warning, danger
     validator(value) {
       // The value must match one of these strings
-      return ["default", "info", "success", "warning", "error"].includes(value);
+      return ["default", "info", "success", "warning", "danger"].includes(value);
     },
   },
   closable: {
@@ -57,6 +58,9 @@ const props = defineProps({
 });
 const emit = defineEmits(["close", "change"]);
 
+// 非受控：组件自身控制值
+const checkSelf = ref(props.defaultChecked || props.checked);
+
 const tagClass = computed(() => {
   let baseClass =
     "inline-flex whitespace-nowrap text-xs px-2 py-0.5 h-6 box-border flex items-center transition";
@@ -65,16 +69,16 @@ const tagClass = computed(() => {
     default: "bg-[--theme-color] dark:bg-zinc-700/80 text-[#000000E0] dark:text-neutral-300",
     info: "bg-indigo-600 text-white",
     success: "bg-emerald-600 text-white",
-    warning: "bg-yellow-600 text-white",
-    error: "bg-red-600 text-white",
+    warning: "bg-yellow-500 text-white",
+    danger: "bg-red-600 text-white",
   };
   if (props.bordered) {
     colors = {
       default: "bg-neutral-50 dark:bg-transparent text-[#000000E0] dark:text-neutral-300",
-      info: "bg-white dark:bg-inherit text-sky-700",
-      success: "bg-white dark:bg-inherit text-emerald-700",
-      warning: "bg-white dark:bg-inherit text-yellow-800",
-      error: "bg-white dark:bg-inherit text-red-800",
+      info: "bg-[#ffffff] dark:bg-inherit text-sky-700",
+      success: "bg-[#ffffff] dark:bg-inherit text-emerald-700",
+      warning: "bg-[#ffffff] dark:bg-inherit text-yellow-800",
+      danger: "bg-[#ffffff] dark:bg-inherit text-red-800",
     };
   }
   const borderColor = {
@@ -82,7 +86,7 @@ const tagClass = computed(() => {
     info: "border-sky-700",
     success: "border-emerald-700",
     warning: "border-yellow-800",
-    error: "border-red-800",
+    danger: "border-red-800",
   };
   let classStr = baseClass;
   if (!props.color) {

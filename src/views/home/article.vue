@@ -29,7 +29,7 @@
               >{{ item.title }}</span
             >
           </div>
-          <div hidden sm:block class="md:mr-6 lg:mr-10 ml-12 md:ml-0 mt-1 md:mt-0">
+          <div class="hidden sm:block ml-12 md:ml-0 mt-1 md:mt-0">
             <Tag
               bordered
               circle
@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // import Pagination from "../components/Pagination.vue";
@@ -100,13 +100,12 @@ import api from "@/api";
 import Card from "@/components/uc/Card.vue";
 import Loading from "@/components/uc/Loading.vue";
 import Tag from "@/components/uc/Tag.vue";
-import { useEvent } from "@/hooks";
 import { useTheme } from "@/hooks";
 import { debounce } from "@/utils/debounce";
+import { event } from "@/utils/event";
 
 const route = useRoute();
 const router = useRouter();
-const { on } = useEvent();
 const [theme] = useTheme();
 const articleListRef = ref([]);
 const loadingRef = ref(false);
@@ -116,13 +115,13 @@ const pagination = ref({
   total: 0,
 });
 const SCROLL_THRESHOLD = 50; // 触发加载的滚动阈值 (px)
-const hasMore = ref(true); // 是否还可以加载更多数据
+const hasMore = ref(false); // 是否还可以加载更多数据
 
 async function fetchData(filterKey) {
   const result = await api.article.getArticleList({ ...pagination.value, filterKey });
   articleListRef.value = articleListRef.value.concat(result.list.filter((item) => item.isPublish));
   pagination.value.total = result.total;
-
+  localStorage.setItem('articles', JSON.stringify(articleListRef.value));
   loadingRef.value = false;
 }
 
@@ -134,8 +133,9 @@ onMounted(() => {
   if (tag) {
     filterKey = tag;
   }
+  loadingRef.value = true;
   fetchData(filterKey);
-  on("scroll", () => {
+  event.on("scroll", () => {
     if (route.fullPath == "/article") {
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
       const scrollHeight = document.documentElement.scrollHeight;
@@ -149,6 +149,7 @@ onMounted(() => {
           return;
         }
         loadingRef.value = true;
+        hasMore.value = true;
         if (articleListRef.value.length >= pagination.value.total) {
           hasMore.value = false;
           loadingRef.value = false;
@@ -168,12 +169,14 @@ watch(
   () => route.query,
   (newVal) => {
     const tag = newVal.tag;
+    articleListRef.value = [];
     fetchData(tag);
   },
 );
 
 function browseArticle(article) {
-  article.scanNumber++;
+  console.log(article)
+  // article.scanNumber++;
   // api.article.updateArticle({ ...article });
   router.push({ path: `/articleDetail/${article.id}` });
 }

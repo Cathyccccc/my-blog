@@ -30,6 +30,12 @@ export const routes = [
         meta: { title: "项目列表" },
       },
       {
+        path: "components",
+        component: () => import("@/views/home/components.vue"),
+        name: "components",
+        meta: { title: "组件集合" },
+      },
+      {
         path: "personal",
         component: () => import("@/views/home/personal.vue"),
         name: "personal",
@@ -42,7 +48,6 @@ export const routes = [
       },
       {
         path: "manage",
-        meta: { title: "管理" },
         children: [
           {
             path: "articles",
@@ -74,7 +79,7 @@ export const routes = [
             path: "addArticle",
             component: () => import("@/views/add/addArticle.vue"),
             name: "addArticle",
-            meta: { title: "新增文章", auth: true },
+            meta: { auth: true },
           },
         ],
       },

@@ -2,7 +2,7 @@
   <div :class="cardClass">
     <!-- 头 -->
     <slot name="header">
-      <div :class="['flex', 'justify-between', 'items-center', 'px-4',  'py-2', divider && 'border-b border-gray-50 dark:border-[--dark-line-color]']">
+      <div :class="['flex', 'justify-between', 'items-center', 'px-4',  'py-2', divider && 'border-b border-gray-50 dark:border-line']">
         <!-- 标题 -->
         <slot name="title">
           <p v-if="title" class="text-base-color-switch text-base font-semibold tracking-wider">
@@ -20,7 +20,7 @@
       <slot></slot>
     </div>
     <!-- 尾 -->
-    <div v-if="$slots.footer" :class="['px-4', 'py-2', divider && 'border-t border-gray-50 dark:border-[--dark-line-color]']">
+    <div v-if="$slots.footer" :class="['px-4', 'py-2', divider && 'border-t border-gray-50 dark:border-line']">
       <slot name="footer"></slot>
     </div>
   </div>
@@ -50,7 +50,7 @@ const props = defineProps({
 });
 
 const cardClass = computed(() => {
-  let baseClass = 'bg-[--theme-color] dark:bg-[--dark-nav-bg-color] transition rounded-xl overflow-hidden';
+  let baseClass = 'bg-theme sm:bg-[--theme-color] dark:bg-[#3b1682] sm:dark:bg-[--dark-nav-bg-color] transition rounded-xl overflow-hidden';
   if (props.bordered) {
     baseClass += ' border line-color-switch border-solid'
   }

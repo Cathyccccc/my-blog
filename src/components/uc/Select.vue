@@ -1,24 +1,22 @@
 <template>
   <div
-    class="select-container w-full"
+    class="inline-block relative align-middle w-full"
     tabindex="-1"
     @blur.capture="handleBlur"
     ref="selectContainerRef"
   >
     <div
-      class="selector"
-      :class="{ focus: focusRef }"
+      :class="[selectorClass, focusRef ? 'focus' : '']"
       @mousedown.prevent.self="toggleSelectList"
       @focus.capture="handleFocus"
     >
       <!-- mousedown的默认行为，对于设置了tabindex的元素会触发元素的聚焦行为。self是只有点击元素自己才toggle，比如点击内部tag时不toggle -->
-      <div v-if="!mode" class="selected-item">{{ selected && selected.label }}</div>
+      <div v-if="!mode" class="text-base-color-switch px-1">{{ selected && selected.label }}</div>
       <div v-else class="inline-block">
         <Tag
           v-for="item in selected"
           :key="item.value"
           class="mr-1"
-          bordered
           closable
           @close="removeSelect(item.value)"
           >{{ item.label }}</Tag
@@ -36,15 +34,22 @@
     </div>
     <!-- 下拉列表选项 -->
     <Transition>
-      <div class="toggle-wrapper bg-white dark:bg-[--dark-nav-bg-color] shadow-md" v-if="open" ref="toggleWrapperRef">
+      <div
+        class="absolute z-10 p-1 w-full bg-[#ffffff] dark:bg-[#3b1682] rounded-md shadow-md"
+        v-if="open"
+        ref="toggleWrapperRef"
+      >
         <ul v-if="newOptions.length > 0" class="select-list">
           <li
             v-for="item in newOptions"
             :key="item.label"
-            :class="[{ selected: mode ? value.includes(item.value) : value === item.value }, 'bg-white dark:bg-[--dark-line-color]']"
+            :class="[
+              'rounded-md hover:bg-violet-100 dark:hover:bg-[#552aa8]/70 transition',
+              (mode ? value.includes(item.value) : value === item.value) ? 'bg-violet-200 dark:bg-[#552aa8]' : 'bg-zinc-100 dark:bg-gray-600/70'
+            ]"
             @click="changeSelect(item.value)"
           >
-            <span class="dark:text-black">{{ item.label }}</span>
+            <span>{{ item.label }}</span>
             <svg
               v-if="mode && value.includes(item.value)"
               t="1697609187051"
@@ -59,7 +64,7 @@
             >
               <path
                 d="M761.906212 445.517843c-8.29492-11.749602-24.579815-14.544251-36.360116-6.250354L416.577209 656.558373 304.674583 499.339656c-8.292873-11.779278-24.564465-14.573927-36.33044-6.28003-11.778254 8.324596-14.572904 24.580838-6.277984 36.361139L388.992967 707.942671c8.293897 11.778254 24.565489 14.57188 36.344766 6.28003l330.318124-232.343719C767.405459 473.584062 770.230808 457.298144 761.906212 445.517843z"
-                fill="#6610f2"
+                :fill="(mode ? value.includes(item.value) : value === item.value) ? '#ddd' : '#6610f2'"
                 p-id="1344"
               ></path>
             </svg>
@@ -83,7 +88,7 @@ import Tag from "./Tag.vue";
 const props = defineProps({
   value: {
     // 选中项的值（v-model)
-    type: [String, Array],
+    type: [String, Array, Number],
     default: () => [],
     required: true,
   },
@@ -95,7 +100,17 @@ const props = defineProps({
   mode: {
     // 多选模式（multiple）或标签模式（tag），不传则为单选模式
     type: String,
+    validator(value) {
+      return ["multiple", "tag"].includes(value);
+    }
   },
+  size: {
+    type: String,
+    default: "middle",
+    validator(value) {
+      return ["middle", "large", "small"].includes(value);
+    }
+  }
 });
 const emit = defineEmits(["update:value", "change", "focus", "blur", "deselect", "select"]);
 
@@ -107,6 +122,17 @@ const newWidth = ref(0);
 const open = ref(false); // 控制是否显示下拉选项列表
 const focusRef = ref(false);
 
+// 样式计算
+const selectorClass = computed(() => {
+  const baseClass = 'border border-1 border-[#eeeeee] rounded-md hover:border-[#6366f1] transition px-1 flex items-center flex-wrap';
+  const sizes = {
+    small: 'h-6',
+    middle: 'h-8',
+    large: 'h-10'
+  }
+  return `${baseClass} ${sizes[props.size]}`
+})
+
 // 当为多选时计算input内容变化时input的宽度
 const inputWidth = computed(() => {
   return props.mode === "tag" ? `${newWidth.value}px` : "4px"; // 计算input的宽度，8px为每个字符的平均宽度
@@ -114,7 +140,6 @@ const inputWidth = computed(() => {
 
 const newOptions = computed(() => {
   // 依赖的响应式数据：
-  // 1. props.mode
   // 2.inputValRef
   // 3.props.options
   // 判断props.options中是否包含inputValRef.value的值，如果包含则不添加，否则添加
@@ -129,8 +154,11 @@ const newOptions = computed(() => {
 
 // 计算选中的标签数据
 const selected = computed(() => {
-  const selectedList = newOptions.value.filter((item) => props.value.includes(item.value));
-  return props.mode ? selectedList : selectedList[0];
+  if (props.mode) {
+    return newOptions.value.filter((item) => props.value.includes(item.value));
+  } else {
+    return newOptions.value.filter((item) => item.value == props.value)[0];
+  }
 })
 
 function handleInput(e) {
@@ -138,7 +166,7 @@ function handleInput(e) {
   // input输入为中文时计算input宽度（输入状态input框内暂时显示的是拼音，需要进行处理）
   calculateRef.value.textContent = inputValRef.value + e.data;
   newWidth.value = calculateRef.value.offsetWidth + 4;
-  if (inputValRef.value === '') {
+  if (inputValRef.value === "") {
     newWidth.value = 0;
   }
 }
@@ -200,13 +228,8 @@ function handleBlur(e) {
 </script>
 
 <style scoped>
-.select-container {
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-}
 
-.selector {
+/* .selector {
   min-height: 32px;
   border: 1px solid #eee;
   border-radius: 5px;
@@ -220,38 +243,28 @@ function handleBlur(e) {
 
 .selector.focus {
   border-color: #55bbff;
-}
-
-.selected-item {
-  height: 26px;
-  font-size: 14px;
-  padding: 3px 2px;
-  box-sizing: border-box;
-}
-
-/* .selected-item.multiple {
-  background-color: #fff9d2;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  margin: 1px 2px;
 } */
 
-.selected-item svg {
+/* .selected-item {
+  padding: 3px 2px;
+  box-sizing: border-box;
+} */
+
+/* .selected-item svg {
   width: 14px;
   height: 14px;
   margin-left: 5px;
   cursor: pointer;
-}
+} */
 
-.selected-item svg path {
+/* .selected-item svg path {
   fill: #b5b5b5;
   transition: all 0.3s;
-}
+} */
 
-.selected-item svg:hover path {
+/* .selected-item svg:hover path {
   fill: #000;
-}
+} */
 
 input {
   width: 100%;
@@ -264,18 +277,6 @@ input {
   /* 控制focus时闪烁线的长度，font-size越大，线越长 */
   font-size: 14px;
   margin-left: 2px;
-}
-
-.toggle-wrapper {
-  width: 100%;
-  position: absolute;
-  margin-top: 3px;
-  z-index: 99;
-  padding: 5px;
-  box-sizing: border-box;
-  /* background-color: #fff; */
-  border-radius: 5px;
-  /* box-shadow: 0 7px 20px #e3e3e3; */
 }
 
 .select-list {
@@ -300,8 +301,6 @@ input {
   line-height: 24px;
   padding: 3px 8px;
   box-sizing: border-box;
-  border-radius: 6px;
-  /* transition: background-color 0.3s; */
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -310,14 +309,10 @@ input {
   margin-bottom: 3px;
 }
 
-li.selected {
-  background-color: var(--theme-color);
-}
-
-.select-list li:not(.selected):hover {
+/* .select-list li:not(.selected):hover {
   background-color: #f7f7f7;
-}
-
+} */
+   
 .empty {
   width: 100%;
 }

@@ -11,7 +11,7 @@
             'transition-all duration-300 underline-offset-3 decoration-gray-300 oneline-text-overflow',
             favorSelectRef === item.id
               ? 'translate-x-1.5 bg-violet-200 dark:bg-indigo-200/30'
-              : 'bg-white dark:bg-violet-600/50',
+              : 'bg-[#ffffff] dark:bg-violet-600/50',
           ]"
           v-for="(item, index) in favorsData"
           :key="item.id"

@@ -3,13 +3,13 @@
     <!-- 左侧栏（小屏隐藏） -->
     <div
       v-if="!$route.fullPath.startsWith('/manage')"
-      class="lg:w-1/5 h-full hidden lg:block bg-slate-100 fixed left-0 top-0 bottom-0"
+      class="lg:w-1/5 h-full hidden lg:block fixed left-0 top-0 bottom-0"
     >
       <slot name="left-side">左侧栏（小屏隐藏）</slot>
     </div>
     <!-- 内容区 -->
     <div
-      :class="['w-full h-full p-3', !$route.fullPath.startsWith('/manage') && 'lg:w-3/4 lg:ml-1/4']"
+      :class="['content-container w-full h-full p-3', !$route.fullPath.startsWith('/manage') && 'lg:w-3/4 lg:ml-1/4']"
     >
       <slot name="content">内容区</slot>
     </div>
@@ -18,4 +18,9 @@
 
 <script setup></script>
 
-<style scoped></style>
+<style scoped>
+.content-container {
+  min-height: calc(100vh - 5rem);
+  box-sizing: border-box;
+}
+</style>
