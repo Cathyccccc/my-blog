@@ -74,32 +74,65 @@
     <span>非受控：</span><Switch />
     <p>小号切换</p>
     <Switch size="small" />
-    <br>
-    <span>初始默认值：</span><Switch defaultChecked />
-    <span>禁用：</span><Switch disabled />
-    <hr class="mt-1">
+    <br />
+    <span>初始默认值：</span><Switch defaultChecked /> <span>禁用：</span><Switch disabled />
+    <hr class="mt-1" />
     <h4 class="font-semibold">Select 下拉选择</h4>
     <span>单选模式：</span><Select v-model:value="value1" :options="options" />
     <span>多选模式：</span><Select v-model:value="value2" mode="multiple" :options="options" />
-    <span>标签模式（可添加新选项）：</span><Select v-model:value="value3" mode="tag" :options="options" />
-    <hr class="mt-1">
+    <span>标签模式（可添加新选项）：</span
+    ><Select v-model:value="value3" mode="tag" :options="options" />
+    <span>小号选择器</span>
+    <Select v-model:value="value1" :options="options" size="small" />
+    <span>大号选择器</span>
+    <Select v-model:value="value2" :options="options" mode="multiple" size="large" />
+    <hr class="mt-1" />
     <h4 class="font-semibold">Input 输入框</h4>
     <Input />
-    <hr class="mt-1">
+    <hr class="mt-1" />
     <h4 class="font-semibold">DatePicker 日期选择器</h4>
     <DatePicker v-model:value="date" />
-    <hr class="mt-1">
+    <hr class="mt-1" />
     <h4 class="font-semibold">Modal 模态框</h4>
     <Modal v-model:open="open" title="标题">这是一个模态框</Modal>
     <Button @click="open = true">open Modal</Button>
+    <hr class="mt-1" />
+    <h4 class="font-semibold">Form 表单</h4>
+    <p>水平布局</p>
+    <Form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+      <FormItem label="Account">
+        <Input v-model:value.trim="loginObj.loginId" autofocus />
+      </FormItem>
+      <FormItem label="Password">
+        <Input v-model:value.trim="loginObj.loginPwd" type="password" />
+      </FormItem>
+    </Form>
+    <p>垂直布局</p>
+    <Form layout="vertical" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+      <FormItem label="Account">
+        <Input v-model:value.trim="loginObj.loginId" autofocus />
+      </FormItem>
+      <FormItem label="Password">
+        <Input v-model:value.trim="loginObj.loginPwd" type="password" />
+      </FormItem>
+    </Form>
+    <p>label 对齐位置</p>
+    <Form labelAlign="right" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <FormItem label="Account">
+        <Input v-model:value.trim="loginObj.loginId" autofocus />
+      </FormItem>
+      <FormItem label="Password">
+        <Input v-model:value.trim="loginObj.loginPwd" type="password" />
+      </FormItem>
+    </Form>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
-import Button from "@/components/uc/Button.vue";
 import DatePicker from "@/components/DatePicker.vue";
+import Button from "@/components/uc/Button.vue";
 import Form from "@/components/uc/Form.vue";
 import FormItem from "@/components/uc/FormItem.vue";
 import Input from "@/components/uc/Input.vue";
@@ -107,19 +140,22 @@ import Modal from "@/components/uc/Modal.vue";
 import Select from "@/components/uc/Select.vue";
 import Switch from "@/components/uc/Switch.vue";
 import Tag from "@/components/uc/Tag.vue";
-import Upload from "@/components/uc/Upload.vue";
 
 const check = ref(true);
 const value1 = ref([]);
 const value2 = ref([]);
 const value3 = ref([]);
 const options = [
-  {label: 1, value: 1},
-  {label: 2, value: 2},
-  {label: 3, value: 3},
-]
+  { label: 1, value: 1 },
+  { label: 2, value: 2 },
+  { label: 3, value: 3 },
+];
 const open = ref(false);
 const date = ref(null);
+const loginObj = reactive({
+  loginId: "",
+  loginPwd: "",
+});
 </script>
 
 <style scoped></style>

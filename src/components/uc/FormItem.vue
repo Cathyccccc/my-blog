@@ -2,7 +2,7 @@
   <div :class="formItemClass">
       <label
       :for="$attrs.name"
-      :class="['shrink-0 mr-4 text-sm text-c-default sm:text-[--text-base-color]', labelAlign === 'right' ? 'text-right' : 'text-left']"
+      :class="['shrink-0 mr-4 text-sm', labelAlign === 'right' ? 'text-right' : 'text-left']"
       :style="{ width: `${(labelCol.span / (labelCol.span + wrapperCol.span)) * 100}%` }"
       >{{ $attrs.label }}</label
     >
@@ -18,7 +18,7 @@ const layout = inject("layout");
 const labelAlign = inject("labelAlign");
 
 const formItemClass = computed(() => {
-  const baseClass = "flex mb-4";
+  const baseClass = "flex mb-4 text-base-color-switch";
   const layoutClass = {
     horizontal: "items-center",
     vertical: "flex-col",

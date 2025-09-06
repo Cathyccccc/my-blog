@@ -12,7 +12,7 @@
     >
       <!-- mousedown的默认行为，对于设置了tabindex的元素会触发元素的聚焦行为。self是只有点击元素自己才toggle，比如点击内部tag时不toggle -->
       <div v-if="!mode" class="text-base-color-switch px-1">{{ selected && selected.label }}</div>
-      <div v-else class="inline-block">
+      <div v-else class="inline-flex items-center">
         <Tag
           v-for="item in selected"
           :key="item.value"
@@ -128,7 +128,7 @@ const selectorClass = computed(() => {
   const sizes = {
     small: 'h-6',
     middle: 'h-8',
-    large: 'h-10'
+    large: 'h-10 text-lg'
   }
   return `${baseClass} ${sizes[props.size]}`
 })
