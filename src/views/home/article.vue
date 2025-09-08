@@ -175,7 +175,7 @@ watch(
 );
 
 function browseArticle(article) {
-  console.log(article)
+  // console.log(article)
   // article.scanNumber++;
   // api.article.updateArticle({ ...article });
   router.push({ path: `/articleDetail/${article.id}` });

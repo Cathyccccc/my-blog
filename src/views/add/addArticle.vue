@@ -91,7 +91,8 @@ onMounted(() => {
   tagListRef.value = data.map((item) => {
     return { value: item.tag_name, label: item.tag_name };
   });
-  if (route.matched[0].path === "/manage/editArticle/:id") {
+  console.log(route.matched)
+  if (route.matched[route.matched.length - 1].path === "/manage/editArticle/:id") {
     loadingRef.value = true;
     api.article.getArticleById(id).then((res) => {
       article = res;
@@ -159,7 +160,7 @@ async function handleUploadImage(event, insertImage, files) {
   const { path } = await api.upload.uploadImage(formData);
   insertImage({
       url: path,
-      // width: 'auto',
+      width: 'auto',
       // height: 'auto',
     });
 }
@@ -215,7 +216,7 @@ async function submitArticle() {
   // api.upload.uploadImage(articleInfo.coverImg).then((res) => {
   //   console.log(res)
   // })
-  if (route.matched[0].path === "/manage/editArticle/:id") {
+  if (route.matched[route.matched.length - 1].path === "/manage/editArticle/:id") {
     await api.article.updateArticle({ ...article, ...articleInfo, tag, date });
     loadingRef.value = false;
   } else {

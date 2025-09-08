@@ -2,7 +2,7 @@
   <div class="relative text-sm pt-6">
     <div
       v-show="currentIndex > 0"
-      class="absolute left-0 min-w-2/5 max-w-4/5 px-3 py-2 bg-[#f4f0fd] dark:bg-[#3b1682] rounded-mdn text-[#111112] dark:text-white cursor-pointer hover:bg-[#5E27CA]/80  transition"
+      class="absolute left-0 w-5/12 px-3 py-2 bg-[#f4f0fd] dark:bg-[#3b1682] rounded-mdn text-[#111112] dark:text-white cursor-pointer hover:bg-[#5E27CA]/80  transition"
       @click="$router.push({ path: `/articleDetail/${articles[currentIndex - 1].id}` })"
     >
     <p class="flex justify-start items-center">
@@ -11,7 +11,7 @@
     </div>
     <div
       v-show="currentIndex < articles.length - 1"
-      class="absolute right-0 min-w-2/5 max-w-4/5 px-3 py-2 bg-[#f4f0fd] dark:bg-[#3b1682] rounded-md text-[#111112] dark:text-white cursor-pointer hover:bg-[#5E27CA]/80  transition"
+      class="absolute right-0 w-5/12 px-3 py-2 bg-[#f4f0fd] dark:bg-[#3b1682] rounded-md text-[#111112] dark:text-white cursor-pointer hover:bg-[#5E27CA]/80  transition"
       @click="$router.push({ path: `/articleDetail/${articles[currentIndex + 1].id}` })"
     >
     <p class="flex justify-end items-center oneline-text-overflow">
