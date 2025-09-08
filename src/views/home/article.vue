@@ -9,7 +9,7 @@
       <!-- 文章卡片--头部 -->
       <template #title>
         <div class="w-full md:flex md:justify-between md:items-center">
-          <div class="flex items-baseline">
+          <div class="flex items-baseline w-full sm:w-4/5">
             <svg
               t="1752569670588"
               class="w-8 h-8 mr-4"
@@ -29,7 +29,7 @@
               >{{ item.title }}</span
             >
           </div>
-          <div class="hidden sm:block ml-12 md:ml-0 mt-1 md:mt-0">
+          <div class="hidden sm:block shrink-0">
             <Tag
               bordered
               circle

@@ -14,11 +14,11 @@
       class="absolute right-0 w-5/12 px-3 py-2 bg-[#f4f0fd] dark:bg-[#3b1682] rounded-md text-[#111112] dark:text-white cursor-pointer hover:bg-[#5E27CA]/80  transition"
       @click="$router.push({ path: `/articleDetail/${articles[currentIndex + 1].id}` })"
     >
-    <p class="flex justify-end items-center oneline-text-overflow">
+    <p class="flex justify-end items-center">
       <span>下一篇</span
       ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 12h14m-4 4l4-4m-4-4l4 4"/></svg>
     </p>
-      <p class="pl-6 text-end font-semibold leading-6">{{ articles[currentIndex + 1]?.title }}</p>
+      <p class="pl-6 text-end font-semibold leading-6 oneline-text-overflow">{{ articles[currentIndex + 1]?.title }}</p>
     </div>
   </div>
 </template>
